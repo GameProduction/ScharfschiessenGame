@@ -10,6 +10,7 @@ namespace Examples.Scharfschiessen
 {
     public class Scharfschiessen : RenderCanvas
     {
+        internal GameState GameState;
         // is called on startup
         public override void Init()
         {
@@ -17,12 +18,17 @@ namespace Examples.Scharfschiessen
             SetWindowSettings();
         }
 
+        internal void InitGame()
+        {
+            GameState = new GameState();
+        }
+
+
         internal void SetWindowSettings()
         {
             //Höhe und Breite an Primären Bildschirm anpassen
             Width = Screen.PrimaryScreen.Bounds.Width;
             Height = Screen.PrimaryScreen.Bounds.Height/6;
-            Debug.Write(Width);
         }
 
         // is called once a frame
