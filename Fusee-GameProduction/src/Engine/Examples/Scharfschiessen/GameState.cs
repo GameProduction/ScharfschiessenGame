@@ -8,12 +8,28 @@ using System.Windows.Forms;
 namespace Examples.Scharfschiessen
 {
     /// <summary>
-    /// The GameState class stores the state the Game is in.
-    /// 
+    /// Die Klasse GameState gibt an und speichert in welchem Status sich das Spiel befindet
     /// </summary>
+   
+
     public class GameState
     {
-        public State CurrentState { get; set; }
+        private State _currentState;
+        public State LastState { get; set; }
+    
+        public State CurrentState
+        {
+            get { return _currentState; }
+            set
+            {
+                if (value == State.HiddenPause)
+                {
+                    LastState = _currentState;
+                }
+                _currentState = value; 
+                
+            }
+        }
 
         public enum State
         {
@@ -25,7 +41,7 @@ namespace Examples.Scharfschiessen
         }
         public GameState()
         {
-            CurrentState = State.MainMenu;
+            _currentState = State.MainMenu;
             Debug.WriteLine(CurrentState);
         }
 
