@@ -18,13 +18,13 @@ namespace Examples.Scharfschiessen
         {
             //Höhe und Breite an Primären Bildschirm anpassen
             rc.Width = Screen.PrimaryScreen.Bounds.Width;
-            rc.Height = Screen.PrimaryScreen.Bounds.Height /9;
+            rc.Height = Screen.PrimaryScreen.Bounds.Height /5;
         }
 
         public void Hide(RenderCanvas rc)
         {
             rc.Width = Screen.PrimaryScreen.Bounds.Width /9;
-            rc.Height = Screen.PrimaryScreen.Bounds.Height / 8;
+            rc.Height = Screen.PrimaryScreen.Bounds.Height / 10;
         }
     }
 }
