@@ -16,7 +16,6 @@ namespace Examples.Scharfschiessen
         internal Mesh MeshCube;
 
         internal GameState GameState;
-        public WindowHandler WindowHandler;
 
         private float rot;
         // variables for shader
@@ -34,8 +33,7 @@ namespace Examples.Scharfschiessen
         // is called on startup
         public override void Init()
         {
-            WindowHandler = new WindowHandler();
-            WindowHandler.SetWindowSettings(this);
+            SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height/5, true, 0,0);
             rot = 0;
             RC.ClearColor = new float4(0.9f, 0.9f, 0.9f, 1);
 
@@ -137,14 +135,15 @@ namespace Examples.Scharfschiessen
             if (Input.Instance.IsKeyUp(KeyCodes.B) && GameState.CurrentState != GameState.State.HiddenPause)
             {
                 GameState.CurrentState = GameState.State.HiddenPause;
+                SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height/5, true, 0,
+                    -Screen.PrimaryScreen.Bounds.Height/5);
                 Debug.WriteLine(GameState.CurrentState);
-                //WindowHandler.Hide(this);
                 Time.Instance.TimeFlow = 0;
             }
             else if (Input.Instance.IsKeyUp(KeyCodes.B))
             {
                 GameState.CurrentState = GameState.LastState;
-                WindowHandler.SetWindowSettings(this);
+                SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
                 Time.Instance.TimeFlow = 1;
             }
         }
