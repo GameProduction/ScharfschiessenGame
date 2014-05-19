@@ -16,6 +16,7 @@ namespace Examples.Scharfschiessen
         internal Mesh MeshCube;
 
         internal GameState GameState;
+        internal Gui Gui;
 
         private float rot;
         // variables for shader
@@ -33,8 +34,6 @@ namespace Examples.Scharfschiessen
         // is called on startup
         public override void Init()
         {
-
-
             SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
 
             rot = 0;
@@ -52,7 +51,8 @@ namespace Examples.Scharfschiessen
 
         internal void InitGame()
         {
-            GameState = new GameState();
+            Gui = new Gui();
+            GameState = new GameState(ref Gui);
         }
 
         // is called once a frame
@@ -100,9 +100,6 @@ namespace Examples.Scharfschiessen
             var mtxRot = float4x4.CreateRotationX(_angleVert) * float4x4.CreateRotationY(_angleHorz);
             var mtxCam = rotX * rotY * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0);
             
-            // Column order notation
-            //RC.ModelView = float4x4.CreateTranslation(0, -50, 0)*mtxRot*float4x4.CreateTranslation(-150, 0, 0)*mtxCam;
-            // Debug.Assert(mtxCam_ROW == float4x4.Transpose(mtxCam));
 
             RC.SetShader(_spColor);
 
@@ -114,10 +111,6 @@ namespace Examples.Scharfschiessen
 
             RC.Render(MeshCube);
 
-
-            //test für rotierenes Mesh um Pause zu überprüfen nur zu Vorführungszwecken der pause Funktion
-            /*var mtxCam = float4x4.LookAt(0, 0, -200, 0, 0, 0, 0, 1, 0);
-            var mtxCam = float4x4.LookAt(0, 200, -500, 0, 0, 0, 0, 1, 0);*/
             rot += (float)Time.Instance.DeltaTime * 5;
 
             var modelView = mtxCam * mtxRot * float4x4.CreateTranslation(-100, 10, 200) * float4x4.CreateRotationX(rot) * float4x4.Scale(0.25f);
@@ -152,17 +145,30 @@ namespace Examples.Scharfschiessen
             if (Input.Instance.IsKeyUp(KeyCodes.P) && GameState.CurrentState != GameState.State.HiddenPause)
             {
                 GameState.CurrentState = GameState.State.HiddenPause;
-                //SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0,
-                  //  -Screen.PrimaryScreen.Bounds.Height / 5);
                 Debug.WriteLine(GameState.CurrentState);
                 Time.Instance.TimeFlow = 0;
             }
             else if (Input.Instance.IsKeyUp(KeyCodes.P))
             {
                 GameState.CurrentState = GameState.LastState;
-                //SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
                 Time.Instance.TimeFlow = 1;
             }
+
+
+            //Test eingabe um Gamestate mt gui verknüpfungzu testen
+            if (Input.Instance.IsKeyUp(KeyCodes.M))
+            {
+                GameState.CurrentState = GameState.State.MainMenu;
+            }
+            if (Input.Instance.IsKeyUp(KeyCodes.I))
+            {
+                GameState.CurrentState = GameState.State.Playing;
+            }
+            if (Input.Instance.IsKeyUp(KeyCodes.H))
+            {
+                GameState.CurrentState = GameState.State.Highscore;
+            }
+
         }
 
         // is called when the window was resized

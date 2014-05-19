@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Data;
 using System.Windows.Forms;
 
 namespace Examples.Scharfschiessen
@@ -16,6 +17,7 @@ namespace Examples.Scharfschiessen
     {
         private State _currentState;
         public State LastState { get; set; }
+        internal Gui Gui;
     
         public State CurrentState
         {
@@ -26,8 +28,8 @@ namespace Examples.Scharfschiessen
                 {
                     LastState = _currentState;
                 }
-                _currentState = value; 
-                
+                _currentState = value;
+                Gui.SetGui(_currentState);
             }
         }
 
@@ -39,10 +41,12 @@ namespace Examples.Scharfschiessen
             Highscore
 
         }
-        public GameState()
+        public GameState(ref Gui g)
         {
+            Gui = g;
             _currentState = State.MainMenu;
-            Debug.WriteLine(CurrentState);
+            Gui.SetGui(_currentState);
+            //Debug.WriteLine(CurrentState);
         }
 
         
