@@ -33,7 +33,10 @@ namespace Examples.Scharfschiessen
         // is called on startup
         public override void Init()
         {
-            SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height/5, true, 0,0);
+
+
+            SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
+
             rot = 0;
             RC.ClearColor = new float4(0.9f, 0.9f, 0.9f, 1);
 
@@ -146,14 +149,28 @@ namespace Examples.Scharfschiessen
                 SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
                 Time.Instance.TimeFlow = 1;
             }
+            if (Input.Instance.IsKeyUp(KeyCodes.P) && GameState.CurrentState != GameState.State.HiddenPause)
+            {
+                GameState.CurrentState = GameState.State.HiddenPause;
+                //SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0,
+                  //  -Screen.PrimaryScreen.Bounds.Height / 5);
+                Debug.WriteLine(GameState.CurrentState);
+                Time.Instance.TimeFlow = 0;
+            }
+            else if (Input.Instance.IsKeyUp(KeyCodes.P))
+            {
+                GameState.CurrentState = GameState.LastState;
+                //SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
+                Time.Instance.TimeFlow = 1;
+            }
         }
 
         // is called when the window was resized
         public override void Resize()
         {
             RC.Viewport(0, 0, Width, Height);
-
             var aspectRatio = Width / (float)Height;
+
             RC.Projection = float4x4.CreatePerspectiveFieldOfView(MathHelper.PiOver4/5, aspectRatio, 1, 10000);
         }
 
