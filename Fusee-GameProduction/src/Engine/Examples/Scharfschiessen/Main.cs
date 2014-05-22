@@ -51,7 +51,7 @@ namespace Examples.Scharfschiessen
 
         internal void InitGame()
         {
-            Gui = new Gui();
+            Gui = new Gui(RC);
             GameState = new GameState(ref Gui);
         }
 
@@ -59,7 +59,7 @@ namespace Examples.Scharfschiessen
         public override void RenderAFrame()
         {
             RC.Clear(ClearFlags.Color | ClearFlags.Depth);
-
+            Gui.DrawGui();
 
 
             // move per mouse
@@ -178,6 +178,8 @@ namespace Examples.Scharfschiessen
             var aspectRatio = Width / (float)Height;
 
             RC.Projection = float4x4.CreatePerspectiveFieldOfView(MathHelper.PiOver4/5, aspectRatio, 1, 10000);
+
+            Gui.Refresh();
         }
 
         public static void Main()
