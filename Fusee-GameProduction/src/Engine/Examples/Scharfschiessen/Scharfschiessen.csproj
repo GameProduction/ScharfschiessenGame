@@ -48,6 +48,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Game.cs" />
+    <Compile Include="GameHandler.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Gui.cs" />
     <Compile Include="Main.cs" />

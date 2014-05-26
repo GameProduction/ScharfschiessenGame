@@ -42,8 +42,8 @@ namespace Examples.Scharfschiessen
             _guiDiffs[1] = new GUIButton(40, 0, 40, 20);
             _guiDiffs[2] = new GUIButton(0, 0, 40, 20);
 
-            Console.WriteLine("Höhe = " + height);
-            Console.WriteLine("Breite = " + width);
+            //Console.WriteLine("Höhe = " + height);
+            //Console.WriteLine("Breite = " + width);
 
         }
 

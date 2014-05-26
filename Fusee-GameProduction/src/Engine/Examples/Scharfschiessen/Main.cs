@@ -15,8 +15,9 @@ namespace Examples.Scharfschiessen
         internal Mesh Mesh;
         internal Mesh MeshCube;
 
-        internal GameState GameState;
-        internal Gui Gui;
+        private GameHandler GameHandler;
+       // internal GameState GameState;
+        //internal Gui Gui;
 
         private float rot;
         // variables for shader
@@ -44,64 +45,22 @@ namespace Examples.Scharfschiessen
             _spColor = MoreShaders.GetDiffuseColorShader(RC);
             _colorParam = _spColor.GetShaderParam("color");
 
-           
-            InitGame();
-            
+
+            GameHandler = new GameHandler(RC);
+
+
         }
 
-        internal void InitGame()
-        {
-            Gui = new Gui(RC);
-            GameState = new GameState(ref Gui);
-        }
 
         // is called once a frame
         public override void RenderAFrame()
         {
             RC.Clear(ClearFlags.Color | ClearFlags.Depth);
-            Gui.DrawGui();
 
+            GameHandler.Update();
+          
 
-            // move per mouse
-            if (Input.Instance.IsButton(MouseButtons.Left))
-            {
-                _angleVelHorz = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseX);
-                _angleVelVert = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseY);
-
-            }
-            else
-            {
-                var curDamp = (float)Math.Exp(-Damping * Time.Instance.DeltaTime);
-
-                _angleVelHorz *= curDamp;
-                _angleVelVert *= curDamp;
-            }
-
-            _angleHorz += _angleVelHorz;
-            _angleVert += _angleVelVert;
-
-
-            // move per keyboard
-            if (Input.Instance.IsKey(KeyCodes.Left))
-                _angleHorz -= RotationSpeed * (float)Time.Instance.DeltaTime;
-
-            if (Input.Instance.IsKey(KeyCodes.Right))
-                _angleHorz += RotationSpeed * (float)Time.Instance.DeltaTime;
-
-            if (Input.Instance.IsKey(KeyCodes.Up))
-                _angleVert -= RotationSpeed * (float)Time.Instance.DeltaTime;
-
-            if (Input.Instance.IsKey(KeyCodes.Down))
-                _angleVert += RotationSpeed * (float)Time.Instance.DeltaTime;
-
-            rotY = float4x4.CreateRotationY(_angleHorz);
-            rotX = float4x4.CreateRotationX(_angleVert);
-
-            var mtxRot = float4x4.CreateRotationX(_angleVert) * float4x4.CreateRotationY(_angleHorz);
-            var mtxCam = rotX * rotY * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0);
-            
-
-            RC.SetShader(_spColor);
+            /*RC.SetShader(_spColor);
 
             // first mesh
             // Row order notation
@@ -120,14 +79,14 @@ namespace Examples.Scharfschiessen
             RC.Render(Mesh);
 
        
-            TestInput();
+            TestInput();*/
 
             Present();
         }
 
         public void TestInput()
         {
-            //TODO: Kann das besser orgneisiert werden? vllt über die GameState Klasse 
+            /*TODO: Kann das besser orgneisiert werden? vllt über die GameState Klasse 
             if (Input.Instance.IsKeyUp(KeyCodes.B) && GameState.CurrentState != GameState.State.HiddenPause)
             {
                 GameState.CurrentState = GameState.State.HiddenPause;
@@ -154,7 +113,7 @@ namespace Examples.Scharfschiessen
                 Time.Instance.TimeFlow = 1;
             }
 
-
+            
             //Test eingabe um Gamestate mt gui verknüpfungzu testen
             if (Input.Instance.IsKeyUp(KeyCodes.M))
             {
@@ -167,7 +126,7 @@ namespace Examples.Scharfschiessen
             if (Input.Instance.IsKeyUp(KeyCodes.H))
             {
                 GameState.CurrentState = GameState.State.Highscore;
-            }
+            }*/
 
         }
 
@@ -179,7 +138,7 @@ namespace Examples.Scharfschiessen
 
             RC.Projection = float4x4.CreatePerspectiveFieldOfView(MathHelper.PiOver4/5, aspectRatio, 1, 10000);
 
-            Gui.Refresh();
+            GameHandler.Gui.Refresh();
         }
 
         public static void Main()

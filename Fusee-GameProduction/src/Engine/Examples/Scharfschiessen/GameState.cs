@@ -18,12 +18,17 @@ namespace Examples.Scharfschiessen
         private State _currentState;
         public State LastState { get; set; }
         internal Gui Gui;
-    
+        internal readonly GameHandler GameHandler;
+
         public State CurrentState
         {
             get { return _currentState; }
             set
             {
+                if (value == State.Playing && LastState != State.HiddenPause)
+                {
+                    GameHandler.StartGame();
+                }
                 if (value == State.HiddenPause)
                 {
                     LastState = _currentState;
@@ -41,9 +46,10 @@ namespace Examples.Scharfschiessen
             Highscore
 
         }
-        public GameState(ref Gui g)
+        public GameState(ref Gui g, GameHandler gameHandler)
         {
             Gui = g;
+            GameHandler = gameHandler;
             _currentState = State.MainMenu;
             Gui.SetGui(_currentState);
             //Debug.WriteLine(CurrentState);
