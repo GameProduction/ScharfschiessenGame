@@ -10,7 +10,7 @@ namespace Examples.Scharfschiessen
     public class GameHandler
     {
         internal readonly RenderContext Rc;
-
+        internal RenderCanvas RCanvas;
         internal Gui gui;
         public Gui Gui {
             get { return gui; }
@@ -21,10 +21,11 @@ namespace Examples.Scharfschiessen
         private GameState GameState;
         private Game Game;
 
-        public GameHandler(RenderContext rc)
+        public GameHandler(RenderContext rc, RenderCanvas rCanvas)
         {
+            RCanvas = rCanvas;
             this.Rc = rc;
-            this.gui = new Gui(Rc);
+            this.gui = new Gui(Rc, RCanvas);
             this.GameState = new GameState(ref gui, this);
         }
 

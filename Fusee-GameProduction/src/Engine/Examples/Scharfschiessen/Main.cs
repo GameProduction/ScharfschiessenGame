@@ -14,7 +14,7 @@ namespace Examples.Scharfschiessen
     {
         internal Mesh Mesh;
         internal Mesh MeshCube;
-
+        
         private GameHandler GameHandler;
        // internal GameState GameState;
         //internal Gui Gui;
@@ -23,7 +23,7 @@ namespace Examples.Scharfschiessen
         // variables for shader
         private ShaderProgram _spColor;
         private IShaderParam _colorParam;
-
+      
 
         private static float _angleHorz, _angleVert, _angleVelHorz, _angleVelVert;
         private float4x4 rotY = float4x4.Identity;
@@ -36,7 +36,7 @@ namespace Examples.Scharfschiessen
         public override void Init()
         {
             SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
-
+            
             rot = 0;
             RC.ClearColor = new float4(0.9f, 0.9f, 0.9f, 1);
 
@@ -46,7 +46,7 @@ namespace Examples.Scharfschiessen
             _colorParam = _spColor.GetShaderParam("color");
 
 
-            GameHandler = new GameHandler(RC);
+            GameHandler = new GameHandler(RC, this);
 
 
         }
