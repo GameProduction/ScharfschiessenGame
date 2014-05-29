@@ -84,51 +84,6 @@ namespace Examples.Scharfschiessen
             Present();
         }
 
-        public void TestInput()
-        {
-            /*TODO: Kann das besser orgneisiert werden? vllt über die GameState Klasse 
-            if (Input.Instance.IsKeyUp(KeyCodes.B) && GameState.CurrentState != GameState.State.HiddenPause)
-            {
-                GameState.CurrentState = GameState.State.HiddenPause;
-                SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height/5, true, 0,
-                    -Screen.PrimaryScreen.Bounds.Height/5);
-                Debug.WriteLine(GameState.CurrentState);
-                Time.Instance.TimeFlow = 0;
-            }
-            else if (Input.Instance.IsKeyUp(KeyCodes.B))
-            {
-                GameState.CurrentState = GameState.LastState;
-                SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
-                Time.Instance.TimeFlow = 1;
-            }
-            if (Input.Instance.IsKeyUp(KeyCodes.P) && GameState.CurrentState != GameState.State.HiddenPause)
-            {
-                GameState.CurrentState = GameState.State.HiddenPause;
-                Debug.WriteLine(GameState.CurrentState);
-                Time.Instance.TimeFlow = 0;
-            }
-            else if (Input.Instance.IsKeyUp(KeyCodes.P))
-            {
-                GameState.CurrentState = GameState.LastState;
-                Time.Instance.TimeFlow = 1;
-            }
-
-            
-            //Test eingabe um Gamestate mt gui verknüpfungzu testen
-            if (Input.Instance.IsKeyUp(KeyCodes.M))
-            {
-                GameState.CurrentState = GameState.State.MainMenu;
-            }
-            if (Input.Instance.IsKeyUp(KeyCodes.I))
-            {
-                GameState.CurrentState = GameState.State.Playing;
-            }
-            if (Input.Instance.IsKeyUp(KeyCodes.H))
-            {
-                GameState.CurrentState = GameState.State.Highscore;
-            }*/
-
-        }
 
         // is called when the window was resized
         public override void Resize()

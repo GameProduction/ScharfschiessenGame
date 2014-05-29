@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using Fusee.Engine;
 
 namespace Examples.Scharfschiessen
@@ -45,6 +46,7 @@ namespace Examples.Scharfschiessen
                 case GameState.State.Highscore:
                     break;
             }
+            Hide();
             TestInput();
             Gui.DrawGui();
         }
@@ -53,6 +55,36 @@ namespace Examples.Scharfschiessen
         {
             Debug.WriteLine("StartGame");
             Game = new Game(Rc);
+        }
+
+        
+        public void Hide()
+        {
+            if (Input.Instance.IsKeyUp(KeyCodes.B) && GameState.CurrentState != GameState.State.HiddenPause)
+            {
+                GameState.CurrentState = GameState.State.HiddenPause;
+                RCanvas.SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0,
+                    -Screen.PrimaryScreen.Bounds.Height / 5);
+                Debug.WriteLine(GameState.CurrentState);
+                Time.Instance.TimeFlow = 0;
+            }
+            else if (Input.Instance.IsKeyUp(KeyCodes.B))
+            {
+                GameState.CurrentState = GameState.LastState;
+                RCanvas.SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
+                Time.Instance.TimeFlow = 1;
+            }
+            if (Input.Instance.IsKeyUp(KeyCodes.P) && GameState.CurrentState != GameState.State.HiddenPause)
+            {
+                GameState.CurrentState = GameState.State.HiddenPause;
+                Debug.WriteLine(GameState.CurrentState);
+                Time.Instance.TimeFlow = 0;
+            }
+            else if (Input.Instance.IsKeyUp(KeyCodes.P))
+            {
+                GameState.CurrentState = GameState.LastState;
+                Time.Instance.TimeFlow = 1;
+            }
         }
 
         public void TestInput()
