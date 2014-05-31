@@ -10,26 +10,31 @@ namespace Examples.Scharfschiessen
 {
     public class GameObject
     {
-        internal readonly RenderContext Rc;
-        internal readonly Mesh Mesh;
-        private float3 position;
-        private float4x4 orientation;
+        private readonly RenderContext _rc;
+        private readonly Mesh _mesh;
+        public float3 Position { get; set; }
+    
+        private float4x4 _orientation;
+
+        public int Radius { get; set; }
+        private float _scale = 1;
 
         // variables for shader
         private ShaderProgram _spColor;
         private IShaderParam _colorParam;
 
-        public GameObject(RenderContext rc, Mesh mesh, float3 position, float4x4 orientation)
+        public GameObject(RenderContext rc, Mesh mesh, float3 position, float4x4 orientation, float scaleFactor)
         {
-            Rc = rc;
-            _spColor = MoreShaders.GetDiffuseColorShader(Rc);
+            _rc = rc;
+            _spColor = MoreShaders.GetDiffuseColorShader(_rc);
             _colorParam = _spColor.GetShaderParam("color");
-            Mesh = mesh;
-            this.orientation = orientation;
-            this.position = position;
+            _mesh = mesh;
+            _scale = scaleFactor;
+            _orientation = orientation;
+            Position = position;
         }
 
-        public void Update()
+        public virtual void Update()
         {
             //setPosition
             //setOrientaion
@@ -37,10 +42,10 @@ namespace Examples.Scharfschiessen
 
         public void Render(float4x4 camMtx)
         {
-            Rc.ModelView = camMtx * orientation * float4x4.CreateTranslation(position.x, position.y, position.z) * float4x4.Scale(0.2f);
-            Rc.SetShader(_spColor);
-            Rc.SetShaderParam(_colorParam, new float4(0.5f, 0.8f, 0, 1));
-            Rc.Render(Mesh);
+            _rc.ModelView = camMtx * _orientation * float4x4.CreateTranslation(Position.x, Position.y, Position.z) * float4x4.Scale(_scale);
+            _rc.SetShader(_spColor);
+            _rc.SetShaderParam(_colorParam, new float4(0.5f, 0.8f, 0, 1));
+            _rc.Render(_mesh);
         }
     }
 }

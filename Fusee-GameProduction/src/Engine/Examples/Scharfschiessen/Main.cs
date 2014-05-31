@@ -15,7 +15,7 @@ namespace Examples.Scharfschiessen
         internal Mesh Mesh;
         internal Mesh MeshCube;
         
-        private GameHandler GameHandler;
+        public GameHandler GameHandler;
        // internal GameState GameState;
         //internal Gui Gui;
 
@@ -96,10 +96,12 @@ namespace Examples.Scharfschiessen
             GameHandler.Gui.Refresh();
         }
 
+
         public static void Main()
         {
             var app = new Scharfschiessen();
             app.Run();
+          
         }
     }
 }

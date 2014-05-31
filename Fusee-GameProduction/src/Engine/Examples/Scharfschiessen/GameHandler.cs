@@ -20,7 +20,7 @@ namespace Examples.Scharfschiessen
 
        
         private GameState GameState;
-        private Game Game;
+        public Game Game;
 
         public GameHandler(RenderContext rc, RenderCanvas rCanvas)
         {
