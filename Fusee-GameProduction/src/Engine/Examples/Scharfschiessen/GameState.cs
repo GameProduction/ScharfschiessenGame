@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 using System.Windows.Forms;
+using Fusee.Engine;
 
 namespace Examples.Scharfschiessen
 {
@@ -25,6 +26,16 @@ namespace Examples.Scharfschiessen
             get { return _currentState; }
             set
             {
+                if (value == State.Playing || value == State.HiddenPause)
+                {
+                    Input.Instance.CursorVisible = false;
+                    Input.Instance.FixMouseAtCenter = true;   
+                }
+                else
+                {
+                    Input.Instance.CursorVisible = true;
+                    Input.Instance.FixMouseAtCenter = false;   
+                }
                 if (value == State.Playing && LastState != State.HiddenPause)
                 {
                     GameHandler.StartGame();

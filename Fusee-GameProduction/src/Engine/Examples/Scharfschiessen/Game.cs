@@ -19,23 +19,28 @@ namespace Examples.Scharfschiessen
         private float4x4 _mtxCam;
        
         private List<GameObject> LevelObjects = new List<GameObject>();
-        
+
+        public DynamicWorld World { get; set; }
+
         public Game(RenderContext rc)
-        {
+        {           
             _rc = rc;
-            CreateLevel();
-            _active = true;
+            CreateEnvironment();
             Debug.WriteLine("new Game");
-            //init
-            Level = 1;
-            
-            
+            LoadLevel(1);
         }
 
+        public void LoadLevel(int i)
+        {
+            _active = true;
+            DisposePhysic();
+            World = new DynamicWorld();
+            Level = i;
+        }
 
         private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
 
-        private void CreateLevel()
+        private void CreateEnvironment()
         {
             var go = new GameObject(_rc, mesh, new float3(0,0,250), float4x4.Identity);
             LevelObjects.Add(go);
@@ -56,10 +61,6 @@ namespace Examples.Scharfschiessen
                 }
 
                 PlayerInput();
-            }
-            else
-            {
-                //MenuInput();
             }
 
             foreach (GameObject t in LevelObjects)
@@ -139,6 +140,14 @@ namespace Examples.Scharfschiessen
             {
                 Debug.WriteLine("Reload");
                 //Weapon.Reaload();
+            }
+        }
+
+        public void DisposePhysic()
+        {
+            if (World != null)
+            {
+                World.Dispose();
             }
         }
     }
