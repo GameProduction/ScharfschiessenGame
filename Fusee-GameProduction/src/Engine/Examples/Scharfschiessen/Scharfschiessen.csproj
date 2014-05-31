@@ -48,6 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DbConnection.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameHandler.cs" />
     <Compile Include="GameObject.cs" />
@@ -82,6 +83,7 @@
   <ItemGroup>
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
