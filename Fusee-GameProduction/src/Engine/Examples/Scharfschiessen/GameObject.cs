@@ -13,18 +13,21 @@ namespace Examples.Scharfschiessen
         private readonly RenderContext _rc;
         private readonly Mesh _mesh;
         public float3 Position { get; set; }
-    
+
+        internal Game Game;
         private float4x4 _orientation;
 
         public int Radius { get; set; }
         private float _scale = 1;
 
         // variables for shader
+        private ShaderEffect _shaderEffect;
         private ShaderProgram _spColor;
         private IShaderParam _colorParam;
 
-        public GameObject(RenderContext rc, Mesh mesh, float3 position, float4x4 orientation, float scaleFactor)
+        public GameObject(RenderContext rc, Mesh mesh, float3 position, float4x4 orientation, float scaleFactor, Game game)
         {
+            this.Game = game;
             _rc = rc;
             _spColor = MoreShaders.GetDiffuseColorShader(_rc);
             _colorParam = _spColor.GetShaderParam("color");
@@ -40,11 +43,16 @@ namespace Examples.Scharfschiessen
             //setOrientaion
         }
 
+        public virtual void Collided()
+        {
+        }
+
         public void Render(float4x4 camMtx)
         {
             _rc.ModelView = camMtx * _orientation * float4x4.CreateTranslation(Position.x, Position.y, Position.z) * float4x4.Scale(_scale);
             _rc.SetShader(_spColor);
             _rc.SetShaderParam(_colorParam, new float4(0.5f, 0.8f, 0, 1));
+            _rc.SetRenderState(new RenderStateSet { AlphaBlendEnable = false, ZEnable = true });
             _rc.Render(_mesh);
         }
     }
