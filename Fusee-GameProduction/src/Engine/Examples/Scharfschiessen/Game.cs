@@ -6,6 +6,11 @@ using System.Linq;
 using System.Text;
 using Fusee.Engine;
 using Fusee.Math;
+using System.IO;
+using Fusee.Engine;
+using Fusee.Engine.SimpleScene;
+using Fusee.Math;
+using Fusee.Serialization;
 
 namespace Examples.Scharfschiessen
 {
@@ -17,52 +22,61 @@ namespace Examples.Scharfschiessen
         private double _countdown = 30;
         private bool _active;
         private float4x4 _mtxCam;
-       
+        private GameHandler _gameHandler;
         private List<GameObject> LevelObjects = new List<GameObject>();
         private Mesh _meshTomtato;
         private Mesh _meshSheep;
         public DynamicWorld World { get; set; }
         private SphereShape _sphereCollider;
         
-        public Game(RenderContext rc)
-        {           
+        public int Points { get; set; }
+
+        public Game(GameHandler gh,RenderContext rc)
+        {
+            _gameHandler = gh;
             _rc = rc;
             _meshTomtato = MeshReader.LoadMesh(@"Assets/Tomato.obj.model");
+            _meshSheep = MeshReader.LoadMesh(@"Assets/Cube.obj.model");
             CreateEnvironment();
-            
-            _meshSheep = MeshReader.LoadMesh(@"Assets/Cube.obj.model"); 
-            Debug.WriteLine("new Game");
+            Points = 0;
             LoadLevel(1);
         }
 
+       
+
         public void LoadLevel(int i)
         {
-            
             _active = true;
             DisposePhysic();
             World = new DynamicWorld();
             _sphereCollider = World.AddSphereShape(1);
             Level = i;
-
         }
 
         private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
 
         private void CreateEnvironment()
         {
-            var tomato = new Tomato(_rc, _meshTomtato, new float3(0, 0,50), float4x4.Identity, 0.2f);
-            LevelObjects.Add(tomato);
-            var go = new GameObject(_rc, mesh, new float3(0,0,250), float4x4.Identity, 0.2f);
+            /*var tomato = new Tomato(_rc, _meshTomtato, new float3(0, 0, 50), float4x4.Identity, 0.2f, this);
+            LevelObjects.Add(tomato);*/
+            var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float4x4.Identity, 0.2f, this);
             LevelObjects.Add(go);
-            var sheep = new Sheep(_rc, mesh, new float3(0, 0, 250), float4x4.Identity, 0.02f);
-            LevelObjects.Add(sheep);
+            var sheep1 = new Sheep(_rc, _meshSheep, new float3(50, 0, 100), float4x4.Identity, 0.02f, this);
+            LevelObjects.Add(sheep1);
+
+            var sheep2 = new Sheep(_rc, _meshSheep, new float3(-50, 0, 50), float4x4.Identity, 0.02f, this);
+            LevelObjects.Add(sheep2);
         }
 
 
         public void Update()
         {
-            if(_active)
+            if (_active)
             {
+                if (World != null)
+                {
+                    World.StepSimulation((float)Time.Instance.DeltaTime, (Time.Instance.FramePerSecondSmooth / 60), 1 / 60);
+                }
                 if (_countdown > 0)
                 {
                     _countdown -= Time.Instance.DeltaTime;
@@ -70,30 +84,53 @@ namespace Examples.Scharfschiessen
                 else
                 {
                     _active = false;
+                    _gameHandler.GameState.CurrentState = GameState.State.Highscore;
                 }
 
                 PlayerInput();
-                if (World != null)
-                {
-                    World.StepSimulation((float)Time.Instance.DeltaTime, (Time.Instance.FramePerSecondSmooth / 60), 1 / 60);
-                }
+                
             }
 
-            foreach (GameObject t in LevelObjects)
+            for (int t = 0; t < LevelObjects.Count; t++)
             {
-                t.Render(_mtxCam);
-                t.Update();
-                foreach (GameObject u in LevelObjects)
+                if (LevelObjects[t] != null)
                 {
-                    if(t != u && CheckForCollision(t, u))
+                    LevelObjects[t].Render(_mtxCam);
+                    LevelObjects[t].Update();
+                
+                
+                    for (int i = 0; i < LevelObjects.Count; i++)
                     {
-                        //Partikeleffect an t.Position
-                        //Punkte hochzählen
+                        if (LevelObjects[i] != null && LevelObjects[t] != LevelObjects[i] && CheckForCollision(LevelObjects[t], LevelObjects[i]))
+                        {
+                            LevelObjects[t].Collided();
+                            LevelObjects[i].Collided();
+                            var p1 = LevelObjects.IndexOf(LevelObjects[t]);
+                            var p2 = LevelObjects.IndexOf(LevelObjects[i]);
+                            LevelObjects[p1] = null;
+                            LevelObjects[p2] = null;
+                        }
                     }
                 }
-
             }
+            UpdateLevelObjectList();
         }
+
+        private void UpdateLevelObjectList()
+        {
+            List<GameObject> helper = new List<GameObject>();
+            foreach (var levelObject in LevelObjects)
+            {
+                if (levelObject != null)
+                {
+                    helper.Add(levelObject);
+                }
+            }
+            LevelObjects.Clear();
+            LevelObjects = helper;
+            helper = null;
+        }
+    
 
         public double GetTime()
         {
@@ -102,89 +139,64 @@ namespace Examples.Scharfschiessen
 
         private bool CheckForCollision(GameObject gameObject1, GameObject gameObject2)
         {
-            var dist = (gameObject1.Position - gameObject2.Position).Length;
-            if (dist <= gameObject1.Radius + gameObject2.Radius )
+            if (gameObject1 != null && gameObject2 != null)
             {
-                return true;
+                var dist = (gameObject1.Position - gameObject2.Position).Length;
+                if (dist <= gameObject1.Radius + gameObject2.Radius)
+                {
+                    return true;
+                }
             }
+                
             return false;
         }
 
         private static float _angleHorz, _angleVert, _angleVelHorz, _angleVelVert;
         private float4x4 _rotY = float4x4.Identity;
         private float4x4 _rotX = float4x4.Identity;
-        private const float RotationSpeed = 0.5f;
+        private const float RotationSpeed = 0.71f;
+
         public void PlayerInput()
         {
+            //if (Input.Instance.IsButton(MouseButtons.Left))
+           // {
+                _angleVelHorz = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseX);
+                _angleVelVert = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseY);
+            //}
             // move per mouse
-            _angleVelHorz = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseX);
-            _angleVelVert = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseY); 
-
+            //_angleVelHorz = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseX);
+            //_angleVelVert = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseY); 
+            
             _angleHorz += _angleVelHorz;
             _angleVert += _angleVelVert;
-
+            
             //Bewegungsferiheit an Fadenkeruz anpassen
-            if (_angleVert >= 0.2f)
+            if (_angleVert >= 0.5f)
             {
-                _angleVert = 0.2f;
+                _angleVert = 0.5f;
             }
-            if (_angleVert <= -0.05f)
+            if (_angleVert <= -0.1f)
             {
-                _angleVert = -0.05f;
+                _angleVert = -0.1f;
             }
-
-            // move per keyboard
-            if (Input.Instance.IsKey(KeyCodes.Left))
-                _angleHorz -= RotationSpeed * (float)Time.Instance.DeltaTime;
-
-            if (Input.Instance.IsKey(KeyCodes.Right))
-                _angleHorz += RotationSpeed * (float)Time.Instance.DeltaTime;
-
-            if (Input.Instance.IsKey(KeyCodes.Up))
-                _angleVert -= RotationSpeed * (float)Time.Instance.DeltaTime;
-
-            if (Input.Instance.IsKey(KeyCodes.Down))
-                _angleVert += RotationSpeed * (float)Time.Instance.DeltaTime;
 
             _rotY = float4x4.CreateRotationY(_angleHorz);
             _rotX = float4x4.CreateRotationX(_angleVert);
-
-           
-            _mtxCam = _rotX * _rotY * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0);
-
-
+            
+            var mtxCam = _rotX * _rotY * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); _mtxCam = mtxCam;
+            
             //Schiessen
-            if (Input.Instance.IsButton(MouseButtons.Left))
+            if (Input.Instance.IsKeyUp(KeyCodes.Space))
             {
-
-                Shoot();
-                /* if (Weapon.Magazin > 0)
-                 {
-                     Debug.WriteLine("Shoot");
-                 * Weapon.Shoot();
-                     //magazin--;
-                 }
-                 else
-                 {
-                     Debug.WriteLine("REALOAD!!!");
-                 }*/
-            }
-            //Nachladen
-            if (Input.Instance.IsButton(MouseButtons.Right))
-            {
-                Debug.WriteLine("Reload");
-                //Weapon.Reaload();
+                Shoot(mtxCam);
             }
         }
-
-        
-        public void Shoot()
+       
+        public void Shoot(float4x4 camMtx)
         {
-            Debug.WriteLine("Shoot");
-
-            var tomato = new Tomato(_rc, _meshTomtato, new float3(0, 10, 0), float4x4.Identity, 0.01f);
+            var tomato = new Tomato(_rc, _meshTomtato, new float3(camMtx.Row3), float4x4.Identity, 0.01f, this);
             LevelObjects.Add(tomato);
-            tomato.ShootTomato(World, _mtxCam, _sphereCollider);
+            tomato.ShootTomato(World, camMtx, _sphereCollider);
         }
 
         public void DisposePhysic()

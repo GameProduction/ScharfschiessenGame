@@ -16,12 +16,13 @@ namespace Examples.Scharfschiessen
         private float _distance;
 
 
-        public Sheep(RenderContext rc, Mesh mesh, float3 position, float4x4 orientation, float scaleFactor)
-            : base(rc, mesh, position, orientation, scaleFactor)
+        public Sheep(RenderContext rc, Mesh mesh, float3 position, float4x4 orientation, float scaleFactor, Game game)
+            : base(rc, mesh, position, orientation, scaleFactor, game)
         {
             _distance = position.Length;
             Speed = 1;
             Radius = 2;
+            Color = new float4(0.5f, 0.8f, 0.8f, 1);
         }
 
         public override void Update()
@@ -32,12 +33,17 @@ namespace Examples.Scharfschiessen
 
         public void Move()
         {
-            Position = Position*float4x4.CreateRotationY(0.001f)*Speed;
+           // Position = Position*float4x4.CreateRotationY(0.001f)*Speed;
         }
 
-        public void Collided()
+        public override void Collided()
         {
-            Debug.WriteLine("Collided");
+            Debug.WriteLine("Sheep Collided");
+            base.Collided();
+            //Punkte ++
+            Game.Points ++;
+            //Destroy
+
         }
     }
 }

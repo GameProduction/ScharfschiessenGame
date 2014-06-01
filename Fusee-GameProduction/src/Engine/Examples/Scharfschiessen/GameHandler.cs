@@ -16,10 +16,11 @@ namespace Examples.Scharfschiessen
         public Gui Gui {
             get { return gui; }
         }
-    
 
-       
-        private GameState GameState;
+
+
+        public GameState GameState{ get; private set; }
+    
         public Game Game;
 
         public GameHandler(RenderContext rc, RenderCanvas rCanvas)
@@ -46,15 +47,15 @@ namespace Examples.Scharfschiessen
                 case GameState.State.Highscore:
                     break;
             }
-            Hide();
-            TestInput();
+            //Hide();
+            //TestInput();
             Gui.DrawGui();
         }
 
         public void StartGame()
         {
             Debug.WriteLine("StartGame");
-            Game = new Game(Rc);
+            Game = new Game(this,Rc);
         }
 
         
