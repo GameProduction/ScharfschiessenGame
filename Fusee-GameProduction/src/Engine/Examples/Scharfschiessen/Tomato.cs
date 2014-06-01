@@ -22,7 +22,7 @@ namespace Examples.Scharfschiessen
 
         public void ShootTomato(DynamicWorld world, float4x4 mtxcam, SphereShape spherecollider)
         {
-            _tomatoRB = world.AddRigidBody(1, new float3(mtxcam.Row3), float3.Zero, spherecollider);
+            _tomatoRB = world.AddRigidBody(1, new float3(0,1.5f,0), float3.Zero, spherecollider);
 
             float3 alt = new float3(mtxcam.Column3);
             mtxcam *= float4x4.CreateTranslation(-alt);
@@ -30,7 +30,7 @@ namespace Examples.Scharfschiessen
             float3 one = new float3(0, 0, 1);
             float3 to;
             float3.TransformVector(ref one, ref mtxcam, out to);
-            float impuls = 80;
+            float impuls = 150;
 
             _tomatoRB.ApplyCentralImpulse = to * impuls;
         }

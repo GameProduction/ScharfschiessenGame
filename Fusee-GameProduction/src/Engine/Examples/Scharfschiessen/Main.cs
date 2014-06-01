@@ -18,13 +18,11 @@ namespace Examples.Scharfschiessen
       // is called on startup
         public override void Init()
         {
-            SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
-           
+            SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height/5, true, 0, 0);
+            
             RC.ClearColor = new float4(0.9f, 0.9f, 0.9f, 1);
 
             GameHandler = new GameHandler(RC, this);
-
-
         }
 
 
@@ -34,6 +32,8 @@ namespace Examples.Scharfschiessen
             RC.Clear(ClearFlags.Color | ClearFlags.Depth);
 
             GameHandler.Update();
+            GameHandler.TestInput();
+            GameHandler.Hide();
           
             Present();
         }

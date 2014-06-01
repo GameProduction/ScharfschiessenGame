@@ -29,7 +29,13 @@ namespace Examples.Scharfschiessen
         public DynamicWorld World { get; set; }
         private SphereShape _sphereCollider;
         
+        // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
+        // Zeigt verbleibende Zeit an
+        public double GetTime()
+        {
+            return _countdown;
+        }
 
         public Game(GameHandler gh,RenderContext rc)
         {
@@ -109,6 +115,7 @@ namespace Examples.Scharfschiessen
                             var p2 = LevelObjects.IndexOf(LevelObjects[i]);
                             LevelObjects[p1] = null;
                             LevelObjects[p2] = null;
+                            
                         }
                     }
                 }
@@ -131,12 +138,6 @@ namespace Examples.Scharfschiessen
             helper = null;
         }
     
-
-        public double GetTime()
-        {
-            return _countdown;
-        }
-
         private bool CheckForCollision(GameObject gameObject1, GameObject gameObject2)
         {
             if (gameObject1 != null && gameObject2 != null)
@@ -182,8 +183,9 @@ namespace Examples.Scharfschiessen
 
             _rotY = float4x4.CreateRotationY(_angleHorz);
             _rotX = float4x4.CreateRotationX(_angleVert);
-            
-            var mtxCam = _rotX * _rotY * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); _mtxCam = mtxCam;
+            var mtxRot = float4x4.CreateRotationX(_angleVert) * float4x4.CreateRotationY(_angleHorz);
+
+            var mtxCam = mtxRot * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); _mtxCam = mtxCam;
             
             //Schiessen
             if (Input.Instance.IsKeyUp(KeyCodes.Space))

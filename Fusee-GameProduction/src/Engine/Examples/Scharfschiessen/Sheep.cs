@@ -33,17 +33,14 @@ namespace Examples.Scharfschiessen
 
         public void Move()
         {
-           // Position = Position*float4x4.CreateRotationY(0.001f)*Speed;
+            Position = Position*float4x4.CreateRotationY(0.001f)*Speed;
         }
 
         public override void Collided()
         {
             Debug.WriteLine("Sheep Collided");
             base.Collided();
-            //Punkte ++
             Game.Points ++;
-            //Destroy
-
         }
     }
 }
