@@ -74,7 +74,7 @@ PluginB *g_pi = NULL;
 
 Bool PluginStart(void)			// the main function C4D calls to start the plugin - nearly as a main
 {
-	// MessageDialog("'Cinema 4D' - Started with plugin in developement");					// The message in the popup window
+	MessageDialog("'Cinema 4D' - Started with plugin in developement");					// The message in the popup window
 
 	pluginStarted = true;
 
@@ -299,7 +299,7 @@ void PluginEnd(void)	// will be called when the plugin is unloaded from C4D
 	}
 }
 
-Bool PluginMessage(Int32 id, void *data)		// allows you to receive plugin messages from C4D or other plugins - so the different plugins can communicate - i think error messages might also be catched here
+Bool PluginMessage(LONG id, void *data)		// allows you to receive plugin messages from C4D or other plugins - so the different plugins can communicate - i think error messages might also be catched here
 {
 	switch (id)
 	{
@@ -309,7 +309,7 @@ Bool PluginMessage(Int32 id, void *data)		// allows you to receive plugin messag
 			char sMonoDebugOption[128] = "";
 			BOOL tryMono = false;
 			
-			Int32 i;
+			LONG i;
 			for (i=0;i<args->argc;i++)
 			{
 				if (!args->argv[i]) continue;
@@ -333,7 +333,7 @@ Bool PluginMessage(Int32 id, void *data)		// allows you to receive plugin messag
 				else if (!strcmp(args->argv[i],"-plugincrash"))
 				{
 					args->argv[i] = NULL;
-					*((Int32*)0) = 1234;
+					*((LONG*)0) = 1234;
 				}
 			}
 			/*

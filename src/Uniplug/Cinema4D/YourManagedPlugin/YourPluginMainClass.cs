@@ -23,7 +23,6 @@ namespace YourManagedPlugin
     // The main class for your plugin
     class YourManagedPluginClass : CommandData
     {
-        public YourManagedPluginClass() : base(false) { }
 
         /* Your Executeable code for the plugin
          * This is your main function

@@ -52,24 +52,16 @@
 /* Includes the header in the wrapper code */
 #include "c4d.h"
 #include "lib_ca.h"
-#include "lib_description.h"
-#include "c4d_file.h"
 #include "c4d_graphview.h"
 #include "c4d_operatordata.h"
 #include "c4d_operatorplugin.h"
-#include "c4d_filterdata.h"
-#include "c4d_filterplugin.h"
-#include "operatingsystem.h"
 #include "c4d_basetag.h"
-#include "c4d_baseselect.h" //NEU
 #include "c4d_basebitmap.h"
 #include "c4d_nodedata.h"
 #include "gvdynamic.h"
 #include "gvobject.h"
 #include "gvmath.h"
 #include "ObjectDataM.h"
-#include "c4d_customdatatype.h"//neu
-#include "customgui_inexclude.h"//neu
 
 // POD (plain old datatype = no construcors or methods) version of C4D's Vector.
 // We need this type as return values for swig-generated C++ stubs. If we use
@@ -208,7 +200,6 @@ class String;
 %apply bool   { Bool }
 %apply double { Real }
 %apply double { LReal }
-%apply float { SReal }
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -220,9 +211,8 @@ class String;
 //
 // <polymorphic-downcasts>
 
-// for BaseTag derivatives tags
 %pragma(csharp) imclasscode=%{
-  public static BaseTag InstantiateConcreteTag(IntPtr cPtr, bool owner)
+  public static BaseTag InstantiateConcreteObject(IntPtr cPtr, bool owner)
   {
     BaseTag ret = null;
     if (cPtr == IntPtr.Zero) 
@@ -253,48 +243,9 @@ BaseTag *
 /* Insert here every other abstract type returned in the C++ API */
 {
     IntPtr cPtr = $imcall;
-    $csclassname ret = ($csclassname) $modulePINVOKE.InstantiateConcreteTag(cPtr, $owner);$excode
-    return ret;
-}
-
-// for BaseObject derivatives
-%pragma(csharp) imclasscode=%{
-  public static BaseObject InstantiateConcreteObject(IntPtr cPtr, bool owner)
-  {
-    BaseObject ret = null;
-    if (cPtr == IntPtr.Zero) 
-	{
-      return ret;
-    }
-    int type = $modulePINVOKE.C4DAtom_GetType(new HandleRef(null, cPtr));
-    switch (type) 
-	{
-       case 0:
-         ret = new BaseObject(cPtr, owner);
-         break;
-	  case 5100: // Opolygon
-		 ret = new PolygonObject(cPtr, owner);
-		 break;
-      // Repeat for every other concrete type.
-      default:
-	  //changed from the debug output to return a BaseTag object
-        ret = new BaseObject(cPtr, owner);
-        break;
-    }
-    return ret;
-  }
-%}
-
-%typemap(csout, excode=SWIGEXCODE)
-BaseObject *
-/* Insert here every other abstract type returned in the C++ API */
-{
-    IntPtr cPtr = $imcall;
     $csclassname ret = ($csclassname) $modulePINVOKE.InstantiateConcreteObject(cPtr, $owner);$excode
     return ret;
 }
-
-
 // </polymorphic-downcasts>
 
 
@@ -407,35 +358,35 @@ BaseObject *
 // %ignore __MEDIZINI;
 // %include "ge_math.h";
 
-// Map Vector* and &   TO   ref Fusee.Math.double3
-%typemap(cstype, out="$csclassname") Vector *, Vector & "ref Fusee.Math.double3 /* Vector*&_cstype */"
+// Map Vector* and &   TO   ref Fusee.Math.Core.Vector3D
+%typemap(cstype, out="$csclassname") Vector *, Vector & "ref Fusee.Math.Core.Vector3D /* Vector*&_cstype */"
 %typemap(csin) Vector *, Vector & "ref $csinput /* Vector*&_csin */"
-%typemap(imtype, out="IntPtr") Vector *, Vector & "ref Fusee.Math.double3 /* Vector*&_imtype */"
+%typemap(imtype, out="IntPtr") Vector *, Vector & "ref Fusee.Math.Core.Vector3D /* Vector*&_imtype */"
 %typemap(in) Vector *, Vector & "$1 = ($1_ltype)$input; /* Vector*&_in */"
 %typemap(csdirectorin, 
-   pre="    Fusee.Math.double3 vec_$iminput;\n"
-       "    unsafe {vec_$iminput = Fusee.Math.ArrayConvert.ArrayDoubleTodouble3((double *)$iminput);}\n"
+   pre="    Fusee.Math.Core.Vector3D vec_$iminput;\n"
+       "    unsafe {vec_$iminput = Fusee.Math.ArrayConversion.Convert.ArrayDoubleToVector3D((double *)$iminput);}\n"
        "    /* Vector*&_csdirectorin_pre */", 
-   post="        unsafe {Fusee.Math.ArrayConvert.double3ToArrayDouble(vec_$iminput, (double *)$iminput);}\n"
+   post="        unsafe {Fusee.Math.ArrayConversion.Convert.Vector3DToArrayDouble(vec_$iminput, (double *)$iminput);}\n"
         "        /* Vector*&_csdirectorin_post */"
   ) Vector *, Vector &
   "ref vec_$iminput /* Vector*&_csdirectorin */"
 %typemap(csdirectorout) Vector *, Vector & "$cscall /* Vector*&_csdirectorout */"
 
-// Map const Vector &  TO  Fusee.Math.double3
-%typemap(cstype, out="Fusee.Math.double3 /* constVector&_cstype_out */") const Vector & "Fusee.Math.double3 /* constVector&_cstype */"
+// Map const Vector &  TO  Fusee.Math.Core.Vector3D
+%typemap(cstype, out="Fusee.Math.Core.Vector3D /* constVector&_cstype_out */") const Vector & "Fusee.Math.Core.Vector3D /* constVector&_cstype */"
 %typemap(csin) const Vector & "ref $csinput /* constVector&_csin */"
-%typemap(imtype, out="IntPtr /* constVector&_imtype_out */") const Vector & "ref Fusee.Math.double3 /* constVector&_imtype */"
+%typemap(imtype, out="IntPtr /* constVector&_imtype_out */") const Vector & "ref Fusee.Math.Core.Vector3D /* constVector&_imtype */"
 %typemap(csout, excode=SWIGEXCODE) const Vector &
 %{ {  /* <constVector&_csout> */
       IntPtr p_ret = $imcall;$excode
-      Fusee.Math.double3 ret;
-      unsafe {ret = Fusee.Math.ArrayConvert.ArrayDoubleTodouble3((double *)p_ret);}
+      Fusee.Math.Core.Vector3D ret;
+      unsafe {ret = Fusee.Math.ArrayConversion.Convert.ArrayDoubleToVector3D((double *)p_ret);}
       return ret;
    } /* </constVector&_csout> */ %}
 %typemap(csdirectorin, 
-   pre="    Fusee.Math.double3 vec_$iminput;\n"
-       "    unsafe {vec_$iminput = Fusee.Math.ArrayConvert.ArrayDoubleTodouble3((double *)$iminput);}\n"
+   pre="    Fusee.Math.Core.Vector3D vec_$iminput;\n"
+       "    unsafe {vec_$iminput = Fusee.Math.ArrayConversion.Convert.ArrayDoubleToVector3D((double *)$iminput);}\n"
        "    /* constVector&_csdirectorin_pre */", 
    post="        /* no re-conversion because of const declaration */\n"
         "        /* constVector&_csdirectorin_post */"
@@ -443,14 +394,14 @@ BaseObject *
   "vec_$iminput /* Vector*&_csdirectorin */"
 
 
-// Map Vector   TO   Fusee.Math.double3
-%typemap(cstype, out="Fusee.Math.double3 /* Vector_cstype_out */") Vector "Fusee.Math.double3 /* Vectorcstype */"
+// Map Vector   TO   Fusee.Math.Core.Vector3D
+%typemap(cstype, out="Fusee.Math.Core.Vector3D /* Vector_cstype_out */") Vector "Fusee.Math.Core.Vector3D /* Vectorcstype */"
 %typemap(csout, excode=SWIGEXCODE) Vector 
 %{ {  /* <Vector_csout> */
-      Fusee.Math.double3 ret = $imcall;$excode
+      Fusee.Math.Core.Vector3D ret = $imcall;$excode
       return ret;
    } /* <Vector_csout> */ %}
-%typemap(imtype, out="Fusee.Math.double3 /* Vector_imtype_out */") Vector "Fusee.Math.double3 /* Vector_imtype */"
+%typemap(imtype, out="Fusee.Math.Core.Vector3D /* Vector_imtype_out */") Vector "Fusee.Math.Core.Vector3D /* Vector_imtype */"
 %typemap(ctype, out="Vector_POD /* Vector_ctype_out */") Vector "Vector /* Vector_ctype */"
 %typemap(directorout) Vector
 %{ /* <Vector_directorout> */
@@ -490,19 +441,19 @@ BaseObject *
    /* <Vector_csvarout> */
    get
    {  
-      Fusee.Math.double3 ret = $imcall;$excode
+      Fusee.Math.Core.Vector3D ret = $imcall;$excode
       return ret;
    } /* <Vector_csvarout> */ %}
 
 
-// Map Matrix* and &   TO   ref Fusee.Math.double4x4
-%typemap(cstype, out="$csclassname") Matrix *, Matrix & "ref Fusee.Math.double4x4 /* Matrix*&_cstype */"
+// Map Matrix* and &   TO   ref Fusee.Math.Core.Matrix4D
+%typemap(cstype, out="$csclassname") Matrix *, Matrix & "ref Fusee.Math.Core.Matrix4D /* Matrix*&_cstype */"
 %typemap(csin, 
    pre="    double[] adbl_$csinput;\n"
-       "    unsafe {adbl_$csinput = Fusee.Math.ArrayConvert.double4x4ToArrayDoubleC4DLayout($csinput);"
+       "    unsafe {adbl_$csinput = Fusee.Math.ArrayConversion.Convert.Matrix4DToArrayDoubleC4DLayout($csinput);"
        "    fixed (double *pdbl_$csinput = adbl_$csinput) {\n"
        "    /* Matrix*&_csin_pre */", 
-   post="        $csinput = Fusee.Math.ArrayConvert.ArrayDoubleC4DLayoutTodouble4x4(pdbl_$csinput);\n"
+   post="        $csinput = Fusee.Math.ArrayConversion.Convert.ArrayDoubleC4DLayoutToMatrix4D(pdbl_$csinput);\n"
         "        /* Matrix*&_csin_post */",
    terminator="} } /* Matrix*&_csin_terminator */"
   ) Matrix *, Matrix &
@@ -510,16 +461,16 @@ BaseObject *
 %typemap(imtype, out="IntPtr") Matrix *, Matrix & "IntPtr /* Matrix*&_imtype */"
 %typemap(in) Matrix *, Matrix & "$1 = ($1_ltype)$input; /* Matrix*&_in */"
 %typemap(csdirectorin, 
-   pre="    Fusee.Math.double4x4 mtx_$iminput;\n"
-       "    unsafe {mtx_$iminput = Fusee.Math.ArrayConvert.ArrayDoubleC4DLayoutTodouble4x4((double *)$iminput);}\n"
+   pre="    Fusee.Math.Core.Matrix4D mtx_$iminput;\n"
+       "    unsafe {mtx_$iminput = Fusee.Math.ArrayConversion.Convert.ArrayDoubleC4DLayoutToMatrix4D((double *)$iminput);}\n"
        "    /* Matrix*&_csdirectorin_pre */", 
-   post="        unsafe {Fusee.Math.ArrayConvert.double4x4ToArrayDoubleC4DLayout(mtx_$iminput, (double *)$iminput);}\n"
+   post="        unsafe {Fusee.Math.ArrayConversion.Convert.Matrix4DToArrayDoubleC4DLayout(mtx_$iminput, (double *)$iminput);}\n"
         "        /* Matrix*&_csdirectorin_post */"
   ) Matrix *, Matrix &
   "ref mtx_$iminput /* Matrix*&_csdirectorin */"
 %typemap(csdirectorout) Matrix *, Matrix & "$cscall /* Matrix*&_csdirectorout */"
 
-// Map Matrix   TO   Fusee.Math.double4x4
+// Map Matrix   TO   Fusee.Math.Core.Matrix4D
 %typemap(ctype) Matrix "Matrix_POD /* Matrix_ctype */"
 %typemap(out) Matrix 
 %{ /* <Matrix_out> */ 
@@ -530,10 +481,10 @@ BaseObject *
    $1 = *((Matrix *)(&$input)); 
    /* </Matrix_in> */%}
 
-%typemap(cstype) Matrix "Fusee.Math.double4x4 /* Matrix_cstype */"
+%typemap(cstype) Matrix "Fusee.Math.Core.Matrix4D /* Matrix_cstype */"
 %typemap(csin, 
    pre="    double[] adbl_$csinput;\n"
-       "    unsafe {adbl_$csinput = Fusee.Math.ArrayConvert.double4x4ToArrayDoubleC4DLayout($csinput);"
+       "    unsafe {adbl_$csinput = Fusee.Math.ArrayConversion.Convert.Matrix4DToArrayDoubleC4DLayout($csinput);"
        "    fixed (double *pdbl_$csinput = adbl_$csinput) {\n"
        "    /* Matrix_csin_pre */", 
    terminator="} } /* Matrix_csin_terminator */"
@@ -542,15 +493,15 @@ BaseObject *
 %typemap(csout, excode=SWIGEXCODE) Matrix 
 %{ {  /* <Matrix_csout> */
       C34M ret_c34m = $imcall;$excode
-	  Fusee.Math.double4x4 ret;
-	  unsafe {ret = Fusee.Math.ArrayConvert.ArrayDoubleC4DLayoutTodouble4x4(ret_c34m.m);}
+	  Fusee.Math.Core.Matrix4D ret;
+	  unsafe {ret = Fusee.Math.ArrayConversion.Convert.ArrayDoubleC4DLayoutToMatrix4D(ret_c34m.m);}
       return ret;
    } /* </Matrix_csout> */ %}
 %typemap(imtype, out="C34M /* Matrix_imtype_out */") Matrix "IntPtr /* Matrix_imtype */"
 // %typemap(in) Matrix "$1 = ($1_ltype)$input; /* Matrix_in */"
 %typemap(csdirectorin, 
-   pre="    Fusee.Math.double4x4 mtx_$iminput;\n"
-       "    unsafe {mtx_$iminput = Fusee.Math.ArrayConvert.ArrayDoubleC4DLayoutTodouble4x4((double *)$iminput);}\n"
+   pre="    Fusee.Math.Core.Matrix4D mtx_$iminput;\n"
+       "    unsafe {mtx_$iminput = Fusee.Math.ArrayConversion.Convert.ArrayDoubleC4DLayoutToMatrix4D((double *)$iminput);}\n"
        "    /* Matrix_csdirectorin_pre */"
   ) Matrix
   "mtx_$iminput /* Matrix_csdirectorin */"
@@ -562,7 +513,7 @@ BaseObject *
        double[] adbl_$csinput;
        unsafe 
 	   {
-		   adbl_$csinput = Fusee.Math.ArrayConvert.double4x4ToArrayDoubleC4DLayout($csinput);
+		   adbl_$csinput = Fusee.Math.ArrayConversion.Convert.Matrix4DToArrayDoubleC4DLayout($csinput);
            fixed (double *pdbl_$csinput = adbl_$csinput) 
 		   {
               $imcall;$excode
@@ -574,19 +525,19 @@ BaseObject *
    get
    {  
       C34M ret_c34m = $imcall;$excode
-	  Fusee.Math.double4x4 ret;
-	  unsafe {ret = Fusee.Math.ArrayConvert.ArrayDoubleC4DLayoutTodouble4x4(ret_c34m.m);}
+	  Fusee.Math.Core.Matrix4D ret;
+	  unsafe {ret = Fusee.Math.ArrayConversion.Convert.ArrayDoubleC4DLayoutToMatrix4D(ret_c34m.m);}
       return ret;   
    } /* <Matrix_csvarout> */ %}
 
-// Map  const Matrix&  TO   Fusee.Math. (currently only if occurring as return value)
-%typemap(cstype, out="Fusee.Math.double4x4 /* constMatrix&_cstype_out */") const Matrix& "ref Fusee.Math.double4x4 /* constMatrix&_cstype */"
+// Map  const Matrix&  TO   Fusee.Math.Core. (currently only if occurring as return value)
+%typemap(cstype, out="Fusee.Math.Core.Matrix4D /* constMatrix&_cstype_out */") const Matrix& "ref Fusee.Math.Core.Matrix4D /* constMatrix&_cstype */"
 %typemap(csin, 
    pre="    double[] adbl_$csinput;\n"
-       "    unsafe {adbl_$csinput = Fusee.Math.ArrayConvert.double4x4ToArrayDoubleC4DLayout($csinput);"
+       "    unsafe {adbl_$csinput = Fusee.Math.ArrayConversion.Convert.Matrix4DToArrayDoubleC4DLayout($csinput);"
        "    fixed (double *pdbl_$csinput = adbl_$csinput) {\n"
        "    /* constMatrix&_csin_pre */", 
-   post="        // NOP $csinput = Fusee.Math.ArrayConvert.ArrayDoubleC4DLayoutTodouble4x4(pdbl_$csinput);\n"
+   post="        // NOP $csinput = Fusee.Math.ArrayConversion.Convert.ArrayDoubleC4DLayoutToMatrix4D(pdbl_$csinput);\n"
         "        /* constMatrix&_csin_post */",
    terminator="} } /* constMatrix&_csin_terminator */"
   ) const Matrix&
@@ -594,17 +545,17 @@ BaseObject *
 %typemap(csout, excode=SWIGEXCODE) const Matrix&
 %{ {  /* <constMatrix&_csout> */
       IntPtr p_ret = $imcall;$excode
-      Fusee.Math.double4x4 ret;
-      unsafe {ret = Fusee.Math.ArrayConvert.ArrayDoubleC4DLayoutTodouble4x4((double *)p_ret);}
+      Fusee.Math.Core.Matrix4D ret;
+      unsafe {ret = Fusee.Math.ArrayConversion.Convert.ArrayDoubleC4DLayoutToMatrix4D((double *)p_ret);}
       return ret;
    } /* </constMatrix&_csout> */ %}
 %typemap(imtype, out="IntPtr /* constMatrix&_imtype_out */") const Matrix& "IntPtr /* constMatrix&_imtype */"
 %typemap(in) const Matrix& "$1 = ($1_ltype)$input; /* constMatrix&_in */"
 %typemap(csdirectorin, 
-   pre="    Fusee.Math.double4x4 mtx_$iminput;\n"
-       "    unsafe {mtx_$iminput = Fusee.Math.ArrayConvert.ArrayDoubleC4DLayoutTodouble4x4((double *)$iminput);}\n"
+   pre="    Fusee.Math.Core.Matrix4D mtx_$iminput;\n"
+       "    unsafe {mtx_$iminput = Fusee.Math.ArrayConversion.Convert.ArrayDoubleC4DLayoutToMatrix4D((double *)$iminput);}\n"
        "    /* constMatrix&_csdirectorin_pre */", 
-   post="        unsafe {Fusee.Math.ArrayConvert.double4x4ToArrayDoubleC4DLayout(mtx_$iminput, (double *)$iminput);}\n"
+   post="        unsafe {Fusee.Math.ArrayConversion.Convert.Matrix4DToArrayDoubleC4DLayout(mtx_$iminput, (double *)$iminput);}\n"
         "        /* constMatrix&_csdirectorin_post */"
   ) const Matrix&
   "ref mtx_$iminput /* constMatrix&_csdirectorin */"
@@ -631,167 +582,9 @@ BaseObject *
 %include "c4d_thread.h";
 
 //////////////////////////////////////////////////////////////////
-// c4d_file.h
-%include "c4d_file.h";
-
-//////////////////////////////////////////////////////////////////
 // lib_description.h
 %ignore DescriptionLib;
 %include "lib_description.swig.h";
-
-
-//////////////////////////////////////////////////////////////////
-//NEW
-%extend DescID
-{
-	const DescLevel &GetAt(LONG pos) const { return (*self)[pos]; }
-}
-
-//////////////////////////////////////////////////////////////////
-// c4d_basebitmap.h
-%include "c4d_basebitmap.swig.h";
-%extend BaseBitmap
-{
-	static BaseBitmap *AutoBitmap(const String &str)
-	{
-		BaseBitmap *bmp=BaseBitmap::Alloc();
-		if (!bmp) 
-			return NULL;
-				
-		char *debug = str.GetCStringCopy();
-
-		if (bmp->Init(str)!=IMAGERESULT_OK)
-		{
-			BaseBitmap::Free(bmp);
-			return NULL;
-		}
-		return bmp;
-	}
-
-	static BaseBitmap *AutoBitmap(LONG id)
-	{
-		BaseBitmap *bmp = InitResourceBitmap(id);
-		return bmp;
-	}
-};
-
-//////////////////////////////////////////////////////////////////
-// c4d_gedata.h
-%include "c4d_gedata.swig.h"
-
-//////////////////////////////////////////////////////////////////
-// c4d_nodedata.h
-%ignore AutoBitmap;
-
-// %cs_callback(DataAllocator, NodeDataAllocator)
-// %define %cs_callback(TYPE, CSTYPE) 
-%typemap(ctype) DataAllocator*, DataAllocator*& "void* /* DataAllocator*_ctype */" 
-%typemap(in) DataAllocator*  %{ $1 = (DataAllocator*)$input; /* DataAllocator*_in */%} 
-%typemap(in) DataAllocator*& %{ $1 = (DataAllocator**)&$input;  /* DataAllocator*&_in */%} 
-%typemap(imtype, out="IntPtr") DataAllocator*, DataAllocator*& "NodeDataAllocator /* DataAllocator*_imtype */" 
-%typemap(cstype, out="IntPtr") DataAllocator*, DataAllocator*& "NodeDataAllocator /* DataAllocator*_cstype */" 
-%typemap(csin) DataAllocator*, DataAllocator*& "$csinput /* DataAllocator*_csin */" 
-// %enddef 
-
-%include "c4d_nodedata.h";
-
-//////////////////////////////////////////////////////////////////
-// obase.h
-%include "obase.h";
-
-
-//////////////////////////////////////////////////////////////////
-// "c4d_baselist.h"
-%include "c4d_baselist.h";
-
-//////////////////////////////////////////////////////////////////
-// c4d_baseobject.h
-%extend PointObject
-{
-	Vector GetPointAt(LONG inx)
-	{
-		return self->GetPointR()[inx];
-	}
-	void SetPointAt(LONG inx, Vector v)
-	{
-		self->GetPointW()[inx] = v;
-	}
-	
-}
-%extend PolygonObject
-{
-	Vector GetPointAt(LONG inx)
-	{
-		return self->GetPointR()[inx];
-	}
-	void SetPointAt(LONG inx, Vector v)
-	{
-		self->GetPointW()[inx] = v;
-	}
-	CPolygon GetPolygonAt(LONG inx)
-	{
-		return self->GetPolygonR()[inx];
-	}
-	void SetPolygonAt(LONG inx, CPolygon v)
-	{
-		self->GetPolygonW()[inx] = v;
-	}
-}
-%extend SplineObject
-{
-	Tangent *GetTangentAt(LONG inx)
-	{
-		return (Tangent *)(self->GetTangentR() + inx);
-	}
-	void SetTangentAt(LONG inx, Tangent *pT)
-	{
-		self->GetTangentW()[inx] = *pT;
-	}
-	Segment *GetSegmentAt(LONG inx)
-	{
-		return (Segment *)(self->GetSegmentR() + inx);
-	}
-	void SetSegmentAt(LONG inx, Segment *pT)
-	{
-		self->GetSegmentW()[inx] = *pT;
-	}
-}
-%extend PointObject
-{
- static PointObject* GetPointObject(BaseObject* iObj){
-  return (PointObject*)iObj;
- }
-}
-
-%include "c4d_baseobject.h";
-
-//////////////////////////////////////////////////////////////////
-// "c4d_basecontainer.h"
-%include "c4d_basecontainer.h";
-
-//////////////////////////////////////////////////////////////////
-// "c4d_basedraw.h"
-%include "c4d_basedraw.h";
-
-//////////////////////////////////////////////////////////////////
-// "c4d_basedocument.h"
-%include "c4d_basedocument.h";
-
-//////////////////////////////////////////////////////////////////
-// "c4d_basetag.h"
-
-%include "c4d_basetag.h";
-
-/////////////////////////////////////////////////////////////////
-//////////////"NEU"
-///////////////////////////////////////////////
-// "c4d_baseselect.h"
-%include "c4d_baseselect.h";
-
-//////////////////////////////////////////////////////////////////
-// "c4d_commanddata.h"
-%feature("director") CommandData;
-%include "c4d_commanddata.h";
 
 //////////////////////////////////////////////////////////////////
 // lib_ca.h
@@ -838,9 +631,122 @@ BaseObject *
 	}
 	// No Setter because m_pPolys is const CPoly*
 }
-%feature("director") BaseTag;
 %include "lib_ca.swig.h";
 
+//////////////////////////////////////////////////////////////////
+// c4d_basebitmap.h
+%include "c4d_basebitmap.swig.h";
+%extend BaseBitmap
+{
+	static BaseBitmap *AutoBitmap(const String &str)
+	{
+		BaseBitmap *bmp=BaseBitmap::Alloc();
+		if (!bmp) 
+			return NULL;
+				
+		char *debug = str.GetCStringCopy();
+
+		if (bmp->Init(str)!=IMAGERESULT_OK)
+		{
+			BaseBitmap::Free(bmp);
+			return NULL;
+		}
+		return bmp;
+	}
+
+	static BaseBitmap *AutoBitmap(LONG id)
+	{
+		BaseBitmap *bmp = InitResourceBitmap(id);
+		return bmp;
+	}
+};
+
+//////////////////////////////////////////////////////////////////
+// c4d_gedata.h
+%include "c4d_gedata.swig.h"
+
+
+//////////////////////////////////////////////////////////////////
+// c4d_nodedata.h
+%ignore AutoBitmap;
+
+// %cs_callback(DataAllocator, NodeDataAllocator)
+// %define %cs_callback(TYPE, CSTYPE) 
+%typemap(ctype) DataAllocator*, DataAllocator*& "void* /* DataAllocator*_ctype */" 
+%typemap(in) DataAllocator*  %{ $1 = (DataAllocator*)$input; /* DataAllocator*_in */%} 
+%typemap(in) DataAllocator*& %{ $1 = (DataAllocator**)&$input;  /* DataAllocator*&_in */%} 
+%typemap(imtype, out="IntPtr") DataAllocator*, DataAllocator*& "NodeDataAllocator /* DataAllocator*_imtype */" 
+%typemap(cstype, out="IntPtr") DataAllocator*, DataAllocator*& "NodeDataAllocator /* DataAllocator*_cstype */" 
+%typemap(csin) DataAllocator*, DataAllocator*& "$csinput /* DataAllocator*_csin */" 
+// %enddef 
+
+%include "c4d_nodedata.h";
+
+//////////////////////////////////////////////////////////////////
+// obase.h
+%include "obase.h";
+
+
+//////////////////////////////////////////////////////////////////
+// "c4d_baselist.h"
+%include "c4d_baselist.h";
+
+//////////////////////////////////////////////////////////////////
+// c4d_baseobject.h
+%extend PointObject
+{
+	Vector GetPointAt(LONG inx)
+	{
+		return self->GetPointR()[inx];
+	}
+	void SetPointAt(LONG inx, Vector v)
+	{
+		self->GetPointW()[inx] = v;
+	}
+}
+%extend SplineObject
+{
+	Tangent *GetTangentAt(LONG inx)
+	{
+		return (Tangent *)(self->GetTangentR() + inx);
+	}
+	void SetTangentAt(LONG inx, Tangent *pT)
+	{
+		self->GetTangentW()[inx] = *pT;
+	}
+	Segment *GetSegmentAt(LONG inx)
+	{
+		return (Segment *)(self->GetSegmentR() + inx);
+	}
+	void SetSegmentAt(LONG inx, Segment *pT)
+	{
+		self->GetSegmentW()[inx] = *pT;
+	}
+}
+
+
+%include "c4d_baseobject.h";
+
+//////////////////////////////////////////////////////////////////
+// "c4d_basecontainer.h"
+%include "c4d_basecontainer.h";
+
+//////////////////////////////////////////////////////////////////
+// "c4d_basedraw.h"
+%include "c4d_basedraw.h";
+
+//////////////////////////////////////////////////////////////////
+// "c4d_basedocument.h"
+%include "c4d_basedocument.h";
+
+//////////////////////////////////////////////////////////////////
+// "c4d_basetag.h"
+%include "c4d_basetag.h";
+
+//////////////////////////////////////////////////////////////////
+// "c4d_commanddata.h"
+%feature("director") CommandData;
+%include "c4d_commanddata.h";
 
 //////////////////////////////////////////////////////////////////
 // "c4d_objectdata.h" (replaced by own implementation)
@@ -931,8 +837,7 @@ BaseObject *
 
 %typemap(imtype) GvNode *& "IntPtr /* GvNode_imtype */"
 
-%include "c4d_graphview.swig.h";
-// %include "c4d_graphview.h";
+%include "c4d_graphview.h";
 
 //////////////////////////////////////////////////////////////////
 // "c4d_operatordata.h"
@@ -943,19 +848,6 @@ BaseObject *
 %include "c4d_operatorplugin.h";
 
 //////////////////////////////////////////////////////////////////
-// "c4d_filterdata.h"
-%feature("director") SceneLoaderData;
-%feature("director") SceneSaverData;
-%feature("director") BitmapLoaderData;
-%feature("director") BitmapSaverData;
-%include "c4d_filterdata.h";
-
-//////////////////////////////////////////////////////////////////
-// "c4d_filterplugin.h"
-%include "c4d_filterplugin.h";
-
-
-//////////////////////////////////////////////////////////////////
 //added 23062011 by DS
 //%include "c4d_customdatatype.h";
 //%include "ge_prepass.h";
@@ -964,48 +856,6 @@ BaseObject *
 // Res file includes (for constants)
 %include "osplineprimitive.h";
 %include "ospline.h";
-
-//////////////////////////////////////////////////////////////////
-//operatingsystem.h
-
-
-%include "operatingsystem.swig.h";
-%extend ModelingCommandData {
-
-	 ModelingCommandData(	BaseDocument* doc=NULL,	BaseObject* op=NULL,BaseContainer* bc=NULL,
-		MODELINGCOMMANDMODE mode=MODELINGCOMMANDMODE_ALL,
-		MODELINGCOMMANDFLAGS flags=MODELINGCOMMANDFLAGS_0,
-		AtomArray* result=NULL,
-		AtomArray* arr=NULL)
-		{
-
-	//~ModelingCommandData();
-
-		return 0;
-	
-		 }
-}
-//////////////////////////////////////////////////////////////////
-///NEU
-//"custom_CUSTOMDATATYPE"
-
-%include "c4d_customdatatype.swig.h";
-
-%template(iCustomDataType_inex) iCustomDataType<DescID>;
-
-// {
-//	  static X* Alloc() { return gNew X; }
-//	  static void Free(X* &data) { gDelete (data); }
-//  };
-//////////////////////////////////////////////////////////////////
-///NEU
-//"custom_INEXCLUDE"
-
-%include "customgui_inexclude.swig.h";
-
-////////////////////////////
-//lib_selectionchanger.h
-//%include "lib_selectionchanger.swig.h";
 
 //////////////////////////////////////////////////////////////////
 // Hand coded declarations. TODO: replace them by including the appropriate header files

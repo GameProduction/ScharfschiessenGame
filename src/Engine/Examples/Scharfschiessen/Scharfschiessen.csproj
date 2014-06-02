@@ -89,6 +89,10 @@
       <Project>{10DA02FC-109F-4D71-864A-9F5B1E9A0D70}</Project>
       <Name>SimpleScene</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Imp\OpenTK\OpenTK.csproj">
+      <Project>{f7ad2bb5-d2b0-4697-bddb-4cc26152a6b6}</Project>
+      <Name>OpenTK</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Fusee.SerializationSerializer, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">

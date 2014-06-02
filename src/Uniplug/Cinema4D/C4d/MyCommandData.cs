@@ -8,10 +8,6 @@ namespace C4d
 {
     class MyCommandData : CommandData
     {
-        public MyCommandData() : base(false)
-        {
-        }
-
         public override bool Execute(BaseDocument doc)
         {
             C4dApi.MessageDialog("ManagedPlugIn");

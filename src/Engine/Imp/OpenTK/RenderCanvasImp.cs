@@ -227,6 +227,14 @@ namespace Fusee.Engine
         }
 
         /// <summary>
+        /// Closes the GameWindow with a call to opentk.
+        /// </summary>
+        public void CloseGameWindow()
+        {
+            // TODO: implement something useful here.
+        }
+
+        /// <summary>
         /// Runs this application instance.
         /// </summary>
         public abstract void Run();
@@ -536,7 +544,7 @@ namespace Fusee.Engine
         /// </summary>
         public void CloseGameWindow()
         {
-            if(_gameWindow != null)
+            if (_gameWindow != null)
                 _gameWindow.Exit();
         }
 

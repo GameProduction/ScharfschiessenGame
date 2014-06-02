@@ -18,7 +18,7 @@ namespace C4d
             Logger.Loglevel = Logger.LogLevel.Debug;
             Logger.Debug("Plugin()");
 
-            PluginAllocator._pluginInstanceList = _pluginInstanceList = new List<object>();
+            _pluginInstanceList = new List<object>();
             _nodeAllocatorList = new List<NodeDataAllocator>();
         }
 
@@ -129,6 +129,7 @@ namespace C4d
                         {
                             helpText = "Execute the " + name + " command.";
                         }
+
 
                         ConstructorInfo ctor = t.GetConstructor(Type.EmptyTypes);
                         if (ctor != null)
@@ -269,14 +270,11 @@ namespace C4d
 
             foreach (object instance in _pluginInstanceList)
             {
-                MethodInfo mi;
-                if (null != (mi = instance.GetType().GetMethod("End")) )
-                {
-                    object ret = mi.Invoke(instance, null);
-                    // TODO: Do something with the return value
-                }
-            }
+                MethodInfo mi = instance.GetType().GetMethod("End");
+                object ret = mi.Invoke(instance, null);
 
+                // TODO: Do something with the return value
+            }
             _pluginInstanceList.RemoveAll(o => true);
             _nodeAllocatorList.RemoveAll(pa => true);
         }
