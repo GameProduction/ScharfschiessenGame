@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -202,9 +203,9 @@ namespace FuExport
             List<string> filePaths;
 
             filePaths = textureList.ToList(); // Directory.GetFiles(Path.Combine(targDir, "Assets")).ToList();
-            filePaths.Add("Assets/Model.fus");
-            filePaths.Add("Assets/FuseeLogo150.png");
-            filePaths.Add("Assets/Lato-Black.ttf");
+            filePaths.Add(Path.Combine(targWeb, "Assets", "Model.fus"));
+            filePaths.Add(Path.Combine(targWeb, "Assets", "FuseeLogo150.png"));
+            filePaths.Add(Path.Combine(targWeb, "Assets", "Lato-Black.ttf"));
             filePaths.Sort(string.Compare);
 
             // Load custom implementations first

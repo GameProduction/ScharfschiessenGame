@@ -14,8 +14,8 @@ namespace Fusee.Engine.SimpleScene
     {
         public static float4x4 Matrix(this TransformContainer tcThis)
         {
-            return float4x4.CreateTranslation(tcThis.Translation) * float4x4.CreateRotationY(tcThis.Rotation.y) *
-                   float4x4.CreateRotationX(tcThis.Rotation.x) * float4x4.CreateRotationZ(tcThis.Rotation.z) *
+            return float4x4.CreateTranslation(tcThis.Translation)*float4x4.CreateRotationY(tcThis.Rotation.y)*
+                   float4x4.CreateRotationX(tcThis.Rotation.x)*float4x4.CreateRotationZ(tcThis.Rotation.z)*
                    float4x4.CreateScale(tcThis.Scale);
         }
     }
@@ -45,7 +45,7 @@ namespace Fusee.Engine.SimpleScene
 
         ShaderEffect CurMat
         {
-            set { _curMat = value; }
+            set { _curMat = value;}
             get { return _curMat; }
         }
 
@@ -256,7 +256,7 @@ namespace Fusee.Engine.SimpleScene
             ShaderCodeBuilder scb = new ShaderCodeBuilder(mc, null);
             var effectParameters = AssembleEffectParamers(mc, scb);
 
-            ShaderEffect ret = new ShaderEffect(new[]
+            ShaderEffect ret = new ShaderEffect(new []
                 {
                     new EffectPassDeclaration()
                     {
@@ -283,7 +283,7 @@ namespace Fusee.Engine.SimpleScene
                 effectParameters.Add(new EffectParameterDeclaration
                 {
                     Name = scb.DiffuseColorName,
-                    Value = (object)mc.Diffuse.Color
+                    Value = (object) mc.Diffuse.Color
                 });
                 if (mc.Diffuse.Texture != null)
                 {
@@ -305,17 +305,17 @@ namespace Fusee.Engine.SimpleScene
                 effectParameters.Add(new EffectParameterDeclaration
                 {
                     Name = scb.SpecularColorName,
-                    Value = (object)mc.Specular.Color
+                    Value = (object) mc.Specular.Color
                 });
                 effectParameters.Add(new EffectParameterDeclaration
                 {
                     Name = scb.SpecularShininessName,
-                    Value = (object)mc.Specular.Shininess
+                    Value = (object) mc.Specular.Shininess
                 });
                 effectParameters.Add(new EffectParameterDeclaration
                 {
                     Name = scb.SpecularIntensityName,
-                    Value = (object)mc.Specular.Intensity
+                    Value = (object) mc.Specular.Intensity
                 });
                 if (mc.Specular.Texture != null)
                 {
@@ -337,7 +337,7 @@ namespace Fusee.Engine.SimpleScene
                 effectParameters.Add(new EffectParameterDeclaration
                 {
                     Name = scb.EmissiveColorName,
-                    Value = (object)mc.Emissive.Color
+                    Value = (object) mc.Emissive.Color
                 });
                 if (mc.Emissive.Texture != null)
                 {
@@ -380,7 +380,7 @@ namespace Fusee.Engine.SimpleScene
                 effectParameters.Add(new EffectParameterDeclaration
                 {
                     Name = ShaderCodeBuilder.LightIntensityName,
-                    Value = (float)1
+                    Value = (float) 1
                 });
                 effectParameters.Add(new EffectParameterDeclaration
                 {
