@@ -82,7 +82,7 @@
       <Name>SerializationContainer</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Components\SceneManagement\SceneManagement.csproj">
-      <Project>{81B3A7F0-F8E4-45D0-BE69-B869C9B1803E}</Project>
+      <Project>{81b3a7f0-f8e4-45d0-be69-b869c9b1803e}</Project>
       <Name>SceneManagement</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Components\SimpleScene\SimpleScene.csproj">
