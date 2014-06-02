@@ -86,7 +86,7 @@ namespace Fusee.Engine.SimpleScene
 
             if (_hasUVs)
                 vs.Append("  attribute vec2 fuUV;\n  varying vec2 vUV;\n");
-            
+
             if (_hasColors)
                 vs.Append("  attribute vec4 fuColor;\n  varying vec4 vColors;\n");
         }
@@ -102,7 +102,7 @@ namespace Fusee.Engine.SimpleScene
                 vs.Append("  uniform mat4 FUSEE_IMV;\n");
             }
             // vs.Append("  uniform mat4 FUSEE_MV;\n");
-            vs.Append("  uniform mat4 FUSEE_MVP;\n");                
+            vs.Append("  uniform mat4 FUSEE_MVP;\n");
         }
 
         private void VSBody(StringBuilder vs)
@@ -137,7 +137,7 @@ namespace Fusee.Engine.SimpleScene
 
         private void PixelInputDeclarations(StringBuilder ps)
         {
-            
+
             ps.Append("#ifdef GL_ES\n");
             ps.Append("  precision highp float;\n");
             ps.Append("#endif\n\n");
@@ -159,12 +159,12 @@ namespace Fusee.Engine.SimpleScene
                 ps.Append(LightDirectionName);
                 ps.Append(";\n");
             }
-            
+
             if (_hasSpecular)
             {
                 ps.Append("  varying vec3 vViewDir;\n");
             }
- 
+
             if (_hasNormals)
                 ps.Append("  varying vec3 vNormal;\n");
 
@@ -177,8 +177,8 @@ namespace Fusee.Engine.SimpleScene
             if (!_hasBump)
                 return;
 
-            ps.Append("  uniform sampler2D BumpTexture;\n"); 
-            ps.Append("  uniform float BumpIntensity;\n\n"); 
+            ps.Append("  uniform sampler2D BumpTexture;\n");
+            ps.Append("  uniform float BumpIntensity;\n\n");
         }
 
         private void SpecularInputDeclaration(StringBuilder ps)
@@ -188,8 +188,8 @@ namespace Fusee.Engine.SimpleScene
 
             ChannelInputDeclaration(ps, _hasSpecular, _hasSpecularTexture, "Specular");
             // This will generate e.g. "  uniform vec4 DiffuseColor;"
-            ps.Append("  uniform float SpecularShininess;\n"); 
-            ps.Append("  uniform float SpecularIntensity;\n\n"); 
+            ps.Append("  uniform float SpecularShininess;\n");
+            ps.Append("  uniform float SpecularIntensity;\n\n");
         }
 
         private void ChannelInputDeclaration(StringBuilder ps, bool hasChannel, bool hasChannelTexture, string channelName)
@@ -198,7 +198,7 @@ namespace Fusee.Engine.SimpleScene
                 return;
 
             // This will generate e.g. "  uniform vec4 DiffuseColor;"
-            ps.Append("  uniform vec3 "); 
+            ps.Append("  uniform vec3 ");
             ps.Append(channelName);
             ps.Append("Color;\n");
 
@@ -208,11 +208,11 @@ namespace Fusee.Engine.SimpleScene
             // This will generate e.g. 
             // "  uniform sampler2D DiffuseTexture;"
             // "  uniform float DiffuseMix;"
-            ps.Append("  uniform sampler2D "); 
+            ps.Append("  uniform sampler2D ");
             ps.Append(channelName);
             ps.Append("Texture;\n");
 
-            ps.Append("  uniform float "); 
+            ps.Append("  uniform float ");
             ps.Append(channelName);
             ps.Append("Mix;\n\n");
         }
@@ -237,6 +237,8 @@ namespace Fusee.Engine.SimpleScene
 
         private void AddCameraVec(StringBuilder ps)
         {
+            if (!_hasSpecular)
+                return;
             ps.Append("    vec3 Camera = vViewDir;\n");
         }
 
@@ -313,7 +315,7 @@ namespace Fusee.Engine.SimpleScene
             ps.Append("    }\n");
         }
 
-        private void AddChannelBaseColorCalculation(StringBuilder ps,  bool hasChannelTexture, string channelName)
+        private void AddChannelBaseColorCalculation(StringBuilder ps, bool hasChannelTexture, string channelName)
         {
             if (!(hasChannelTexture && _hasUVs))
             {
@@ -329,24 +331,24 @@ namespace Fusee.Engine.SimpleScene
                 ps.Append(channelName);
                 ps.Append("BaseColor = ");
                 ps.Append(channelName);
-                ps.Append("Color * (1.0 - ");                
+                ps.Append("Color * (1.0 - ");
                 ps.Append(channelName);
-                ps.Append("Mix) + texture2D(");                
+                ps.Append("Mix) + texture2D(");
                 ps.Append(channelName);
-                ps.Append("Texture, vUV).rgb * ");                
+                ps.Append("Texture, vUV).rgb * ");
                 ps.Append(channelName);
-                ps.Append("Mix;\n");                
+                ps.Append("Mix;\n");
             }
         }
-        
 
-        private string _vs; 
+
+        private string _vs;
         public string VS
         {
             get { return _vs; }
         }
 
-        private string _ps; 
+        private string _ps;
         public string PS
         {
             get { return _ps; }
@@ -372,6 +374,6 @@ namespace Fusee.Engine.SimpleScene
         public static string LightDirectionName { get { return "LightDirection"; } }
         public static string LightColorName { get { return "LightColor"; } }
         public static string LightIntensityName { get { return "LightIntensity"; } }
-    
+
     }
 }
