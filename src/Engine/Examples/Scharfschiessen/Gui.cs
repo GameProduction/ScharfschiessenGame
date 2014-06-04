@@ -13,6 +13,7 @@ namespace Examples.Scharfschiessen
     public class Gui
     {
         private RenderCanvas _rCanvas;
+        private readonly GameHandler _gameHandler ;
         private GUIHandler _guiHandler;
         private GUIHandler _mainmenuHandler;
         private GUIHandler _inGameHandler;
@@ -32,10 +33,11 @@ namespace Examples.Scharfschiessen
         private GUIImage _guiImage2;
 
 
-        public Gui(RenderContext RC, RenderCanvas rCanvas) //da initialisieren wir alles für den GuiHandler
+        public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler) //da initialisieren wir alles für den GuiHandler
         {
             _rCanvas = rCanvas;
             _guiHandler = new GUIHandler(RC);
+            _gameHandler = gameHandler;
             _mainmenuHandler = new GUIHandler(RC);
             _inGameHandler = new GUIHandler(RC);
             _highScoreHandler = new GUIHandler(RC);
@@ -144,7 +146,7 @@ namespace Examples.Scharfschiessen
 
         private void OnDiffButtonDown(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
-        InGameGui();
+            _gameHandler.GameState.CurrentState = GameState.State.Playing;
         }
 
     }

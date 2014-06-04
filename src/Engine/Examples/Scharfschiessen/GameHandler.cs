@@ -27,7 +27,7 @@ namespace Examples.Scharfschiessen
         {
             RCanvas = rCanvas;
             this.Rc = rc;
-            this.gui = new Gui(Rc, RCanvas);
+            this.gui = new Gui(Rc, RCanvas, this);
             this.GameState = new GameState(ref gui, this);
         }
 
