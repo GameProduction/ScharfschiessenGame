@@ -31,17 +31,20 @@ namespace Examples.Scharfschiessen
         private GUIButton[] _guiDiffs;
         private GUIImage _guiImage1;
         private GUIImage _guiImage2;
+        private double _countdown;
 
 
         public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler) //da initialisieren wir alles für den GuiHandler
         {
             _rCanvas = rCanvas;
-            _guiHandler = new GUIHandler(RC);
             _gameHandler = gameHandler;
+            _guiHandler = new GUIHandler(RC);
             _mainmenuHandler = new GUIHandler(RC);
             _inGameHandler = new GUIHandler(RC);
             _highScoreHandler = new GUIHandler(RC);
-
+            _countdown = new double();
+            //_countdown = Game.GetTime();
+           
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
             _guiFontAlphaWood18 = RC.LoadFont("Assets/AlphaWood.ttf", 18);
@@ -72,7 +75,7 @@ namespace Examples.Scharfschiessen
             _guiImage2 = new GUIImage("Assets/holz.png", width / 2 - (width / 140), height / 2 - (height / 20), -1, 150, 40);
             
         }
-
+         
         public void DrawGui()
         {
             //Gui Rendern
@@ -92,6 +95,7 @@ namespace Examples.Scharfschiessen
                     MainMenuGui();
                     break;
                 case GameState.State.Playing:
+                    Console.Write(_countdown);
                     InGameGui();
                     break;
                 case GameState.State.HiddenPause:
@@ -124,11 +128,12 @@ namespace Examples.Scharfschiessen
             //set guiHander für während das Spiel läuft (während der Pause?)
             Console.WriteLine("InGameGui");
             _guiDiffs[0].OnGUIButtonDown -= OnDiffButtonDown;
+            //Game.GetTime();
             _guiHandler = _inGameHandler;
-            _guiText1 = new GUIText("Zeit:", _guiFontCabin12, 10, 15);
+            _guiText1 = new GUIText("Zeit: "+ _countdown, _guiFontCabin12, 10, 15);
             _guiText1.TextColor = new float4(0, 0, 0, 1);
-            _inGameHandler.Add(_guiText1);
-
+            _inGameHandler.Add(_guiText1); 
+            
         }
 
         internal void HighScoreGui()
@@ -144,10 +149,10 @@ namespace Examples.Scharfschiessen
 
         }
 
+
         private void OnDiffButtonDown(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
             _gameHandler.GameState.CurrentState = GameState.State.Playing;
         }
-
     }
 }
