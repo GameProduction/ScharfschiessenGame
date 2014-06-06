@@ -42,8 +42,7 @@ namespace Examples.Scharfschiessen
             _mainmenuHandler = new GUIHandler(RC);
             _inGameHandler = new GUIHandler(RC);
             _highScoreHandler = new GUIHandler(RC);
-            _countdown = new double();
-            //_countdown = Game.GetTime();
+            _countdown = Game.GetTime();
            
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
@@ -148,6 +147,7 @@ namespace Examples.Scharfschiessen
             _guiDiffs[0].OnGUIButtonDown += OnDiffButtonDown;
 
         }
+
 
 
         private void OnDiffButtonDown(GUIButton sender, Fusee.Engine.MouseEventArgs mea)

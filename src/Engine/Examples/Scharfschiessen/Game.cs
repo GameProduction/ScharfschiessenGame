@@ -19,7 +19,7 @@ namespace Examples.Scharfschiessen
         private readonly RenderContext _rc;
 
         public int Level { get; set; }
-        private double _countdown = 30;
+        private static double _countdown = 30;
         private bool _active;
         private float4x4 _mtxCam;
         private GameHandler _gameHandler;
@@ -32,7 +32,7 @@ namespace Examples.Scharfschiessen
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
         // Zeigt verbleibende Zeit an
-        public double GetTime()
+        public static double GetTime()
         {
             return _countdown;
         }
