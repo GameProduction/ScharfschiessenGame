@@ -19,7 +19,7 @@ namespace Examples.Scharfschiessen
         private readonly RenderContext _rc;
 
         public int Level { get; set; }
-        private static double _countdown = 30;
+        public double Countdown { get; set; }
         private bool _active;
         private float4x4 _mtxCam;
         private GameHandler _gameHandler;
@@ -31,11 +31,6 @@ namespace Examples.Scharfschiessen
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
-        // Zeigt verbleibende Zeit an
-        public static double GetTime()
-        {
-            return _countdown;
-        }
 
         public Game(GameHandler gh,RenderContext rc)
         {
@@ -46,6 +41,7 @@ namespace Examples.Scharfschiessen
             CreateEnvironment();
             Points = 0;
             LoadLevel(1);
+            
         }
 
        
@@ -57,6 +53,7 @@ namespace Examples.Scharfschiessen
             World = new DynamicWorld();
             _sphereCollider = World.AddSphereShape(1);
             Level = i;
+            Countdown = 30;
         }
 
         private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
@@ -83,9 +80,9 @@ namespace Examples.Scharfschiessen
                 {
                     World.StepSimulation((float)Time.Instance.DeltaTime, (Time.Instance.FramePerSecondSmooth / 60), 1 / 60);
                 }
-                if (_countdown > 0)
+                if (Countdown > 0)
                 {
-                    _countdown -= Time.Instance.DeltaTime;
+                    Countdown -= Time.Instance.DeltaTime;
                 }
                 else
                 {
@@ -94,6 +91,7 @@ namespace Examples.Scharfschiessen
                 }
 
                 PlayerInput();
+                //Console.WriteLine(Countdown);
                 
             }
 

@@ -18,10 +18,9 @@ namespace Examples.Scharfschiessen
         }
 
 
-
         public GameState GameState{ get; private set; }
-    
-        public Game Game;
+
+        public Game Game { get; set; }
 
         public GameHandler(RenderContext rc, RenderCanvas rCanvas)
         {
@@ -57,6 +56,7 @@ namespace Examples.Scharfschiessen
             Debug.WriteLine("StartGame");
             Game = new Game(this,Rc);
         }
+
 
         
         public void Hide()
@@ -103,6 +103,5 @@ namespace Examples.Scharfschiessen
                 GameState.CurrentState = GameState.State.Highscore;
             }
         }
-
     }
 }
