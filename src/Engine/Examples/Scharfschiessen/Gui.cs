@@ -8,13 +8,17 @@ using System.Windows;
 using System.Windows.Forms;
 using Fusee.Engine;
 using Fusee.Math;
+using System.Windows.Controls;
+using MessageBox = System.Windows.Forms.MessageBox;
+
 
 namespace Examples.Scharfschiessen
 {
+
     public class Gui
     {
         private RenderCanvas _rCanvas;
-        private readonly GameHandler _gameHandler ;
+        private readonly GameHandler _gameHandler;
         private GUIHandler _guiHandler;
         private GUIHandler _mainmenuHandler;
         private GUIHandler _inGameHandler;
@@ -30,26 +34,26 @@ namespace Examples.Scharfschiessen
         private GUIText _guiText4;
         private GUIText _guiText5;
         private GUIText _guiText6;
-       // private GUIText[] _guiText;
+        // private GUIText[] _guiText;
         private GUIButton[] _guiDiffs;
         private GUIImage[] _guiImages;
         private double _countdown;
-        enum _buttons{ btnStart, btnNochmal, btnHighscore};
-        enum _btnimages { btniStart, btniNochmal, btniHighscore };
-
-       // public Form Form1;
-        private TextBox Textbox1;
-        public Form testDialog;
-        private Form txtResult;
-        private string Text;
-        public Form TestDialog
+        private enum _buttons
         {
-            get { return testDialog; }
-            set { testDialog = value; }
-        }
-      
+            btnStart,
+            btnNochmal,
+            btnHighscore
+        };
 
-        public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler) //da initialisieren wir alles für den GuiHandler
+        private enum _btnimages
+        {
+            btniStart,
+            btniNochmal,
+            btniHighscore
+        };
+       
+        public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler)
+            //da initialisieren wir alles für den GuiHandler
         {
             _rCanvas = rCanvas;
             var height = _rCanvas.Height;
@@ -64,7 +68,6 @@ namespace Examples.Scharfschiessen
             _guiDiffs = new GUIButton[3];
             _guiImages = new GUIImage[3];
 
-
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
             _guiFontAlphaWood18 = RC.LoadFont("Assets/AlphaWood.ttf", 18);
@@ -73,58 +76,48 @@ namespace Examples.Scharfschiessen
 
             //Text Mainmenü: Scha(r)fschießen
             textwidth = GUIText.GetTextWidth("Scha(r)fschießen", _guiFontWESTERN30);
-            _guiText1 = new GUIText("Scha(r)fschießen", _guiFontWESTERN30, (width/2) - (int)(textwidth/2), (height/3));
+            _guiText1 = new GUIText("Scha(r)fschießen", _guiFontWESTERN30, (width/2) - (int) (textwidth/2), (height/3));
             _guiText1.TextColor = new float4(0, 0, 0, 1);
 
             // Button MainMenü: Starten
             textwidth = GUIText.GetTextWidth("Starten", _guiFontCabin12);
             texthight = GUIText.GetTextHeight("Starten", _guiFontCabin12);
-            _guiText3 = new GUIText("Starten", _guiFontCabin12, width / 2 - (int)(textwidth / 2), (height / 2));
+            _guiText3 = new GUIText("Starten", _guiFontCabin12, width/2 - (int) (textwidth/2), (height/2));
             _guiText3.TextColor = new float4(1, 1, 1, 1);
-            _guiDiffs[(int)_buttons.btnStart] = new GUIButton(_guiText3.PosX, _guiText3.PosY - (int)texthight, -2, (int)textwidth, (int)texthight);
-            _guiImages[(int)_btnimages.btniStart] = new GUIImage("Assets/holz.png", _guiText3.PosX - (int)textwidth/2, _guiText3.PosY - (int)(texthight*1.5), -1, (int)textwidth * 2, (int)texthight * 2);
+            _guiDiffs[(int) _buttons.btnStart] = new GUIButton(_guiText3.PosX, _guiText3.PosY - (int) texthight, -2,
+                (int) textwidth, (int) texthight);
+            _guiImages[(int) _btnimages.btniStart] = new GUIImage("Assets/holz.png", _guiText3.PosX - (int) textwidth/2,
+                _guiText3.PosY - (int) (texthight*1.5), -1, (int) textwidth*2, (int) texthight*2);
 
             // Text HighscoreMenü: Game Over
             textwidth = GUIText.GetTextWidth("Game Over!", _guiFontWESTERN30);
-            _guiText4 = new GUIText("Game Over!", _guiFontWESTERN30, width/2 - (int)(textwidth/2), (height/3));
+            _guiText4 = new GUIText("Game Over!", _guiFontWESTERN30, width/2 - (int) (textwidth/2), (height/3));
             _guiText4.TextColor = new float4(0, 0, 0, 1);
 
             // Button HighscoreMenü: Nochmal spielen
             textwidth = GUIText.GetTextWidth("Nochmal spielen", _guiFontCabin12);
-            _guiText5 = new GUIText("Nochmal spielen", _guiFontCabin12, (width/2) -(int)(textwidth*1.5), (height/2) + (height/10));
+            _guiText5 = new GUIText("Nochmal spielen", _guiFontCabin12, (width/2) - (int) (textwidth*1.5),
+                (height/2) + (height/10));
             _guiText5.TextColor = new float4(1, 1, 1, 1);
             texthight = GUIText.GetTextHeight("Nochmal spielen", _guiFontCabin12);
-            _guiDiffs[(int)_buttons.btnNochmal] = new GUIButton(_guiText5.PosX, _guiText5.PosY - (int)texthight, -2, (int)textwidth, (int)texthight);
-            _guiImages[(int)_btnimages.btniNochmal] = new GUIImage("Assets/holz.png", _guiText5.PosX - (int)textwidth/2, _guiText5.PosY - (int)(texthight*1.5), -1, (int)textwidth * 2, (int)texthight * 2);
+            _guiDiffs[(int) _buttons.btnNochmal] = new GUIButton(_guiText5.PosX, _guiText5.PosY - (int) texthight, -2,
+                (int) textwidth, (int) texthight);
+            _guiImages[(int) _btnimages.btniNochmal] = new GUIImage("Assets/holz.png",
+                _guiText5.PosX - (int) textwidth/2, _guiText5.PosY - (int) (texthight*1.5), -1, (int) textwidth*2,
+                (int) texthight*2);
 
             // Button HighscoreMenü: Highscore
             textwidth = GUIText.GetTextWidth("Highscore anzeigen", _guiFontCabin12);
-            _guiText6 = new GUIText("Highscore anzeigen", _guiFontCabin12, (width / 2) + (int)(textwidth/2), (height / 2) + (height / 10));
+            _guiText6 = new GUIText("Highscore anzeigen", _guiFontCabin12, (width/2) + (int) (textwidth/2),
+                (height/2) + (height/10));
             _guiText6.TextColor = new float4(1, 1, 1, 1);
             texthight = GUIText.GetTextHeight("Highscore anzeigen", _guiFontCabin12);
-            _guiDiffs[(int)_buttons.btnHighscore] = new GUIButton(_guiText6.PosX, _guiText6.PosY - (int)texthight, -2, (int)textwidth, (int)texthight);
-            _guiImages[(int)_btnimages.btniHighscore] = new GUIImage("Assets/holz.png", _guiText6.PosX - (int)textwidth / 2, _guiText6.PosY - (int)(texthight * 1.5), -1, (int)textwidth * 2, (int)texthight * 2);
-
-            TextBox textBox1 = new TextBox();
-            //textBox1.Location = new System.Drawing.Point(300, 30);
-            textBox1.Text = "Hallo";
-            textBox1.Visible = true;
-            //textBox1.Size = new Size(50,50);
-            textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif",
-                                 26.25F,
-                                 System.Drawing.FontStyle.Regular,
-                                 System.Drawing.GraphicsUnit.Point,
-                                 ((byte)(0)));
-            textBox1.Location = new System.Drawing.Point(0, 0);
-            // this is what makes the height 'stick'
-            textBox1.Multiline = true;
-            // the desired height
-            textBox1.Size = new System.Drawing.Size(100, 60);
+            _guiDiffs[(int) _buttons.btnHighscore] = new GUIButton(_guiText6.PosX, _guiText6.PosY - (int) texthight, -2,
+                (int) textwidth, (int) texthight);
+            _guiImages[(int) _btnimages.btniHighscore] = new GUIImage("Assets/holz.png",
+                _guiText6.PosX - (int) textwidth/2, _guiText6.PosY - (int) (texthight*1.5), -1, (int) textwidth*2,
+                (int) texthight*2);
         }
-
-      
-
-        
 
         public void DrawGui()
         {
@@ -134,7 +127,6 @@ namespace Examples.Scharfschiessen
             {
                 _countdown = (int) _gameHandler.Game.Countdown;
                 _guiText1.Text = "Zeit:  " + _countdown;
-               // ShowDialog();
             }
         }
 
@@ -147,7 +139,7 @@ namespace Examples.Scharfschiessen
         {
             switch (_state)
             {
-                    case GameState.State.MainMenu:
+                case GameState.State.MainMenu:
                     MainMenuGui();
                     break;
                 case GameState.State.Playing:
@@ -170,13 +162,13 @@ namespace Examples.Scharfschiessen
             Console.WriteLine("MainMenuGui");
             //set guiHander GUI für Hauptmenu
             _guiHandler = _mainmenuHandler;
-            _mainmenuHandler.Add(_guiImages[(int)_btnimages.btniStart]);
+            _mainmenuHandler.Add(_guiImages[(int) _btnimages.btniStart]);
             _mainmenuHandler.Add(_guiText1);
             _mainmenuHandler.Add(_guiText3);
-            //testDialog();
-            _guiHandler.Add(_guiDiffs[(int)_buttons.btnStart]);
-            _guiDiffs[(int)_buttons.btnStart].OnGUIButtonDown += OnbtnPlay;
+            _guiHandler.Add(_guiDiffs[(int) _buttons.btnStart]);
+            _guiDiffs[(int) _buttons.btnStart].OnGUIButtonDown += OnbtnPlay;
         }
+
 
         internal void InGameGui()
         {
@@ -189,7 +181,7 @@ namespace Examples.Scharfschiessen
             _guiText1 = new GUIText("Zeit: " + _countdown, _guiFontCabin12, 10, 15);
             _guiText1.TextColor = new float4(0, 0, 0, 1);
             _inGameHandler.Add(_guiText1);
- 
+
         }
 
         internal void HighScoreGui()
@@ -197,44 +189,21 @@ namespace Examples.Scharfschiessen
             //set guiHander für die Highscore Anzeige
             Console.WriteLine("HighScoreGui");
             _guiHandler = _highScoreHandler;
-            _highScoreHandler.Add(_guiImages[(int)_btnimages.btniNochmal]);
-            _highScoreHandler.Add(_guiImages[(int)_btnimages.btniHighscore]);
+            _highScoreHandler.Add(_guiImages[(int) _btnimages.btniNochmal]);
+            _highScoreHandler.Add(_guiImages[(int) _btnimages.btniHighscore]);
             _highScoreHandler.Add(_guiText4);
             _highScoreHandler.Add(_guiText5);
             _highScoreHandler.Add(_guiText6);
-            _guiHandler.Add(_guiDiffs[(int)_buttons.btnNochmal]);
-            _guiDiffs[(int)_buttons.btnNochmal].OnGUIButtonDown += OnbtnPlay;
-            _guiHandler.Add(_guiDiffs[(int)_buttons.btnHighscore]);
-            _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown += OnbtnHighscore;
+            _guiHandler.Add(_guiDiffs[(int) _buttons.btnNochmal]);
+            _guiDiffs[(int) _buttons.btnNochmal].OnGUIButtonDown += OnbtnPlay;
+            _guiHandler.Add(_guiDiffs[(int) _buttons.btnHighscore]);
+            _guiDiffs[(int) _buttons.btnHighscore].OnGUIButtonDown += OnbtnHighscore;
         }
-
-        /*public void ShowDialog()
-        {
-            Form testDialog = new Form();
-            testDialog.Text = "Hi";
-            
-            // Show testDialog as a modal dialog and determine if DialogResult = OK.
-             if (testDialog.ShowDialog(this) == DialogResult.OK)
-             {
-                 // Read the contents of testDialog's TextBox.
-                 //this.txtResult.Text = testDialog.Textbox1.Text;
-                 testDialog.Text = "Hi2";
-             }
-             else
-             {
-                 this.txtResult.Text = "Cancelled";
-             }
-             testDialog.Dispose();
-             testDialog.ShowDialog();
-            
-        }
-        */
 
 
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
             //To-Do: Hier verlinken zur Datenbank
-            //ShowDialog();
             _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
         }
 
@@ -242,8 +211,5 @@ namespace Examples.Scharfschiessen
         {
             _gameHandler.GameState.CurrentState = GameState.State.Playing;
         }
-
-        
-
     }
 }
