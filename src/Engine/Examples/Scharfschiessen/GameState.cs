@@ -26,6 +26,7 @@ namespace Examples.Scharfschiessen
             get { return _currentState; }
             set
             {
+                LastState = _currentState;
                 if (value == State.Playing || value == State.HiddenPause)
                 {
                     Input.Instance.CursorVisible = false;
@@ -39,6 +40,11 @@ namespace Examples.Scharfschiessen
                 if (value == State.Playing && LastState != State.HiddenPause)
                 {
                     GameHandler.StartGame();
+                    Debug.WriteLine("value");
+                }
+                else if (value == State.Playing && LastState == State.HiddenPause)
+                {
+                    _currentState = value;
                 }
                 if (value == State.HiddenPause)
                 {
@@ -63,7 +69,6 @@ namespace Examples.Scharfschiessen
             GameHandler = gameHandler;
             _currentState = State.MainMenu;
             Gui.SetGui(_currentState);
-            //Debug.WriteLine(CurrentState);
         }
 
         

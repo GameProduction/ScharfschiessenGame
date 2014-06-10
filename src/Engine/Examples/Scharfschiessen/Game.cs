@@ -41,13 +41,13 @@ namespace Examples.Scharfschiessen
             CreateEnvironment();
             Points = 0;
             LoadLevel(1);
-            
         }
 
        
 
         public void LoadLevel(int i)
         {
+            Debug.WriteLine("LoadLevel");
             _active = true;
             DisposePhysic();
             World = new DynamicWorld();
@@ -90,9 +90,7 @@ namespace Examples.Scharfschiessen
                     _gameHandler.GameState.CurrentState = GameState.State.Highscore;
                 }
 
-                PlayerInput();
-                //Console.WriteLine(Countdown);
-                
+                PlayerInput();               
             }
 
             for (int t = 0; t < LevelObjects.Count; t++)
