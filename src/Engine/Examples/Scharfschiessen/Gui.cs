@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Security.Authentication.ExtendedProtection;
 using System.Text;
@@ -36,28 +37,39 @@ namespace Examples.Scharfschiessen
         enum _buttons{ btnStart, btnNochmal, btnHighscore};
         enum _btnimages { btniStart, btniNochmal, btniHighscore };
 
-
-        public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler/*, Game g*/) //da initialisieren wir alles für den GuiHandler
+       // public Form Form1;
+        private TextBox Textbox1;
+        public Form testDialog;
+        private Form txtResult;
+        private string Text;
+        public Form TestDialog
         {
+            get { return testDialog; }
+            set { testDialog = value; }
+        }
+      
+
+        public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler) //da initialisieren wir alles für den GuiHandler
+        {
+            _rCanvas = rCanvas;
+            var height = _rCanvas.Height;
+            var width = _rCanvas.Width;
             float textwidth;
             float texthight;
-            _rCanvas = rCanvas;
             _gameHandler = gameHandler;
             _guiHandler = new GUIHandler(RC);
             _mainmenuHandler = new GUIHandler(RC);
             _inGameHandler = new GUIHandler(RC);
             _highScoreHandler = new GUIHandler(RC);
+            _guiDiffs = new GUIButton[3];
+            _guiImages = new GUIImage[3];
 
-            var height = _rCanvas.Height;
-            var width = _rCanvas.Width;
 
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
             _guiFontAlphaWood18 = RC.LoadFont("Assets/AlphaWood.ttf", 18);
             _guiFontWESTERN30 = RC.LoadFont("Assets/WESTERN.ttf", 30);
 
-            _guiDiffs = new GUIButton[3];
-            _guiImages = new GUIImage[3];
 
             //Text Mainmenü: Scha(r)fschießen
             textwidth = GUIText.GetTextWidth("Scha(r)fschießen", _guiFontWESTERN30);
@@ -71,7 +83,6 @@ namespace Examples.Scharfschiessen
             _guiText3.TextColor = new float4(1, 1, 1, 1);
             _guiDiffs[(int)_buttons.btnStart] = new GUIButton(_guiText3.PosX, _guiText3.PosY - (int)texthight, -2, (int)textwidth, (int)texthight);
             _guiImages[(int)_btnimages.btniStart] = new GUIImage("Assets/holz.png", _guiText3.PosX - (int)textwidth/2, _guiText3.PosY - (int)(texthight*1.5), -1, (int)textwidth * 2, (int)texthight * 2);
-
 
             // Text HighscoreMenü: Game Over
             textwidth = GUIText.GetTextWidth("Game Over!", _guiFontWESTERN30);
@@ -93,7 +104,27 @@ namespace Examples.Scharfschiessen
             texthight = GUIText.GetTextHeight("Highscore anzeigen", _guiFontCabin12);
             _guiDiffs[(int)_buttons.btnHighscore] = new GUIButton(_guiText6.PosX, _guiText6.PosY - (int)texthight, -2, (int)textwidth, (int)texthight);
             _guiImages[(int)_btnimages.btniHighscore] = new GUIImage("Assets/holz.png", _guiText6.PosX - (int)textwidth / 2, _guiText6.PosY - (int)(texthight * 1.5), -1, (int)textwidth * 2, (int)texthight * 2);
+
+            TextBox textBox1 = new TextBox();
+            //textBox1.Location = new System.Drawing.Point(300, 30);
+            textBox1.Text = "Hallo";
+            textBox1.Visible = true;
+            //textBox1.Size = new Size(50,50);
+            textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif",
+                                 26.25F,
+                                 System.Drawing.FontStyle.Regular,
+                                 System.Drawing.GraphicsUnit.Point,
+                                 ((byte)(0)));
+            textBox1.Location = new System.Drawing.Point(0, 0);
+            // this is what makes the height 'stick'
+            textBox1.Multiline = true;
+            // the desired height
+            textBox1.Size = new System.Drawing.Size(100, 60);
         }
+
+      
+
+        
 
         public void DrawGui()
         {
@@ -103,6 +134,7 @@ namespace Examples.Scharfschiessen
             {
                 _countdown = (int) _gameHandler.Game.Countdown;
                 _guiText1.Text = "Zeit:  " + _countdown;
+               // ShowDialog();
             }
         }
 
@@ -141,9 +173,9 @@ namespace Examples.Scharfschiessen
             _mainmenuHandler.Add(_guiImages[(int)_btnimages.btniStart]);
             _mainmenuHandler.Add(_guiText1);
             _mainmenuHandler.Add(_guiText3);
+            //testDialog();
             _guiHandler.Add(_guiDiffs[(int)_buttons.btnStart]);
             _guiDiffs[(int)_buttons.btnStart].OnGUIButtonDown += OnbtnPlay;
-
         }
 
         internal void InGameGui()
@@ -174,12 +206,35 @@ namespace Examples.Scharfschiessen
             _guiDiffs[(int)_buttons.btnNochmal].OnGUIButtonDown += OnbtnPlay;
             _guiHandler.Add(_guiDiffs[(int)_buttons.btnHighscore]);
             _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown += OnbtnHighscore;
-
         }
+
+        /*public void ShowDialog()
+        {
+            Form testDialog = new Form();
+            testDialog.Text = "Hi";
+            
+            // Show testDialog as a modal dialog and determine if DialogResult = OK.
+             if (testDialog.ShowDialog(this) == DialogResult.OK)
+             {
+                 // Read the contents of testDialog's TextBox.
+                 //this.txtResult.Text = testDialog.Textbox1.Text;
+                 testDialog.Text = "Hi2";
+             }
+             else
+             {
+                 this.txtResult.Text = "Cancelled";
+             }
+             testDialog.Dispose();
+             testDialog.ShowDialog();
+            
+        }
+        */
+
 
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
             //To-Do: Hier verlinken zur Datenbank
+            //ShowDialog();
             _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
         }
 
@@ -187,5 +242,8 @@ namespace Examples.Scharfschiessen
         {
             _gameHandler.GameState.CurrentState = GameState.State.Playing;
         }
+
+        
+
     }
 }
