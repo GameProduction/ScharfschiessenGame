@@ -16,8 +16,8 @@ namespace Examples.Scharfschiessen
         private float _distance;
 
 
-        public Sheep(RenderContext rc, Mesh mesh, float3 position, float4x4 orientation, float scaleFactor, Game game)
-            : base(rc, mesh, position, orientation, scaleFactor, game)
+        public Sheep(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game)
+            : base(rc, mesh, position, rotation, scaleFactor, game)
         {
             _distance = position.Length;
             Speed = 1;

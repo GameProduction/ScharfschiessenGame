@@ -13,8 +13,8 @@ namespace Examples.Scharfschiessen
         
 
         private RigidBody _tomatoRB;
-        public Tomato(RenderContext rc, Mesh mesh, float3 position, float4x4 orientation, float scaleFactor, Game game)
-            : base(rc, mesh, position, orientation, scaleFactor, game)
+        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game)
+            : base(rc, mesh, position, rotation, scaleFactor, game)
         {
             Color = new float4(0.5f, 0.1f, 0.1f, 1);
             Radius = 1;

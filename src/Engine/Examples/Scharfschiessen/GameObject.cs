@@ -14,9 +14,9 @@ namespace Examples.Scharfschiessen
         private readonly RenderContext _rc;
         private readonly Mesh _mesh;
         public float3 Position { get; set; }
+        private float4x4 mtxRot;
 
         internal Game Game;
-        private float4x4 _orientation;
 
         public int Radius { get; set; }
         private float _scale = 1;
@@ -27,7 +27,7 @@ namespace Examples.Scharfschiessen
         private IShaderParam _colorParam;
         internal float4 Color;
 
-        public GameObject(RenderContext rc, Mesh mesh, float3 position, float4x4 orientation, float scaleFactor, Game game)
+        public GameObject(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game)
         {
             this.Game = game;
             _rc = rc;
@@ -35,7 +35,10 @@ namespace Examples.Scharfschiessen
             _colorParam = _spColor.GetShaderParam("color");
             _mesh = mesh;
             _scale = scaleFactor;
-            _orientation = orientation;
+            mtxRot = float4x4.CreateRotationX(rotation.x)
+                     *float4x4.CreateRotationY(rotation.y)
+                     *float4x4.CreateRotationZ(rotation.z);
+
             Position = position;
             Color = new float4(0.5f, 0.2f, 0.4f, 1);
         }
@@ -53,7 +56,7 @@ namespace Examples.Scharfschiessen
 
         public void Render(float4x4 camMtx)
         {
-            _rc.ModelView = camMtx * _orientation * float4x4.CreateTranslation(Position.x, Position.y, Position.z) * float4x4.Scale(_scale);
+            _rc.ModelView = camMtx * float4x4.CreateTranslation(Position.x, Position.y, Position.z) * float4x4.Scale(_scale);
             _rc.SetShader(_spColor);
             _rc.SetShaderParam(_colorParam, Color);
             _rc.SetRenderState(new RenderStateSet { AlphaBlendEnable = false, ZEnable = true });

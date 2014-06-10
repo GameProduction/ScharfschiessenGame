@@ -28,6 +28,7 @@ namespace Examples.Scharfschiessen
         private Mesh _meshSheep;
         public DynamicWorld World { get; set; }
         private SphereShape _sphereCollider;
+        private List<Sheep> SheepList = new List<Sheep>(); 
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
@@ -62,15 +63,27 @@ namespace Examples.Scharfschiessen
         {
             /*var tomato = new Tomato(_rc, _meshTomtato, new float3(0, 0, 50), float4x4.Identity, 0.2f, this);
             LevelObjects.Add(tomato);*/
-            var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float4x4.Identity, 0.2f, this);
+            var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
             LevelObjects.Add(go);
-            var sheep1 = new Sheep(_rc, _meshSheep, new float3(50, 0, 100), float4x4.Identity, 0.02f, this);
+            var sheep1 = new Sheep(_rc, _meshSheep, new float3(50, 0, 100), float3.Zero, 0.02f, this);
             LevelObjects.Add(sheep1);
 
-            var sheep2 = new Sheep(_rc, _meshSheep, new float3(-50, 0, 50), float4x4.Identity, 0.02f, this);
+            var sheep2 = new Sheep(_rc, _meshSheep, new float3(-50, 0, 50), float3.Zero, 0.02f, this);
             LevelObjects.Add(sheep2);
         }
 
+        //neues Schaf wird gespawned
+        public void InstantiateSheepAt(float3 pos, float3 rot)
+        {
+            var sheep = new Sheep(_rc, _meshSheep, pos, rot, 0.02f, this);
+            SheepList.Add(sheep);
+        }
+
+        public float4x4 FindPosition()
+        {
+            float4x4 mtx = float4x4.Identity;
+            return mtx;
+        }
 
         public void Update()
         {
@@ -99,7 +112,6 @@ namespace Examples.Scharfschiessen
                 {
                     LevelObjects[t].Render(_mtxCam);
                     LevelObjects[t].Update();
-                
                 
                     for (int i = 0; i < LevelObjects.Count; i++)
                     {
@@ -192,7 +204,7 @@ namespace Examples.Scharfschiessen
        
         public void Shoot(float4x4 camMtx)
         {
-            var tomato = new Tomato(_rc, _meshTomtato, new float3(camMtx.Row3), float4x4.Identity, 0.01f, this);
+            var tomato = new Tomato(_rc, _meshTomtato, new float3(camMtx.Row3), float3.Zero, 0.01f, this);
             LevelObjects.Add(tomato);
             tomato.ShootTomato(World, camMtx, _sphereCollider);
         }
