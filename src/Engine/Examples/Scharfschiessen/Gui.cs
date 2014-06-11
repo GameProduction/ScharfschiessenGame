@@ -35,6 +35,7 @@ namespace Examples.Scharfschiessen
         public GUIText nameInput;
         private bool _inputToggle;
         private bool _highscore;
+        public string playername;
 
         private enum _buttons
         {
@@ -229,6 +230,7 @@ namespace Examples.Scharfschiessen
                         nameInput.Text = "Player1";
                     }
                     Console.Write("Name = " + nameInput.Text);
+                    playername = nameInput.Text;
                     System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
                 }
 
@@ -357,6 +359,7 @@ namespace Examples.Scharfschiessen
             //To-Do: Hier verlinken zur Datenbank
             System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
             Console.Write("Name = " + nameInput.Text);
+            playername = nameInput.Text;
            _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
         }
 
