@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Security.Authentication.ExtendedProtection;
-using System.Text;
 using System.Windows;
 using System.Windows.Forms;
 using Fusee.Engine;
 using Fusee.Math;
-using System.Windows.Controls;
-using MessageBox = System.Windows.Forms.MessageBox;
 
 
 namespace Examples.Scharfschiessen
@@ -34,10 +27,15 @@ namespace Examples.Scharfschiessen
         private GUIText _guiText4;
         private GUIText _guiText5;
         private GUIText _guiText6;
+        private GUIText _name;
         // private GUIText[] _guiText;
         private GUIButton[] _guiDiffs;
         private GUIImage[] _guiImages;
         private double _countdown;
+        public GUIText nameInput;
+        private bool _inputToggle;
+        private bool _highscore;
+
         private enum _buttons
         {
             btnStart,
@@ -51,10 +49,11 @@ namespace Examples.Scharfschiessen
             btniNochmal,
             btniHighscore
         };
-       
+
         public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler)
             //da initialisieren wir alles für den GuiHandler
         {
+            _highscore = false;
             _rCanvas = rCanvas;
             var height = _rCanvas.Height;
             var width = _rCanvas.Width;
@@ -73,6 +72,11 @@ namespace Examples.Scharfschiessen
             _guiFontAlphaWood18 = RC.LoadFont("Assets/AlphaWood.ttf", 18);
             _guiFontWESTERN30 = RC.LoadFont("Assets/WESTERN.ttf", 30);
 
+            //Eingabetext Name für Highscore
+            texthight = GUIText.GetTextHeight("Lorem ipsum", _guiFontCabin12);
+            textwidth = GUIText.GetTextWidth("Name: ", _guiFontCabin12);
+            _name = new GUIText("Name: ", _guiFontCabin12, (width / 2) - (int)(textwidth), (height / 2) - (int)(texthight), new float4(0, 0, 0, 1));
+            nameInput = new GUIText("", _guiFontCabin12, (width / 2), (height / 2) - (int)(texthight), new float4(1, 0, 0, 1));
 
             //Text Mainmenü: Scha(r)fschießen
             textwidth = GUIText.GetTextWidth("Scha(r)fschießen", _guiFontWESTERN30);
@@ -107,11 +111,11 @@ namespace Examples.Scharfschiessen
                 (int) texthight*2);
 
             // Button HighscoreMenü: Highscore
-            textwidth = GUIText.GetTextWidth("Highscore anzeigen", _guiFontCabin12);
-            _guiText6 = new GUIText("Highscore anzeigen", _guiFontCabin12, (width/2) + (int) (textwidth/2),
+            textwidth = GUIText.GetTextWidth("In Highscore eintragen", _guiFontCabin12);
+            _guiText6 = new GUIText("In Highscore eintragen", _guiFontCabin12, (width / 2) + (int)(textwidth / 2),
                 (height/2) + (height/10));
             _guiText6.TextColor = new float4(1, 1, 1, 1);
-            texthight = GUIText.GetTextHeight("Highscore anzeigen", _guiFontCabin12);
+            texthight = GUIText.GetTextHeight("In Highscore eintragen", _guiFontCabin12);
             _guiDiffs[(int) _buttons.btnHighscore] = new GUIButton(_guiText6.PosX, _guiText6.PosY - (int) texthight, -2,
                 (int) textwidth, (int) texthight);
             _guiImages[(int) _btnimages.btniHighscore] = new GUIImage("Assets/holz.png",
@@ -119,14 +123,21 @@ namespace Examples.Scharfschiessen
                 (int) texthight*2);
         }
 
+
         public void DrawGui()
         {
             //Gui Rendern
             _guiHandler.RenderGUI();
+
             if (_gameHandler.Game != null) //Countdown nur während dem Spiel
             {
                 _countdown = (int) _gameHandler.Game.Countdown;
                 _guiText1.Text = "Zeit:  " + _countdown;
+            }
+
+            if (_highscore = true) //Namen eingeben nur nach dem Spiel
+            {
+                UpdateCustomText();
             }
         }
 
@@ -161,6 +172,7 @@ namespace Examples.Scharfschiessen
         {
             Console.WriteLine("MainMenuGui");
             //set guiHander GUI für Hauptmenu
+            //_guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown -= OnbtnHighscore;
             _guiHandler = _mainmenuHandler;
             _mainmenuHandler.Add(_guiImages[(int) _btnimages.btniStart]);
             _mainmenuHandler.Add(_guiText1);
@@ -174,7 +186,7 @@ namespace Examples.Scharfschiessen
         {
             //set guiHander für während das Spiel läuft (während der Pause?)
             Console.WriteLine("InGameGui");
-            _guiDiffs[0].OnGUIButtonDown -= OnbtnHighscore;
+            _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown -= OnbtnHighscore;
             _inGameHandler.Remove(_guiText1);
             _guiHandler = _inGameHandler;
             _countdown = _gameHandler.Game.Countdown;
@@ -188,6 +200,7 @@ namespace Examples.Scharfschiessen
         {
             //set guiHander für die Highscore Anzeige
             Console.WriteLine("HighScoreGui");
+            _highscore = true;
             _guiHandler = _highScoreHandler;
             _highScoreHandler.Add(_guiImages[(int) _btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int) _btnimages.btniHighscore]);
@@ -198,13 +211,153 @@ namespace Examples.Scharfschiessen
             _guiDiffs[(int) _buttons.btnNochmal].OnGUIButtonDown += OnbtnPlay;
             _guiHandler.Add(_guiDiffs[(int) _buttons.btnHighscore]);
             _guiDiffs[(int) _buttons.btnHighscore].OnGUIButtonDown += OnbtnHighscore;
+            _highScoreHandler.Add(nameInput);
+            _highScoreHandler.Add(_name); 
         }
 
+        public void UpdateCustomText()
+        {
+            _inputToggle = true;
+            //Console.Write("Bitte Namen eingeben");
+
+                if (Input.Instance.IsKeyDown(KeyCodes.Enter))
+                {
+                    _inputToggle = !_inputToggle;
+                    _highscore = false;
+                    if (nameInput.Text.Length <= 0)
+                    {
+                        nameInput.Text = "Player1";
+                    }
+                    Console.Write("Name = " + nameInput.Text);
+                    System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
+                }
+
+                if (_inputToggle)
+                {
+                    if (Input.Instance.IsKeyDown(KeyCodes.A))
+                    {
+                        nameInput.Text = nameInput.Text + "A";
+                        Console.WriteLine("A");
+                    }
+                        /*else if (Input.Instance.IsKeyDown(KeyCodes.B))
+                {
+                    _customText.Text = _customText.Text + "B";
+                }
+               */
+                    else if (Input.Instance.IsKeyDown(KeyCodes.C))
+                    {
+                        nameInput.Text = nameInput.Text + "C";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.D))
+                    {
+                        nameInput.Text = nameInput.Text + "D";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.E))
+                    {
+                        nameInput.Text = nameInput.Text + "E";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.F))
+                    {
+                        nameInput.Text = nameInput.Text + "F";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.G))
+                    {
+                        nameInput.Text = nameInput.Text + "G";
+                    }
+                        /*else if (Input.Instance.IsKeyDown(KeyCodes.H))
+                {
+                    _customText.Text = _customText.Text + "H";
+                }
+                else if (Input.Instance.IsKeyDown(KeyCodes.I))
+                {
+                    _customText.Text = _customText.Text + "I";
+                }
+               */
+                    else if (Input.Instance.IsKeyDown(KeyCodes.J))
+                    {
+                        nameInput.Text = nameInput.Text + "J";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.K))
+                    {
+                        nameInput.Text = nameInput.Text + "K";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.L))
+                    {
+                        nameInput.Text = nameInput.Text + "L";
+                    }
+                        /* else if (Input.Instance.IsKeyDown(KeyCodes.M))
+                {
+                    _customText.Text = _customText.Text + "M";
+                }
+               */
+                    else if (Input.Instance.IsKeyDown(KeyCodes.N))
+                    {
+                        nameInput.Text = nameInput.Text + "N";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.O))
+                    {
+                        nameInput.Text = nameInput.Text + "O";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.P))
+                    {
+                        nameInput.Text = nameInput.Text + "P";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.Q))
+                    {
+                        nameInput.Text = nameInput.Text + "Q";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.R))
+                    {
+                        nameInput.Text = nameInput.Text + "R";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.S))
+                    {
+                        nameInput.Text = nameInput.Text + "S";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.T))
+                    {
+                        nameInput.Text = nameInput.Text + "T";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.U))
+                    {
+                        nameInput.Text = nameInput.Text + "U";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.V))
+                    {
+                        nameInput.Text = nameInput.Text + "V";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.W))
+                    {
+                        nameInput.Text = nameInput.Text + "W";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.X))
+                    {
+                        nameInput.Text = nameInput.Text + "X";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.Y))
+                    {
+                        nameInput.Text = nameInput.Text + "Y";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.Z))
+                    {
+                        nameInput.Text = nameInput.Text + "Z";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.Back))
+                    {
+                        if (nameInput.Text.Length > 0)
+                        {
+                            nameInput.Text = nameInput.Text.Substring(0, nameInput.Text.Length - 1);
+                        }
+                    }
+                }
+        }
 
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
             //To-Do: Hier verlinken zur Datenbank
-            _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
+            System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
+            Console.Write("Name = " + nameInput.Text);
+           _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
         }
 
         private void OnbtnPlay(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
