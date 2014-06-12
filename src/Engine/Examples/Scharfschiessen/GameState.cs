@@ -40,7 +40,6 @@ namespace Examples.Scharfschiessen
                 if (value == State.Playing && LastState != State.HiddenPause)
                 {
                     GameHandler.StartGame();
-                    Debug.WriteLine("value");
                 }
                 else if (value == State.Playing && LastState == State.HiddenPause)
                 {
