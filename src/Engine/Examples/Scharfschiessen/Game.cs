@@ -65,25 +65,30 @@ namespace Examples.Scharfschiessen
             LevelObjects.Add(tomato);*/
             var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
             LevelObjects.Add(go);
-            var sheep1 = new Sheep(_rc, _meshSheep, new float3(50, 0, 100), float3.Zero, 0.02f, this);
+            var sheep1 = new Sheep(_rc, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this);
             LevelObjects.Add(sheep1);
-
-            var sheep2 = new Sheep(_rc, _meshSheep, new float3(-50, 0, 50), float3.Zero, 0.02f, this);
-            LevelObjects.Add(sheep2);
         }
 
+        
+        //posiotion für neues Schaf
+        public void FindPosition(out float3 pos, out float3 rot)
+        {
+            pos = new float3(0, 0, 0);
+            rot = new float3(0, 0, 0);
+            //Rechenen
+        }
         //neues Schaf wird gespawned
-        public void InstantiateSheepAt(float3 pos, float3 rot)
+        public void InstantiateSheep()
         {
+            float3 pos = float3.Zero;
+            float3 rot = float3.Zero;
+            FindPosition(out pos, out rot);
             var sheep = new Sheep(_rc, _meshSheep, pos, rot, 0.02f, this);
-            SheepList.Add(sheep);
+            LevelObjects.Add(sheep);
         }
 
-        public float4x4 FindPosition()
-        {
-            float4x4 mtx = float4x4.Identity;
-            return mtx;
-        }
+
+        
 
         public void Update()
         {
@@ -167,14 +172,9 @@ namespace Examples.Scharfschiessen
 
         public void PlayerInput()
         {
-            //if (Input.Instance.IsButton(MouseButtons.Left))
-           // {
-                _angleVelHorz = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseX);
-                _angleVelVert = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseY);
-            //}
-            // move per mouse
-            //_angleVelHorz = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseX);
-            //_angleVelVert = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseY); 
+
+            _angleVelHorz = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseX);
+            _angleVelVert = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseY);
             
             _angleHorz += _angleVelHorz;
             _angleVert += _angleVelVert;
@@ -193,7 +193,8 @@ namespace Examples.Scharfschiessen
             _rotX = float4x4.CreateRotationX(_angleVert);
             var mtxRot = float4x4.CreateRotationX(_angleVert) * float4x4.CreateRotationY(_angleHorz);
 
-            var mtxCam = mtxRot * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); _mtxCam = mtxCam;
+            var mtxCam = mtxRot * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); 
+            _mtxCam = mtxCam;
             
             //Schiessen
             if (Input.Instance.IsKeyUp(KeyCodes.Space))

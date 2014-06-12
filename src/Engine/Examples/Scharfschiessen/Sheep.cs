@@ -14,26 +14,46 @@ namespace Examples.Scharfschiessen
     {
         public float Speed { get; set; }
         private float _distance;
+        private float3 Pos;
+        private float _alpha;
+        private float3 P = float3.Zero;
 
 
         public Sheep(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game)
             : base(rc, mesh, position, rotation, scaleFactor, game)
         {
+            Color = new float4(0.5f, 0.8f, 0.8f, 1);
             _distance = position.Length;
             Speed = 1;
             Radius = 2;
-            Color = new float4(0.5f, 0.8f, 0.8f, 1);
+
+            Pos = position;
+            
+            _alpha =  (float) Math.Tan(position.x/position.z);
+            Debug.WriteLine(ObjectMtx);
         }
 
         public override void Update()
         {
             base.Update();
+            
             Move();
         }
 
         public void Move()
         {
-            Position = Position*float4x4.CreateRotationY(0.001f)*Speed;
+            if (_alpha == 2 * Math.PI)
+            {
+                _alpha = 0;
+            }
+            else
+            {
+                _alpha += 0.1f;
+            }
+            P.x = 50 * (float)Math.Sin(_alpha/3);
+            P.z = 50 * (float)Math.Cos(_alpha/3);
+
+            ObjectMtx *= float4x4.CreateTranslation(-ObjectMtx.Column3.xyz) * float4x4.CreateTranslation(P);
         }
 
         public override void Collided()
