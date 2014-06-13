@@ -42,6 +42,7 @@ namespace Examples.Scharfschiessen
             if (_tomatoRB != null)
             {
                 Position = _tomatoRB.Position;
+                ObjectMtx *= float4x4.CreateTranslation(Position);
             }
         }
 

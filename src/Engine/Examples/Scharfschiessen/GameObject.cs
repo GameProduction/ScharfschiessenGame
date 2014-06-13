@@ -48,6 +48,7 @@ namespace Examples.Scharfschiessen
 
         public virtual void Update()
         {
+           
             //setPosition
             //setOrientaion
         }
