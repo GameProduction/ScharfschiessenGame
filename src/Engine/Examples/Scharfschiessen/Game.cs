@@ -31,7 +31,8 @@ namespace Examples.Scharfschiessen
         private List<Sheep> SheepList = new List<Sheep>();
 
         private SceneLoader _sceneLoader;
-        private SceneRenderer srTomato;
+        private readonly SceneRenderer srTomato;
+        private readonly SceneRenderer srSheep;
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
@@ -42,8 +43,7 @@ namespace Examples.Scharfschiessen
             _rc = rc;
             _sceneLoader = new SceneLoader();
             srTomato = _sceneLoader.LoadTomato();
-            _meshTomtato = MeshReader.LoadMesh(@"Assets/tomate.obj.model");
-            _meshSheep = MeshReader.LoadMesh(@"Assets/Cube.obj.model");
+            srSheep = _sceneLoader.LoadSheep();
             CreateEnvironment();
             Points = 0;
             LoadLevel(1);
@@ -54,7 +54,6 @@ namespace Examples.Scharfschiessen
 
         public void LoadLevel(int i)
         {
-            Debug.WriteLine("LoadLevel");
             _active = true;
             DisposePhysic();
             World = new DynamicWorld();
@@ -63,7 +62,7 @@ namespace Examples.Scharfschiessen
             Countdown = 30;
         }
 
-        private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
+        //private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
 
         private void CreateEnvironment()
         {
@@ -71,8 +70,8 @@ namespace Examples.Scharfschiessen
             //LevelObjects.Add(tomato);
             //var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
             //LevelObjects.Add(go);
-            //var sheep1 = new Sheep(_rc, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this);
-            //LevelObjects.Add(sheep1);
+            var sheep1 = new Sheep(_rc, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this, srSheep);
+            LevelObjects.Add(sheep1);
         }
 
         

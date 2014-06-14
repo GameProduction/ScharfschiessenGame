@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows.Media.Animation;
 using Fusee.Engine;
+using Fusee.Engine.SimpleScene;
 using Fusee.Math;
 
 namespace Examples.Scharfschiessen
@@ -19,8 +20,8 @@ namespace Examples.Scharfschiessen
         private float3 P = float3.Zero;
 
 
-        public Sheep(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game)
-            : base(rc, mesh, position, rotation, scaleFactor, game)
+        public Sheep(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game, SceneRenderer sc)
+            : base(rc, mesh, position, rotation, scaleFactor, game, sc)
         {
             Color = new float4(0.5f, 0.8f, 0.8f, 1);
             _distance = position.Length;
@@ -30,7 +31,8 @@ namespace Examples.Scharfschiessen
             Pos = position;
             
             _alpha =  (float) Math.Tan(position.x/position.z);
-            Debug.WriteLine(ObjectMtx);
+            var imgData = rc.LoadImage("Assets/SchafOberflächenfarbe.jpg");
+            _iTex = rc.CreateTexture(imgData);
         }
 
         public override void Update()
@@ -48,7 +50,7 @@ namespace Examples.Scharfschiessen
             }
             else
             {
-                _alpha += 0.1f;
+                _alpha += (float)Time.Instance.DeltaTime * Speed;
             }
             P.x = 50 * (float)Math.Sin(_alpha/3);
             P.z = 50 * (float)Math.Cos(_alpha/3);

@@ -33,9 +33,10 @@ namespace Examples.Scharfschiessen
         internal float4 Color;
         internal SceneRenderer SceneRenderer;
 
-        public GameObject(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game)
+        public GameObject(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game, SceneRenderer sc)
         {
             this.Game = game;
+            SceneRenderer = sc;
             _rc = rc;
             _spColor = MoreShaders.GetDiffuseColorShader(_rc);
             _colorParam = _spColor.GetShaderParam("color");

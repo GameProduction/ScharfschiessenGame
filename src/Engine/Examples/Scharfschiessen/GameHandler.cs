@@ -66,7 +66,6 @@ namespace Examples.Scharfschiessen
                 GameState.CurrentState = GameState.State.HiddenPause;
                 RCanvas.SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0,
                     -Screen.PrimaryScreen.Bounds.Height / 5);
-                Debug.WriteLine(GameState.CurrentState);
                 Time.Instance.TimeFlow = 0;
             }
             else if (Input.Instance.IsKeyUp(KeyCodes.B))
