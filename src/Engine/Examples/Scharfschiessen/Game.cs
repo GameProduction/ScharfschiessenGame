@@ -28,7 +28,10 @@ namespace Examples.Scharfschiessen
         private Mesh _meshSheep;
         public DynamicWorld World { get; set; }
         private SphereShape _sphereCollider;
-        private List<Sheep> SheepList = new List<Sheep>(); 
+        private List<Sheep> SheepList = new List<Sheep>();
+
+        private SceneLoader _sceneLoader;
+        private SceneRenderer srTomato;
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
@@ -37,11 +40,14 @@ namespace Examples.Scharfschiessen
         {
             _gameHandler = gh;
             _rc = rc;
-            _meshTomtato = MeshReader.LoadMesh(@"Assets/Tomato.obj.model");
+            _sceneLoader = new SceneLoader();
+            srTomato = _sceneLoader.LoadTomato();
+            _meshTomtato = MeshReader.LoadMesh(@"Assets/tomate.obj.model");
             _meshSheep = MeshReader.LoadMesh(@"Assets/Cube.obj.model");
             CreateEnvironment();
             Points = 0;
             LoadLevel(1);
+            
         }
 
        
@@ -61,12 +67,12 @@ namespace Examples.Scharfschiessen
 
         private void CreateEnvironment()
         {
-            /*var tomato = new Tomato(_rc, _meshTomtato, new float3(0, 0, 50), float4x4.Identity, 0.2f, this);
-            LevelObjects.Add(tomato);*/
-            var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
-            LevelObjects.Add(go);
-            var sheep1 = new Sheep(_rc, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this);
-            LevelObjects.Add(sheep1);
+            //var tomato = new Tomato(_rc, _meshTomtato, new float3(0, 0, 60), float3.Zero, 0.2f, this, srTomato);
+            //LevelObjects.Add(tomato);
+            //var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
+            //LevelObjects.Add(go);
+            //var sheep1 = new Sheep(_rc, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this);
+            //LevelObjects.Add(sheep1);
         }
 
         
@@ -83,8 +89,8 @@ namespace Examples.Scharfschiessen
             float3 pos = float3.Zero;
             float3 rot = float3.Zero;
             FindPosition(out pos, out rot);
-            var sheep = new Sheep(_rc, _meshSheep, pos, rot, 0.02f, this);
-            LevelObjects.Add(sheep);
+            //var sheep = new Sheep(_rc, _meshSheep, pos, rot, 0.02f, this);
+            //LevelObjects.Add(sheep);
         }
 
 
@@ -92,6 +98,7 @@ namespace Examples.Scharfschiessen
 
         public void Update()
         {
+            
             if (_active)
             {
                 if (World != null)
@@ -205,7 +212,7 @@ namespace Examples.Scharfschiessen
        
         public void Shoot(float4x4 camMtx)
         {
-            var tomato = new Tomato(_rc, _meshTomtato, new float3(camMtx.Row3), float3.Zero, 0.01f, this);
+            var tomato = new Tomato(_rc, _meshTomtato, new float3(camMtx.Column3.xyz), float3.Zero, 0.01f, this, srTomato);
             LevelObjects.Add(tomato);
             tomato.ShootTomato(World, camMtx, _sphereCollider);
         }

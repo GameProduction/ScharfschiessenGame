@@ -129,10 +129,10 @@
     <None Include="Assets\Teapot.obj.model">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Assets\tomate.fus">
+    <None Include="Assets\tomate.obj.model">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Assets\Tomato.obj.model">
+    <None Include="Assets\tomato.fus">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Assets\WESTERN.TTF">

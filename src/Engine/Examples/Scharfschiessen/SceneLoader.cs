@@ -12,22 +12,24 @@ namespace Examples.Scharfschiessen
 {
     public class SceneLoader
     {
-        private SceneRenderer _sr;
+        public SceneRenderer _sr;
         private float4x4 _modelScaleOffset;
 
         private Mesh _meshTomtato;
 
-        private void LoadEnvironment()
+        public void LoadEnvironment()
         {
+            //return Load("environment");
         }
 
         public SceneRenderer LoadTomato()
         {
-            return Loader("tomate");
+            return Loader("tomato");
         }
 
-        private void LoadSheep()
+        public SceneRenderer LoadSheep()
         {
+            return Loader("sheep");
         }
 
 
@@ -58,6 +60,7 @@ namespace Examples.Scharfschiessen
             _modelScaleOffset = float4x4.CreateScale(200.0f / scale) * float4x4.CreateTranslation(-bbox.Center);
         }
 
+        
 
     }
 }

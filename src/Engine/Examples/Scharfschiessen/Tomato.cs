@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Fusee.Engine;
+using Fusee.Engine.SimpleScene;
 using Fusee.Math;
 
 namespace Examples.Scharfschiessen
@@ -13,11 +14,15 @@ namespace Examples.Scharfschiessen
         
 
         private RigidBody _tomatoRB;
-        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game)
+        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game, SceneRenderer sc)
             : base(rc, mesh, position, rotation, scaleFactor, game)
         {
             Color = new float4(0.5f, 0.1f, 0.1f, 1);
             Radius = 1;
+            // load texture
+            var imgData = rc.LoadImage("Assets/TomateOberflächenfarbe.jpg");
+            _iTex = rc.CreateTexture(imgData);
+            SceneRenderer = sc;
         }
 
         public void ShootTomato(DynamicWorld world, float4x4 mtxcam, SphereShape spherecollider)
@@ -30,7 +35,7 @@ namespace Examples.Scharfschiessen
             float3 one = new float3(0, 0, 1);
             float3 to;
             float3.TransformVector(ref one, ref mtxcam, out to);
-            float impuls = 150;
+            float impuls = 50;
 
             _tomatoRB.ApplyCentralImpulse = to * impuls;
         }
