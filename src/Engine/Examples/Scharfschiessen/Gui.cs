@@ -28,10 +28,12 @@ namespace Examples.Scharfschiessen
         private GUIText _guiText5;
         private GUIText _guiText6;
         private GUIText _name;
+        private GUIText _guiTextTitel;
         // private GUIText[] _guiText;
         private GUIButton[] _guiDiffs;
         private GUIImage[] _guiImages;
         private double _countdown;
+        private double _points;
         public GUIText nameInput;
         private bool _inputToggle;
         private bool _highscore;
@@ -41,7 +43,8 @@ namespace Examples.Scharfschiessen
         {
             btnStart,
             btnNochmal,
-            btnHighscore
+            btnHighscore,
+            btn1, btn2, btn3, btn4, btn5
         };
 
         private enum _btnimages
@@ -65,7 +68,7 @@ namespace Examples.Scharfschiessen
             _mainmenuHandler = new GUIHandler(RC);
             _inGameHandler = new GUIHandler(RC);
             _highScoreHandler = new GUIHandler(RC);
-            _guiDiffs = new GUIButton[3];
+            _guiDiffs = new GUIButton[8];
             _guiImages = new GUIImage[3];
 
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
@@ -81,8 +84,17 @@ namespace Examples.Scharfschiessen
 
             //Text Mainmenü: Scha(r)fschießen
             textwidth = GUIText.GetTextWidth("Scha(r)fschießen", _guiFontWESTERN30);
-            _guiText1 = new GUIText("Scha(r)fschießen", _guiFontWESTERN30, (width/2) - (int) (textwidth/2), (height/3));
+            _guiTextTitel = new GUIText("Scha(r)fschießen", _guiFontWESTERN30, (width/2) - (int) (textwidth/2), (height/3));
+            _guiTextTitel.TextColor = new float4(0, 0, 0, 1);
+
+            // Text InGame
+            textwidth = GUIText.GetTextWidth("Time: ", _guiFontCabin12);
+            texthight = GUIText.GetTextHeight("Time: ", _guiFontCabin12);
+            _guiText1 = new GUIText("Time: " + _countdown, _guiFontCabin12, (int)textwidth, (int)(texthight*2));
             _guiText1.TextColor = new float4(0, 0, 0, 1);
+            textwidth = GUIText.GetTextWidth("Time: ", _guiFontCabin12);
+            _guiText2 = new GUIText("Points: " + _points, _guiFontCabin12, width - (int)(textwidth * 3), (int)(texthight*2));
+            _guiText2.TextColor = new float4(0, 0, 0, 1);
 
             // Button MainMenü: Starten
             textwidth = GUIText.GetTextWidth("Starten", _guiFontCabin12);
@@ -122,6 +134,13 @@ namespace Examples.Scharfschiessen
             _guiImages[(int) _btnimages.btniHighscore] = new GUIImage("Assets/holz.png",
                 _guiText6.PosX - (int) textwidth/2, _guiText6.PosY - (int) (texthight*1.5), -1, (int) textwidth*2,
                 (int) texthight*2);
+
+            //Test-Dummies für Munition
+            _guiDiffs[(int)_buttons.btn1] = new GUIButton(width - (int)textwidth - 10, height / 2, -2, 5, 10);
+            _guiDiffs[(int)_buttons.btn2] = new GUIButton(width - (int)textwidth - 20, height / 2, -2, 5, 10);
+            _guiDiffs[(int)_buttons.btn3] = new GUIButton(width - (int)textwidth - 30, height / 2, -2, 5, 10);
+            _guiDiffs[(int)_buttons.btn4] = new GUIButton(width - (int)textwidth - 40, height / 2, -2, 5, 10);
+            _guiDiffs[(int)_buttons.btn5] = new GUIButton(width - (int)textwidth - 50, height / 2, -2, 5, 10);
         }
 
 
@@ -133,7 +152,10 @@ namespace Examples.Scharfschiessen
             if (_gameHandler.Game != null) //Countdown nur während dem Spiel
             {
                 _countdown = (int) _gameHandler.Game.Countdown;
-                _guiText1.Text = "Zeit:  " + _countdown;
+                _guiText1.Text = "Time:  " + _countdown;
+                _guiText2.Text = "Points: " + _points;
+                
+                //To-Do: Munition(btn1 bis btn10) abziehen, wenn geklickt wird
             }
 
             if (_highscore = true) //Namen eingeben nur nach dem Spiel
@@ -176,7 +198,7 @@ namespace Examples.Scharfschiessen
             //_guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown -= OnbtnHighscore;
             _guiHandler = _mainmenuHandler;
             _mainmenuHandler.Add(_guiImages[(int) _btnimages.btniStart]);
-            _mainmenuHandler.Add(_guiText1);
+            _mainmenuHandler.Add(_guiTextTitel);
             _mainmenuHandler.Add(_guiText3);
             _guiHandler.Add(_guiDiffs[(int) _buttons.btnStart]);
             _guiDiffs[(int) _buttons.btnStart].OnGUIButtonDown += OnbtnPlay;
@@ -188,13 +210,16 @@ namespace Examples.Scharfschiessen
             //set guiHander für während das Spiel läuft (während der Pause?)
             Console.WriteLine("InGameGui");
             _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown -= OnbtnHighscore;
-            _inGameHandler.Remove(_guiText1);
+            _inGameHandler.Remove(_guiTextTitel);
             _guiHandler = _inGameHandler;
             _countdown = _gameHandler.Game.Countdown;
-            _guiText1 = new GUIText("Zeit: " + _countdown, _guiFontCabin12, 10, 15);
-            _guiText1.TextColor = new float4(0, 0, 0, 1);
             _inGameHandler.Add(_guiText1);
-
+            _inGameHandler.Add(_guiText2);
+            _guiHandler.Add(_guiDiffs[(int)_buttons.btn1]);
+            _guiHandler.Add(_guiDiffs[(int)_buttons.btn2]);
+            _guiHandler.Add(_guiDiffs[(int)_buttons.btn3]);
+            _guiHandler.Add(_guiDiffs[(int)_buttons.btn4]);
+            _guiHandler.Add(_guiDiffs[(int)_buttons.btn5]);
         }
 
         internal void HighScoreGui()
