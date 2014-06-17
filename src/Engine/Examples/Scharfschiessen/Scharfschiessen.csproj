@@ -59,6 +59,7 @@
     <Compile Include="SceneLoader.cs" />
     <Compile Include="Sheep.cs" />
     <Compile Include="Tomato.cs" />
+    <Compile Include="Weapon.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\holz.png">

@@ -16,21 +16,24 @@ namespace Examples.Scharfschiessen
 {
     public class Game
     {
-        private readonly RenderContext _rc;
+        public RenderContext RC { get; private set; }
+    
 
         public int Level { get; set; }
         public double Countdown { get; set; }
         private bool _active;
         private float4x4 _mtxCam;
         private GameHandler _gameHandler;
-        private List<GameObject> LevelObjects = new List<GameObject>();
+        public List<GameObject> LevelObjects = new List<GameObject>();
         private Mesh _meshTomtato;
         private Mesh _meshSheep;
         public DynamicWorld World { get; set; }
         private SphereShape _sphereCollider;
         private List<Sheep> SheepList = new List<Sheep>();
+        private Weapon _weapon;
 
-        private SceneLoader _sceneLoader;
+        public SceneLoader SceneLoader { get; private set; }
+    
         private readonly SceneRenderer srTomato;
         private readonly SceneRenderer srSheep;
         
@@ -40,10 +43,10 @@ namespace Examples.Scharfschiessen
         public Game(GameHandler gh,RenderContext rc)
         {
             _gameHandler = gh;
-            _rc = rc;
-            _sceneLoader = new SceneLoader();
-            srTomato = _sceneLoader.LoadTomato();
-            srSheep = _sceneLoader.LoadSheep();
+            RC = rc;
+            SceneLoader = new SceneLoader();
+            srTomato = SceneLoader.LoadTomato();
+            srSheep = SceneLoader.LoadSheep();
             CreateEnvironment();
             Points = 0;
             LoadLevel(1);
@@ -60,6 +63,7 @@ namespace Examples.Scharfschiessen
             _sphereCollider = World.AddSphereShape(1);
             Level = i;
             Countdown = 30;
+            _weapon = new Weapon(World, this);
         }
 
         //private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
@@ -70,7 +74,7 @@ namespace Examples.Scharfschiessen
             //LevelObjects.Add(tomato);
             //var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
             //LevelObjects.Add(go);
-            var sheep1 = new Sheep(_rc, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this, srSheep);
+            var sheep1 = new Sheep(RC, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this, srSheep);
             LevelObjects.Add(sheep1);
         }
 
@@ -203,15 +207,17 @@ namespace Examples.Scharfschiessen
             _mtxCam = mtxCam;
             
             //Schiessen
-            if (Input.Instance.IsKeyUp(KeyCodes.Space))
+            _weapon.WeaponInput(_mtxCam);
+            /*if (Input.Instance.IsKeyUp(KeyCodes.Space))
             {
-                Shoot(mtxCam);
-            }
+                _weapon.Shoot(mtxCam);
+                //Shoot(mtxCam);
+            }*/
         }
        
         public void Shoot(float4x4 camMtx)
         {
-            var tomato = new Tomato(_rc, _meshTomtato, new float3(camMtx.Column3.xyz), float3.Zero, 0.01f, this, srTomato);
+            var tomato = new Tomato(RC, _meshTomtato, new float3(camMtx.Column3.xyz), float3.Zero, 0.01f, this, srTomato);
             LevelObjects.Add(tomato);
             tomato.ShootTomato(World, camMtx, _sphereCollider);
         }
