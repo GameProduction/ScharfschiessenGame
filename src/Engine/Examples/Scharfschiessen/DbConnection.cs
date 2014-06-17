@@ -7,11 +7,11 @@ namespace Examples.Scharfschiessen
 {
     class DbConnection
     {
-        private MySqlConnection connection;
-        private string server;
-        private string database;
-        private string uid;
-        private string password;
+        private MySqlConnection _connection;
+        private string _server;
+        private string _database;
+        private string _uid;
+        private string _password;
 
         // Construktor
         public DbConnection()
@@ -21,15 +21,14 @@ namespace Examples.Scharfschiessen
 
         private void Initialize()
         {
-            server = "87.106.27.181:3306";
-            database = "schafschiessenDB";
-            uid = "db_anwendung";
-            password = "FEKnnqERy7MHEDpr";
+            _server = "87.106.27.181:3306";
+            _database = "schafschiessenDB";
+            _uid = "db_anwendung";
+            _password = "FEKnnqERy7MHEDpr";
 
-            string connectionString;
-            connectionString = "SERVER=" + server + ";" + "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+            string connectionString = "SERVER=" + _server + ";" + "DATABASE=" + _database + ";" + "UID=" + _uid + ";" + "PASSWORD=" + _password + ";";
 
-            connection = new MySqlConnection(connectionString);
+            _connection = new MySqlConnection(connectionString);
 
         }
 
@@ -39,7 +38,7 @@ namespace Examples.Scharfschiessen
         {
             try
             {
-                connection.Open();
+                _connection.Open();
                 return true;
             }
             catch (MySqlException ex)
@@ -52,11 +51,11 @@ namespace Examples.Scharfschiessen
                 switch (ex.Number)
                 {
                     case 0:
-                        MessageBox.Show("Kann keine Verbindung zum Server erstellt werden. Kontaktieren Sie bitte den Administrator");
+                        MessageBox.Show(@"Kann keine Verbindung zum Server erstellt werden. Kontaktieren Sie bitte den Administrator");
                         break;
 
                     case 1045:
-                        MessageBox.Show("Benutzername/Kennwort ungültig, bitte wiederholen!");
+                        MessageBox.Show(@"Benutzername/Kennwort ungültig, bitte wiederholen!");
                         break;
                 }
                 return false;
@@ -68,7 +67,7 @@ namespace Examples.Scharfschiessen
         {
             try
             {
-                connection.Close();
+                _connection.Close();
                 return true;
             }
             catch (MySqlException ex)
@@ -81,13 +80,13 @@ namespace Examples.Scharfschiessen
         //Insert statement
         public void Insert()
         {
-            string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values( 'Ramo', 10000)";
+            const string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values( 'Ramo', 10000)";
 
             //open connection
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+                var cmd = new MySqlCommand(query, _connection);
 
                 //Execute command
                 cmd.ExecuteNonQuery();
@@ -106,13 +105,10 @@ namespace Examples.Scharfschiessen
             if (this.OpenConnection() == true)
             {
                 //create mysql command
-                MySqlCommand cmd = new MySqlCommand();
+                var cmd = new MySqlCommand {Connection = _connection};
 
                 //Assign the query using CommandText
                 //cmd.CommandText = query;
-
-                //Assign the connection using Connection
-                cmd.Connection = connection;
 
                 //Execute query
                 cmd.ExecuteNonQuery();
@@ -125,11 +121,11 @@ namespace Examples.Scharfschiessen
         //Delete statement
         public void Delete()
         {
-            //string query = "DELETE FROM PlayerPoints WHERE PlayerName='Ramo'";
+            var query = "DELETE FROM PlayerPoints WHERE PlayerName='Ramo'";
 
             if (this.OpenConnection() == true)
             {
-                //MySqlCommand cmd = new MySqlCommand(query, connection);
+                //MySqlCommand cmd = new MySqlCommand(query, _connection);
                 //cmd.ExecuteNonQuery();
                 this.CloseConnection();
             }
@@ -138,10 +134,10 @@ namespace Examples.Scharfschiessen
         //Select statement
         public List<string>[] Select()
         {
-            string query = "SELECT * FROM PlayerPoints";
+            const string query = "SELECT * FROM PlayerPoints";
 
             //Create a list to store the result
-            List<string>[] list = new List<string>[2];
+            var list = new List<string>[2];
             list[0] = new List<string>();
             list[1] = new List<string>();
 
@@ -149,7 +145,7 @@ namespace Examples.Scharfschiessen
             if (this.OpenConnection() == true)
             {
                 //Create Command
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+                var cmd = new MySqlCommand(query, _connection);
                 //Create a data reader and Execute the command
                 MySqlDataReader dataReader = cmd.ExecuteReader();
 
@@ -178,26 +174,26 @@ namespace Examples.Scharfschiessen
         //Count statement
         public int Count()
         {
-            string query = "SELECT Count(*) FROM PlayerPoints";
-            int Count = -1;
+            const string query = "SELECT Count(*) FROM PlayerPoints";
+            int count = -1;
 
             //Open Connection
             if (this.OpenConnection() == true)
             {
                 //Create Mysql Command
-                MySqlCommand cmd = new MySqlCommand(query, connection);
+                var cmd = new MySqlCommand(query, _connection);
 
                 //ExecuteScalar will return one value
-                Count = int.Parse(cmd.ExecuteScalar() + "");
+                count = int.Parse(cmd.ExecuteScalar() + "");
 
                 //close Connection
                 this.CloseConnection();
 
-                return Count;
+                return count;
             }
             else
             {
-                return Count;
+                return count;
             }
         }
 
