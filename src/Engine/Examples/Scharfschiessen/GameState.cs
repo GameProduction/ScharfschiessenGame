@@ -67,6 +67,7 @@ namespace Examples.Scharfschiessen
             Gui = g;
             GameHandler = gameHandler;
             _currentState = State.MainMenu;
+            LastState = CurrentState;
             Gui.SetGui(_currentState);
         }
 

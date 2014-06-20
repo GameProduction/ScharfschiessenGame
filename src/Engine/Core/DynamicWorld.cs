@@ -11,10 +11,17 @@ namespace Fusee.Engine
     public class DynamicWorld
     {
         internal /*readonly*/ IDynamicWorldImp _dwi;
-        
+        private static DynamicWorld _instance;
+
         public DynamicWorld()
         {
             _dwi = ImpFactory.CreateIDynamicWorldImp();
+        }
+
+
+        public static DynamicWorld Instance
+        {
+            get { return _instance ?? (_instance = new DynamicWorld()); }
         }
 
         public float3 Gravity

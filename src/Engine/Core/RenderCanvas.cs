@@ -223,6 +223,7 @@ namespace Fusee.Engine
         {
             Audio.Instance.CloseDevice();
             Network.Instance.CloseDevice();
+            DynamicWorld.Instance.Dispose();
         }
 
         /// <summary>

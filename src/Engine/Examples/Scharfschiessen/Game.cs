@@ -203,24 +203,12 @@ namespace Examples.Scharfschiessen
             _rotX = float4x4.CreateRotationX(_angleVert);
             var mtxRot = float4x4.CreateRotationX(_angleVert) * float4x4.CreateRotationY(_angleHorz);
 
-            var mtxCam = mtxRot * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); 
-            _mtxCam = mtxCam;
+            _mtxCam = mtxRot * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); 
             
             //Schiessen
             _weapon.WeaponInput(_mtxCam);
-            /*if (Input.Instance.IsKeyUp(KeyCodes.Space))
-            {
-                _weapon.Shoot(mtxCam);
-                //Shoot(mtxCam);
-            }*/
         }
        
-        public void Shoot(float4x4 camMtx)
-        {
-            var tomato = new Tomato(RC, _meshTomtato, new float3(camMtx.Column3.xyz), float3.Zero, 0.01f, this, srTomato);
-            LevelObjects.Add(tomato);
-            tomato.ShootTomato(World, camMtx, _sphereCollider);
-        }
 
         public void DisposePhysic()
         {
