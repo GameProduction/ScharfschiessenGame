@@ -28,7 +28,7 @@ namespace Examples.Scharfschiessen
         private Mesh _meshTomtato;
         private Mesh _meshSheep;
         public DynamicWorld World { get; set; }
-        private SphereShape _sphereCollider;
+        public  SphereShape SphereCollider { get; private set; }
         private List<Sheep> SheepList = new List<Sheep>();
         private Weapon _weapon;
 
@@ -60,7 +60,7 @@ namespace Examples.Scharfschiessen
             _active = true;
             DisposePhysic();
             World = new DynamicWorld();
-            _sphereCollider = World.AddSphereShape(1);
+            SphereCollider = World.AddSphereShape(1);
             Level = i;
             Countdown = 30;
             _weapon = new Weapon(World, this);
@@ -204,7 +204,7 @@ namespace Examples.Scharfschiessen
             var mtxRot = float4x4.CreateRotationX(_angleVert) * float4x4.CreateRotationY(_angleHorz);
 
             _mtxCam = mtxRot * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); 
-            
+           
             //Schiessen
             _weapon.WeaponInput(_mtxCam);
         }

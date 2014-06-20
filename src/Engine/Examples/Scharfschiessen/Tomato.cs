@@ -14,9 +14,10 @@ namespace Examples.Scharfschiessen
         
 
         private RigidBody _tomatoRB;
-        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game, SceneRenderer sc)
+        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game, SceneRenderer sc, RigidBody tomatoRigidBody)
             : base(rc, mesh, position, rotation, scaleFactor, game, sc)
         {
+            _tomatoRB = tomatoRigidBody;
             Color = new float4(0.5f, 0.1f, 0.1f, 1);
             Radius = 1;
             // load texture
@@ -24,7 +25,7 @@ namespace Examples.Scharfschiessen
             _iTex = rc.CreateTexture(imgData);
         }
 
-        public void ShootTomato(DynamicWorld world, float4x4 mtxcam, SphereShape spherecollider)
+        /*public void ShootTomato(DynamicWorld world, float4x4 mtxcam, SphereShape spherecollider)
         {
             _tomatoRB = world.AddRigidBody(1, new float3(0,0,0), float3.Zero, spherecollider);
 
@@ -37,7 +38,7 @@ namespace Examples.Scharfschiessen
             float impuls = 50;
 
             _tomatoRB.ApplyCentralImpulse = to * impuls;
-        }
+        }*/
 
 
         public override void Update()
