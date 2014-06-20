@@ -30,7 +30,7 @@ namespace Examples.Scharfschiessen
         public DynamicWorld World { get; set; }
         private SphereShape _sphereCollider;
         private List<Sheep> SheepList = new List<Sheep>();
-        private Weapon _weapon;
+        public Weapon Weapon;
 
         public SceneLoader SceneLoader { get; private set; }
     
@@ -38,7 +38,7 @@ namespace Examples.Scharfschiessen
         private readonly SceneRenderer srSheep;
         
         // Gibt die altuelle Punktzahl an
-        public int Points { get; set; }
+        public int Points { get; private set; }
 
         public Game(GameHandler gh,RenderContext rc)
         {
@@ -63,7 +63,7 @@ namespace Examples.Scharfschiessen
             _sphereCollider = World.AddSphereShape(1);
             Level = i;
             Countdown = 30;
-            _weapon = new Weapon(World, this);
+            Weapon = new Weapon(World, this);
         }
 
         //private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
@@ -207,7 +207,7 @@ namespace Examples.Scharfschiessen
             _mtxCam = mtxCam;
             
             //Schiessen
-            _weapon.WeaponInput(_mtxCam);
+            Weapon.WeaponInput(_mtxCam);
             /*if (Input.Instance.IsKeyUp(KeyCodes.Space))
             {
                 _weapon.Shoot(mtxCam);
