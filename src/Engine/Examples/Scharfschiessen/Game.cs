@@ -49,12 +49,12 @@ namespace Examples.Scharfschiessen
             SceneLoader = new SceneLoader();
             srTomato = SceneLoader.LoadTomato();
             srSheep = SceneLoader.LoadSheep();
-            srSkybox = SceneLoader.LoadSkybox();
+            //srSkybox = SceneLoader.LoadSkybox();
             srLandschaft = SceneLoader.LoadEnvironment();
             CreateEnvironment();
             Points = 0;
             LoadLevel(1);
-            _skybox = new Skybox(RC, srSkybox);
+            _skybox = new Skybox(RC);
             
            
             
@@ -132,7 +132,7 @@ namespace Examples.Scharfschiessen
 
                 PlayerInput();               
             }
-            //_skybox.Render(_mtxCam);
+            
             for (int t = 0; t < LevelObjects.Count; t++)
             {
                 if (LevelObjects[t] != null)
@@ -155,6 +155,8 @@ namespace Examples.Scharfschiessen
                     }
                 }
             }
+
+            _skybox.Render(_mtxCam);
             UpdateLevelObjectList();
         }
 

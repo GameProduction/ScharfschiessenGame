@@ -16,6 +16,12 @@
             return spSimple;
         }
 
+        public static ShaderProgram GetSkyboxShader(RenderContext rc)
+        {
+            var spSimple = rc.CreateShader(VsSkyboxTexture, PsSkyboxTexture);
+            return spSimple;
+        }
+
         /// <summary>
         /// Creates a simple diffuse texture shader in RenderContext.
         /// </summary>
@@ -93,6 +99,40 @@
 
             void main(){
                 gl_FragColor = max(dot(vec3(0,0,-1),normalize(vNormal)), 0.2) * texture2D(texture1, vUV);
+            }";
+
+        private const string VsSkyboxTexture = @"
+            #ifdef GL_ES
+                precision mediump float;
+            #endif
+
+            attribute vec3 fuVertex;
+            attribute vec3 fuNormal;
+            attribute vec2 fuUV;
+
+            varying vec3 vNormal;
+            varying vec2 vUV;
+
+            uniform mat4 FUSEE_MVP;
+            uniform mat4 FUSEE_ITMV;
+
+            void main(){
+                vUV = fuUV;
+                gl_Position = FUSEE_MVP * vec4(fuVertex, 1.0);
+                vNormal = mat3(FUSEE_ITMV[0].xyz, FUSEE_ITMV[1].xyz, FUSEE_ITMV[2].xyz) * fuNormal;
+            }";
+
+        private const string PsSkyboxTexture = @"
+            #ifdef GL_ES
+                precision mediump float;
+            #endif
+
+            uniform sampler2D texture1;
+            varying vec3 vNormal;
+            varying vec2 vUV;
+
+            void main(){
+                gl_FragColor =  texture2D(texture1, vUV);
             }";
 
         private const string VsDiffuse = @"

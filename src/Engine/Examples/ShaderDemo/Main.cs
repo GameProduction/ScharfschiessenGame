@@ -363,7 +363,7 @@ namespace Examples.ShaderDemo
             // Setup Shaderprograms and Update GUI
             _shaderDiffuseColor = MoreShaders.GetDiffuseColorShader(RC);
             _shaderDiffuseTexture = MoreShaders.GetDiffuseTextureShader(RC);
-            _shaderTexture = MoreShaders.GetTextureShader(RC);
+            _shaderTexture = MoreShaders.GetSkyboxShader(RC);
             _shaderDiffuseBumpTexture = MoreShaders.GetBumpDiffuseShader(RC);
             _shaderSpecularTexture = MoreShaders.GetSpecularShader(RC);
             _btnDiffuseColorShader.ButtonColor = ColorHighlightedButton;
