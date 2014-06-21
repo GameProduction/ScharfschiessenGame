@@ -30,7 +30,7 @@ namespace Examples.Scharfschiessen
         public DynamicWorld World { get; set; }
         public  SphereShape SphereCollider { get; private set; }
         private List<Sheep> SheepList = new List<Sheep>();
-        private Weapon _weapon;
+        public Weapon Weapon;
 
         public SceneLoader SceneLoader { get; private set; }
     
@@ -68,7 +68,7 @@ namespace Examples.Scharfschiessen
             SphereCollider = World.AddSphereShape(1);
             Level = i;
             Countdown = 30;
-            _weapon = new Weapon(World, this);
+            Weapon = new Weapon(World, this);
         }
 
         //private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
@@ -213,7 +213,14 @@ namespace Examples.Scharfschiessen
             _mtxCam = mtxRot * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); 
            
             //Schiessen
-            _weapon.WeaponInput(_mtxCam);
+
+            Weapon.WeaponInput(_mtxCam);
+            /*if (Input.Instance.IsKeyUp(KeyCodes.Space))
+            {
+                _weapon.Shoot(mtxCam);
+                //Shoot(mtxCam);
+            }*/
+
         }
        
 

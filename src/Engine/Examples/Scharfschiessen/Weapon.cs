@@ -15,7 +15,8 @@ namespace Examples.Scharfschiessen
         private DynamicWorld _world;
         private SphereShape _sphereCollider;
         private Game _game;
-        private int _magazin = 10;
+        public int Magazin { get; private set; }
+   
         
         private readonly SceneRenderer _srTomato;
         public Weapon(DynamicWorld world, Game game)
@@ -24,9 +25,10 @@ namespace Examples.Scharfschiessen
             _sphereCollider = _world.AddSphereShape(1);
             _game = game;
             _srTomato = _game.SceneLoader.LoadTomato();
+            Magazin = 10;
         }
 
-        public void Shoot(float4x4 mtxcam)
+        private void Shoot(float4x4 mtxcam)
         {
             var tomatoRb = _world.AddRigidBody(1, new float3(0, 0, 0), float3.Zero, _game.SphereCollider);
             var tomato = new Tomato(_game.RC, null, tomatoRb.Position, float3.Zero, 0.01f, _game, _srTomato, tomatoRb);
@@ -47,7 +49,7 @@ namespace Examples.Scharfschiessen
             if (Input.Instance.IsKeyUp(KeyCodes.Space))
             {
                 Shoot(mtxcam);
-                _magazin--;
+                Magazin--;
             }
 
             //Nachladen
