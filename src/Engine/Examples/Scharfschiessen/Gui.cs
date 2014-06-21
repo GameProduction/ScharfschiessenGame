@@ -202,7 +202,9 @@ namespace Examples.Scharfschiessen
                     InGameGui();
                     break;
                 case GameState.State.HiddenPause:
-                    InGameGui();
+                    //InGameGui(); 
+                    // keine Gui anzeigen, da sonst Null-Referenz-Exeption auftreten kann wenn zb. im MainMenu pausiert wird.
+                    // oder DummyFunktion() ist aber eigendlich nciht nötig.
                     break;
                 case GameState.State.Highscore:
                     HighScoreGui();
