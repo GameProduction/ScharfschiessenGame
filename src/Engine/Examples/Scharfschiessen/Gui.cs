@@ -59,6 +59,7 @@ namespace Examples.Scharfschiessen
             btniStart,
             btniNochmal,
             btniHighscore,
+            btniMouse
         };
 
         public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler)
@@ -77,8 +78,9 @@ namespace Examples.Scharfschiessen
             _highScoreHandler = new GUIHandler(RC);
             _guiDiffs = new GUIButton[4];
             _guiImageTomato = new GUIImage[10];
-            _guiImages = new GUIImage[3];
-            
+            _guiImages = new GUIImage[4];
+
+            _guiImages[(int)_btnimages.btniMouse] = new GUIImage("Assets/Mouse.png", width/4, 0, -1, 70, 100);
 
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
@@ -205,15 +207,19 @@ namespace Examples.Scharfschiessen
 
         internal void MainMenuGui()
         {
+
             Console.WriteLine("MainMenuGui");
             //set guiHander GUI für Hauptmenu
             //_guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown -= OnbtnHighscore;
+            var height = _rCanvas.Height;
+            var width = _rCanvas.Width;
             _guiHandler = _mainmenuHandler;
             _mainmenuHandler.Add(_guiImages[(int) _btnimages.btniStart]);
             _mainmenuHandler.Add(_guiTextTitel);
             _mainmenuHandler.Add(_guiText3);
             _guiHandler.Add(_guiDiffs[(int) _buttons.btnStart]);
             _guiDiffs[(int) _buttons.btnStart].OnGUIButtonDown += OnbtnPlay;
+            _mainmenuHandler.Add(_guiImages[(int)_btnimages.btniMouse]);
         }
 
         internal void InGameGui()
