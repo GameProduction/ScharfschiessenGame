@@ -46,8 +46,6 @@ namespace Examples.Scharfschiessen
                 case GameState.State.Highscore:
                     break;
             }
-            //Hide();
-            //TestInput();
             Gui.DrawGui();
         }
 

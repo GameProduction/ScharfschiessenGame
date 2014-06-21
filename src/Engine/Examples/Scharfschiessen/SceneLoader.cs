@@ -17,9 +17,9 @@ namespace Examples.Scharfschiessen
 
         private Mesh _meshTomtato;
 
-        public void LoadEnvironment()
+        public SceneRenderer LoadEnvironment()
         {
-            //return Load("environment");
+            return Loader("Landschaft");
         }
 
         public SceneRenderer LoadTomato()
@@ -29,7 +29,7 @@ namespace Examples.Scharfschiessen
 
         public SceneRenderer LoadSheep()
         {
-            return Loader("schafFus");
+            return Loader("schaf");
         }
 
         public SceneRenderer LoadSkybox()

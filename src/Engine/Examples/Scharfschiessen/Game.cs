@@ -37,6 +37,7 @@ namespace Examples.Scharfschiessen
         private readonly SceneRenderer srTomato;
         private readonly SceneRenderer srSheep;
         private readonly SceneRenderer srSkybox;
+        private readonly SceneRenderer srLandschaft;
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
@@ -49,12 +50,13 @@ namespace Examples.Scharfschiessen
             srTomato = SceneLoader.LoadTomato();
             srSheep = SceneLoader.LoadSheep();
             srSkybox = SceneLoader.LoadSkybox();
+            srLandschaft = SceneLoader.LoadEnvironment();
             CreateEnvironment();
             Points = 0;
             LoadLevel(1);
             _skybox = new Skybox(RC, srSkybox);
-           // var skybox = new Skybox(RC, null, new float3(0,0,0), float3.Zero, 60, this, srSkybox);
-           // LevelObjects.Add(skybox);
+            
+           
             
         }
 
@@ -79,9 +81,12 @@ namespace Examples.Scharfschiessen
             //LevelObjects.Add(tomato);
             //var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
             //LevelObjects.Add(go);
-            var sheep1 = new Sheep(RC, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this, srTomato);
+            var ebene = new GameObject(RC, null, new float3(0, -200, 0), float3.Zero, new float3(20,1,20), this, srLandschaft);
+            ebene.SetTexture("EbeneOberflächenfarbe");
+            LevelObjects.Add(ebene);
+            var sheep1 = new Sheep(RC, _meshSheep, new float3(0, 0,10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), this, srSheep);
             LevelObjects.Add(sheep1);
-            var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, 0.02f, this, srTomato);
+            var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), this, srSheep);
             LevelObjects.Add(sheep2);
         }
 
@@ -127,7 +132,7 @@ namespace Examples.Scharfschiessen
 
                 PlayerInput();               
             }
-            _skybox.Render(_mtxCam);
+            //_skybox.Render(_mtxCam);
             for (int t = 0; t < LevelObjects.Count; t++)
             {
                 if (LevelObjects[t] != null)
@@ -210,17 +215,10 @@ namespace Examples.Scharfschiessen
             _rotX = float4x4.CreateRotationX(_angleVert);
             var mtxRot = float4x4.CreateRotationX(_angleVert) * float4x4.CreateRotationY(_angleHorz);
 
-            _mtxCam = mtxRot * float4x4.LookAt(0, 1, -1, 0, 1, 1, 0, 1, 0); 
-           
+            _mtxCam = mtxRot * float4x4.LookAt(0, 20, -1, 0, 20, 1, 0, 1, 0);
+            _mtxCam *= float4x4.CreateTranslation(0, 20, -1);
             //Schiessen
-
             Weapon.WeaponInput(_mtxCam);
-            /*if (Input.Instance.IsKeyUp(KeyCodes.Space))
-            {
-                _weapon.Shoot(mtxCam);
-                //Shoot(mtxCam);
-            }*/
-
         }
        
 

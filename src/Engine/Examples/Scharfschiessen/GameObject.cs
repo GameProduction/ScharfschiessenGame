@@ -12,7 +12,7 @@ namespace Examples.Scharfschiessen
 {
     public class GameObject
     {
-        private readonly RenderContext _rc;
+        internal readonly RenderContext _rc;
         private readonly Mesh _mesh;
         internal float3 Position { get; set; }
         internal float3 Rotation { get; set; }
@@ -21,7 +21,7 @@ namespace Examples.Scharfschiessen
         internal Game Game;
 
         public int Radius { get; set; }
-        private float _scale = 1;
+        private float3 _scale = new float3(1,1,1);
 
         // variables for shader
         private ShaderEffect _shaderEffect;
@@ -33,7 +33,7 @@ namespace Examples.Scharfschiessen
         internal float4 Color;
         internal SceneRenderer SceneRenderer;
 
-        public GameObject(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game, SceneRenderer sc)
+        public GameObject(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor, Game game, SceneRenderer sc)
         {
             this.Game = game;
             SceneRenderer = sc;
@@ -58,6 +58,13 @@ namespace Examples.Scharfschiessen
 
         }
 
+        public void SetTexture(string name)
+        {
+
+            var imgData = _rc.LoadImage("Assets/"+name+".jpg");
+            _iTex = _rc.CreateTexture(imgData);
+        }
+
         public virtual void Update()
         {
            
@@ -70,7 +77,7 @@ namespace Examples.Scharfschiessen
             Debug.WriteLine("GameObject Collided");
         }
 
-        public void Render(float4x4 camMtx)
+        public virtual void Render(float4x4 camMtx)
         {
             _rc.ModelView = camMtx * ObjectMtx/* float4x4.CreateTranslation(Position.x, Position.y, Position.z) */* float4x4.Scale(_scale);
          

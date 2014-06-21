@@ -20,18 +20,19 @@ namespace Examples.Scharfschiessen
         private float3 P = float3.Zero;
 
 
-        public Sheep(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float scaleFactor, Game game, SceneRenderer sc)
+        public Sheep(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor, Game game, SceneRenderer sc)
             : base(rc, mesh, position, rotation, scaleFactor, game, sc)
         {
             Color = new float4(0.5f, 0.8f, 0.8f, 1);
             _distance = position.Length;
             Speed = 1;
-            Radius = 2;
+            Radius = 5;
 
             Pos = position;
             
             _alpha =  (float) Math.Tan(position.x/position.z);
             var imgData = rc.LoadImage("Assets/SchafOberflächenfarbe.jpg");
+
             _iTex = rc.CreateTexture(imgData);
         }
 
@@ -39,7 +40,7 @@ namespace Examples.Scharfschiessen
         {
             base.Update();
             
-           // Move();
+            Move();
         }
 
         public void Move()
@@ -55,7 +56,7 @@ namespace Examples.Scharfschiessen
             P.x = 50 * (float)Math.Sin(_alpha/3);
             P.z = 50 * (float)Math.Cos(_alpha/3);
 
-            //ObjectMtx *= float4x4.CreateTranslation(-ObjectMtx.Column3.xyz) * float4x4.CreateTranslation(P);
+            ObjectMtx *= float4x4.CreateTranslation(-ObjectMtx.Column3.xyz) * float4x4.CreateTranslation(P);
         }
 
         public override void Collided()

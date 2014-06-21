@@ -13,6 +13,8 @@ namespace Examples.Scharfschiessen
         private RenderContext _rc;
         private ITexture _iTex;
         private SceneRenderer _sceneRenderer;
+        private ShaderProgram _skyBoxShaderParam;
+        private ShaderProgram TextureSp;
         public Skybox(RenderContext rc, SceneRenderer sceneRenderer)
         {
             // load texture
@@ -22,11 +24,12 @@ namespace Examples.Scharfschiessen
             _rc = rc;
 
         }
-        
-        
-       public void Render(float4x4 camMtx)
+
+
+
+        public void Render(float4x4 camMtx)
        {
-           _rc.ModelView = camMtx*float4x4.CreateTranslation(0,-400,0) * float4x4.Scale(50,50,50);
+           _rc.ModelView = camMtx*float4x4.CreateTranslation(0,0,0) * float4x4.Scale(100,50,100);
            _sceneRenderer.Render(_rc);
         }
     }
