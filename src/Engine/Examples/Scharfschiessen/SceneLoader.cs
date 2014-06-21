@@ -29,7 +29,12 @@ namespace Examples.Scharfschiessen
 
         public SceneRenderer LoadSheep()
         {
-            return Loader("schaf");
+            return Loader("schafFus");
+        }
+
+        public SceneRenderer LoadSkybox()
+        {
+            return Loader("skybox");
         }
 
 

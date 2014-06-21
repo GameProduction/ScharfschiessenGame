@@ -36,10 +36,11 @@ namespace Examples.Scharfschiessen
     
         private readonly SceneRenderer srTomato;
         private readonly SceneRenderer srSheep;
+        private readonly SceneRenderer srSkybox;
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
-
+        private Skybox _skybox;
         public Game(GameHandler gh,RenderContext rc)
         {
             _gameHandler = gh;
@@ -47,9 +48,13 @@ namespace Examples.Scharfschiessen
             SceneLoader = new SceneLoader();
             srTomato = SceneLoader.LoadTomato();
             srSheep = SceneLoader.LoadSheep();
+            srSkybox = SceneLoader.LoadSkybox();
             CreateEnvironment();
             Points = 0;
             LoadLevel(1);
+            _skybox = new Skybox(RC, srSkybox);
+           // var skybox = new Skybox(RC, null, new float3(0,0,0), float3.Zero, 60, this, srSkybox);
+           // LevelObjects.Add(skybox);
             
         }
 
@@ -74,8 +79,10 @@ namespace Examples.Scharfschiessen
             //LevelObjects.Add(tomato);
             //var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
             //LevelObjects.Add(go);
-            var sheep1 = new Sheep(RC, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this, srSheep);
+            var sheep1 = new Sheep(RC, _meshSheep, new float3(0, 0,10), float3.Zero, 0.02f, this, srTomato);
             LevelObjects.Add(sheep1);
+            var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, 0.02f, this, srTomato);
+            LevelObjects.Add(sheep2);
         }
 
         
@@ -120,7 +127,7 @@ namespace Examples.Scharfschiessen
 
                 PlayerInput();               
             }
-
+            _skybox.Render(_mtxCam);
             for (int t = 0; t < LevelObjects.Count; t++)
             {
                 if (LevelObjects[t] != null)
@@ -190,14 +197,14 @@ namespace Examples.Scharfschiessen
             _angleVert += _angleVelVert;
             
             //Bewegungsferiheit an Fadenkeruz anpassen
-            if (_angleVert >= 0.5f)
+            /*if (_angleVert >= 0.5f)
             {
                 _angleVert = 0.5f;
             }
             if (_angleVert <= -0.1f)
             {
                 _angleVert = -0.1f;
-            }
+            }*/
 
             _rotY = float4x4.CreateRotationY(_angleHorz);
             _rotX = float4x4.CreateRotationX(_angleVert);

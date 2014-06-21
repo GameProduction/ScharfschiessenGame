@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using Fusee.Engine;
+using Fusee.Engine.SimpleScene;
 using Fusee.Math;
+using Fusee.Serialization;
 
 namespace Examples.Simple
 {
@@ -28,11 +31,37 @@ namespace Examples.Simple
         private ITexture _iTex;
         private float _zz;
 
+
+
+        public SceneRenderer LoadSkybox()
+        {
+            return Loader("skybox");
+        }
+
+        private SceneRenderer _sr;
+        private SceneRenderer Loader(string name)
+        {
+            // Scene loading
+            SceneContainer scene;
+            var ser = new Serializer();
+            string filename = "Assets/" + name + ".fus";
+            using (var file = File.OpenRead(@filename))
+            {
+                scene = ser.Deserialize(file, null, typeof(SceneContainer)) as SceneContainer;
+            }
+            _sr = new SceneRenderer(scene, "Assets");
+            _sr.InitShaders(RC);
+            return _sr;
+        }
+
+        private SceneRenderer skypox;
         // is called on startup
         public override void Init()
         {
             RC.ClearColor = new float4(1, 1, 1, 1);
-
+            skypox = LoadSkybox();
+            var img = RC.LoadImage("Assets/skyboxOberflächenfarbe.jpg");
+            _iTex = RC.CreateTexture(img);
             // initialize the variables
             _meshTea = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
             // _meshFace = MeshReader.LoadMesh(@"Assets/coords.obj.model"); ;
@@ -45,8 +74,8 @@ namespace Examples.Simple
             _textureParam = _spTexture.GetShaderParam("texture1");
 
             // load texture
-            var imgData = RC.LoadImage("Assets/coords.jpg");
-            _iTex = RC.CreateTexture(imgData);
+            //var imgData = RC.LoadImage("Assets/coords.jpg");
+            //_iTex = RC.CreateTexture(imgData);
             _zz = 0.0f;
         }
 
@@ -134,7 +163,9 @@ namespace Examples.Simple
 
             RC.Render(_meshFace);
 
-
+            RC.SetShaderParam(_textureParam, new float4(0.5f, 0.8f, 0, 1));
+            RC.ModelView = mtxCam*mtxRot*float4x4.CreateTranslation(0, -60, 0)*float4x4.Scale(30);
+            skypox.Render(RC);
 
 
 
@@ -149,7 +180,7 @@ namespace Examples.Simple
 
             var aspectRatio = Width/(float) Height;
             var projection_ROW = float4x4.CreatePerspectiveFieldOfView_ROW(MathHelper.PiOver4, aspectRatio, 1, 5000);
-            var projection = float4x4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1, 5000);
+            var projection = float4x4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1, 10000);
             // Debug.Assert(projection_ROW == float4x4.Transpose(projection));
             // RC.Projection = float4x4.Transpose(projection);
             RC.Projection = projection;

@@ -53,6 +53,8 @@ namespace Examples.Scharfschiessen
             Position = position;
             Rotation = rotation;
             Color = new float4(0.5f, 0.2f, 0.4f, 1);
+            var imgData = rc.LoadImage("Assets/skyboxOberflächenfarbe.jpg");
+            _iTex = rc.CreateTexture(imgData);
 
         }
 
