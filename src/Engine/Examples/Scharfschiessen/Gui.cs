@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using Fusee.Engine;
@@ -33,6 +36,7 @@ namespace Examples.Scharfschiessen
         // private GUIText[] _guiText;
         private GUIButton[] _guiDiffs;
         private GUIImage[] _guiImages;
+
         private double _countdown;
         private double _points;
         private int _munition ;
@@ -49,12 +53,12 @@ namespace Examples.Scharfschiessen
             btnInGame,
         };
 
+        private GUIImage[] _guiImageTomato;
         private enum _btnimages
         {
             btniStart,
             btniNochmal,
             btniHighscore,
-            btniTomato1, btniTomato2, btniTomato3, btniTomato4, btniTomato5, btniTomato6, btniTomato7, btniTomato8, btniTomato9, btniTomato10 
         };
 
         public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler)
@@ -72,8 +76,9 @@ namespace Examples.Scharfschiessen
             _inGameHandler = new GUIHandler(RC);
             _highScoreHandler = new GUIHandler(RC);
             _guiDiffs = new GUIButton[4];
-            _guiImages = new GUIImage[13];
-            _munition = 10;
+            _guiImageTomato = new GUIImage[10];
+            _guiImages = new GUIImage[3];
+            
 
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
@@ -141,43 +146,26 @@ namespace Examples.Scharfschiessen
 
             _guiDiffs[(int) _buttons.btnInGame] = new GUIButton(0, 0, -3, width, height);
             
-
-            //Test-Dummies für Munition
-            _guiImages[(int)_btnimages.btniTomato1] = new GUIImage("Assets/holz.png", 10, height / 2, -1, 10, 20);
-            _guiImages[(int)_btnimages.btniTomato2] = new GUIImage("Assets/holz.png", 30, height / 2, -1, 10, 20);
-            _guiImages[(int)_btnimages.btniTomato3] = new GUIImage("Assets/holz.png", 50, height / 2, -1, 10, 20);
-            _guiImages[(int)_btnimages.btniTomato4] = new GUIImage("Assets/holz.png", 70, height / 2, -1, 10, 20);
-            _guiImages[(int)_btnimages.btniTomato5] = new GUIImage("Assets/holz.png", 90, height / 2, -1, 10, 20);
-            _guiImages[(int)_btnimages.btniTomato6] = new GUIImage("Assets/holz.png", 110, height / 2, -1, 10, 20);
-            _guiImages[(int)_btnimages.btniTomato7] = new GUIImage("Assets/holz.png", 130, height / 2, -1, 10, 20);
-            _guiImages[(int)_btnimages.btniTomato8] = new GUIImage("Assets/holz.png", 150, height / 2, -1, 10, 20);
-            _guiImages[(int)_btnimages.btniTomato9] = new GUIImage("Assets/holz.png", 170, height / 2, -1, 10, 20);
-            _guiImages[(int)_btnimages.btniTomato10] = new GUIImage("Assets/holz.png", 190, height / 2, -1, 10, 20);
-
         }
 
-
+       
         public void DrawGui()
         {
             //Gui Rendern
             _guiHandler.RenderGUI();
-
+         
             if (_gameHandler.Game != null) //Countdown nur während dem Spiel
             {
                 _countdown = (int) _gameHandler.Game.Countdown;
                 _guiText1.Text = "Time:  " + _countdown;
                 _points = (int)_gameHandler.Game.Points;
                 _guiText2.Text = "Points: " + _points;
-
-                if (Input.Instance.IsKeyDown(KeyCodes.Back))
+                if (_munition != _gameHandler.Game.Weapon.Magazin)
                 {
-                    _munition = 10;
-                    Console.WriteLine("Munition aufgeladen: " + _munition);
-                    DrawMunition();
-                    return;
+                    UpdateMunition(_gameHandler.Game.Weapon.Magazin);
+                    
                 }
-
-               
+                _munition = _gameHandler.Game.Weapon.Magazin;
             }
 
             if (_highscore = true) //Namen eingeben nur nach dem Spiel
@@ -228,16 +216,16 @@ namespace Examples.Scharfschiessen
             _guiDiffs[(int) _buttons.btnStart].OnGUIButtonDown += OnbtnPlay;
         }
 
-
         internal void InGameGui()
         {
             //set guiHander für während das Spiel läuft (während der Pause?)
             Console.WriteLine("InGameGui");
             _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown -= OnbtnHighscore;
-            _guiDiffs[(int)_buttons.btnInGame].OnGUIButtonDown += Shoot;
+           // _guiDiffs[(int)_buttons.btnInGame].OnGUIButtonDown += Shoot;
+            _guiHandler = _inGameHandler; 
             _inGameHandler.Remove(_guiTextTitel);
-            _guiHandler = _inGameHandler;
             _countdown = _gameHandler.Game.Countdown;
+            _munition = _gameHandler.Game.Weapon.Magazin;
             _inGameHandler.Add(_guiText1);
             _inGameHandler.Add(_guiText2);
             DrawMunition();
@@ -245,31 +233,37 @@ namespace Examples.Scharfschiessen
 
         public void DrawMunition()
         {
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato1]);
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato2]);
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato3]);
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato4]);
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato5]);
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato6]);
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato7]);
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato8]);
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato9]);
-            _guiHandler.Add(_guiImages[(int)_btnimages.btniTomato10]); 
-            }
+             int tomatoposition = 10;
 
-        private void Shoot(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
-        {
-            if (_munition > 0)
+            for (int i = 0; i < 10; i++) // ... dann neu zeichnen so viel ich brauch.
             {
-                _munition--;
-                _guiHandler.Remove(_guiImages[_munition+3]);
-                Console.WriteLine("Munition: " + _munition);
-            }
-            else
-            {
-                Console.WriteLine("Keine Munition mehr!");
+                var height = _rCanvas.Height;
+                 _guiImageTomato[i]=new GUIImage("Assets/tomateAmmoTexture.png", tomatoposition, height - 30, -1, 20, 20);
+                _guiHandler.Add(_guiImageTomato[i]);
+                tomatoposition = tomatoposition + 20;
             }
         }
+
+       private void UpdateMunition(int munition)
+        {
+           if (munition < _munition)
+           {
+               Debug.WriteLine("neu: " + munition + "alt: "+_munition);
+               Debug.WriteLine("_guiImageTomato.count: " + _guiImageTomato.Length);
+               _guiHandler.Remove(_guiImageTomato[munition]);
+           }
+           else
+           {
+               for (int i = 0; i < 10; i++)
+               {
+                   _guiHandler.Remove(_guiImageTomato[i]);
+               }
+               
+               DrawMunition();
+           }
+            
+        }
+
 
         internal void HighScoreGui()
         {
@@ -277,6 +271,10 @@ namespace Examples.Scharfschiessen
             Console.WriteLine("HighScoreGui");
             _highscore = true;
             _guiHandler = _highScoreHandler;
+            for (int j = 1; j <= 10; j++) //Erst alle weg...
+            {
+                _guiHandler.Remove(_guiImageTomato[j]);
+            }
             _highScoreHandler.Add(_guiImages[(int) _btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int) _btnimages.btniHighscore]);
             _highScoreHandler.Add(_guiText4);
