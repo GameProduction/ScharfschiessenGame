@@ -11,13 +11,14 @@ namespace Examples.Scharfschiessen
 {
     public class Tomato : GameObject
     {
-        
 
-        private RigidBody _tomatoRB;
-        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor, Game game, SceneRenderer sc, RigidBody tomatoRigidBody, ImageData imgData)
-            : base(rc, mesh, position, rotation, scaleFactor, game, sc)
+
+        public RigidBody TomatoRB { get; set; }
+    
+        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor,SceneRenderer sc, RigidBody tomatoRigidBody, ImageData imgData)
+            : base(rc, mesh, position, rotation, scaleFactor, sc)
         {
-            _tomatoRB = tomatoRigidBody;
+            TomatoRB = tomatoRigidBody;
             Color = new float4(0.5f, 0.1f, 0.1f, 1);
             Radius = 2;
             // load texture
@@ -28,10 +29,9 @@ namespace Examples.Scharfschiessen
 
         public override void Update()
         {
-        
-            if (_tomatoRB != null)
+            if (TomatoRB != null)
             {
-                Position = _tomatoRB.Position;
+                Position = TomatoRB.Position;
                 ObjectMtx *= float4x4.CreateTranslation(Position);
             }
         }
@@ -43,7 +43,8 @@ namespace Examples.Scharfschiessen
         }
         public override void Collided()
         {
-            Debug.WriteLine("Tomato Colloided");
+            Debug.WriteLine("Tomato Collided");
+            
         }
 
     }

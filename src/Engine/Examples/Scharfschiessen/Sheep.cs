@@ -18,15 +18,18 @@ namespace Examples.Scharfschiessen
         private float3 Pos;
         private float _alpha;
         private float3 P = float3.Zero;
+        private Game _game;
 
 
-        public Sheep(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor, Game game, SceneRenderer sc)
-            : base(rc, mesh, position, rotation, scaleFactor, game, sc)
+        public Sheep(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor,  SceneRenderer sc, Game game)
+            : base(rc, mesh, position, rotation, scaleFactor, sc)
         {
             Color = new float4(0.5f, 0.8f, 0.8f, 1);
             _distance = position.Length;
             Speed = 1;
             Radius = 5;
+            _game = game;
+
 
             Pos = position;
             
@@ -40,13 +43,13 @@ namespace Examples.Scharfschiessen
         {
             base.Update();
             
-            MoveTo();
+            //MoveTo();
         }
 
         public void MoveTo()
         {
-            Random rand = new Random();
-            float3 pos = new float3(rand.Next(-20, 20), 1, rand.Next(-20, 20));
+            //Random rand = new Random();
+            //float3 pos = new float3(rand.Next(-20, 20), 1, rand.Next(-20, 20));
             if (_alpha == 2 * Math.PI)
             {
                 _alpha = 0;
@@ -65,7 +68,7 @@ namespace Examples.Scharfschiessen
         {
             Debug.WriteLine("Sheep Collided");
             base.Collided();
-            Game.Points ++;
+            _game.Points++;
         }
     }
 }

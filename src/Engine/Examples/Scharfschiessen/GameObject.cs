@@ -18,31 +18,18 @@ namespace Examples.Scharfschiessen
         internal float3 Rotation { get; set; }
         internal float4x4 ObjectMtx;
 
-        internal Game Game;
-
         public int Radius { get; set; }
         private float3 _scale = new float3(1,1,1);
 
-        // variables for shader
-        private ShaderEffect _shaderEffect;
-        private ShaderProgram _spColor;
-        private ShaderProgram _spTexture;
-        private IShaderParam _textureParam;
-        private IShaderParam _colorParam;
+
         internal ITexture _iTex;
         internal float4 Color;
         internal SceneRenderer SceneRenderer;
 
-        public GameObject(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor, Game game, SceneRenderer sc)
+        public GameObject(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor, SceneRenderer sc)
         {
-            this.Game = game;
             SceneRenderer = sc;
             _rc = rc;
-            _spColor = MoreShaders.GetDiffuseColorShader(_rc);
-            _colorParam = _spColor.GetShaderParam("color");
-            _spTexture = MoreShaders.GetTextureShader(_rc);
-            _textureParam = _spTexture.GetShaderParam("texture1");
-
             _mesh = mesh;
             _scale = scaleFactor;
             ObjectMtx = float4x4.CreateRotationX(rotation.x)
@@ -52,10 +39,6 @@ namespace Examples.Scharfschiessen
 
             Position = position;
             Rotation = rotation;
-            Color = new float4(0.5f, 0.2f, 0.4f, 1);
-            var imgData = rc.LoadImage("Assets/skyboxOberflächenfarbe.jpg");
-            _iTex = rc.CreateTexture(imgData);
-
         }
 
         public void SetTexture(string name)
@@ -87,7 +70,9 @@ namespace Examples.Scharfschiessen
             //_rc.SetShaderParam(_colorParam, new float4(0.5f, 0.8f, 0, 1));
             //_rc.SetRenderState(new RenderStateSet { AlphaBlendEnable = false, ZEnable = true });
             //_rc.Render(_mesh);
+            
             SceneRenderer.Render(_rc);
+
         }
     }
 }

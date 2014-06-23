@@ -81,12 +81,12 @@ namespace Examples.Scharfschiessen
             //LevelObjects.Add(tomato);
             //var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
             //LevelObjects.Add(go);
-            var ebene = new GameObject(RC, null, new float3(0, -100, 0), float3.Zero, new float3(20,1,20), this, srLandschaft);
+            var ebene = new GameObject(RC, null, new float3(0, -100, 0), float3.Zero, new float3(20,1,20), srLandschaft);
             ebene.SetTexture("EbeneOberflächenfarbe");
             LevelObjects.Add(ebene);
-            var sheep1 = new Sheep(RC, _meshSheep, new float3(0, 0,10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), this, srSheep);
+            var sheep1 = new Sheep(RC, _meshSheep, new float3(0, 0,10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep1);
-            var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), this, srSheep);
+            var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep2);
         }
 
@@ -109,7 +109,6 @@ namespace Examples.Scharfschiessen
         }
 
 
-        
 
         public void Update()
         {
@@ -151,13 +150,16 @@ namespace Examples.Scharfschiessen
                             LevelObjects[p1] = null;
                             LevelObjects[p2] = null;
                             
+                            
                         }
                     }
                 }
             }
 
             _skybox.Render(_mtxCam);
+            
             UpdateLevelObjectList();
+            //Debug.WriteLine(Time.Instance.FramePerSecond);
         }
 
         private void UpdateLevelObjectList()
@@ -231,5 +233,6 @@ namespace Examples.Scharfschiessen
                 World.Dispose();
             }
         }
+
     }
 }
