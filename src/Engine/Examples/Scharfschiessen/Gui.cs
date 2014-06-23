@@ -44,6 +44,7 @@ namespace Examples.Scharfschiessen
         private bool _inputToggle;
         private bool _highscore;
         public string playername;
+        private string _hs;
 
         
         private enum _buttons
@@ -269,7 +270,9 @@ namespace Examples.Scharfschiessen
               alte munition = 9 -> aufladen um 1 -> an der stelle 9
               alte munition = 8 -> aufladen um 2 -> an der stelle 8&9
               alte munition = 7 -> aufladen um 3 -> an der stelle 7&8&9
-            */
+               ...
+               */
+
                if (munition <= 9)
                {
                    _guiHandler.Add(_guiImageTomato[9]);
@@ -312,7 +315,7 @@ namespace Examples.Scharfschiessen
                }
                
                
-               DrawMunition();
+              // DrawMunition();
            }
             
         }
@@ -324,7 +327,7 @@ namespace Examples.Scharfschiessen
             Console.WriteLine("HighScoreGui");
             _highscore = true;
             _guiHandler = _highScoreHandler;
-            for (int j = 1; j <= 10; j++) //Erst alle weg...
+            for (int j = 0; j <= _munition; j++) // alle weg...
             {
                 _guiHandler.Remove(_guiImageTomato[j]);
             }
@@ -483,6 +486,8 @@ namespace Examples.Scharfschiessen
         {
             //To-Do: Hier verlinken zur Datenbank
             System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
+            //_gameHandler.DbConnection.ShowFirstFiveHighScore();
+           // _hs = _gameHandler.DbConnection.ToString(_gameHandler.DbConnection.ShowFirstFiveHighScore());
             Console.Write("Name = " + nameInput.Text);
             playername = nameInput.Text;
            _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
