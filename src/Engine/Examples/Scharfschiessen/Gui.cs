@@ -38,13 +38,14 @@ namespace Examples.Scharfschiessen
         private GUIImage[] _guiImages;
 
         private double _countdown;
-        private double _points;
+        public double _points;
         private int _munition ;
         public GUIText nameInput;
         private bool _inputToggle;
         private bool _highscore;
         public string playername;
 
+        
         private enum _buttons
         {
             btnStart,

@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-
+//using Examples.Scharfschiessen.Gui;
 
 namespace Examples.Scharfschiessen
 {
-    class DbConnection
+    public class DbConnection
     {
         private MySqlConnection _connection;
         private string _server;
         private string _database;
         private string _uid;
         private string _password;
-
+        private Gui _gui;
         // Construktor
-        public DbConnection()
+        public DbConnection(GameHandler gameHandler)
         {
+            _gui = gameHandler.Gui;
             Initialize();
         }
 
@@ -77,10 +78,30 @@ namespace Examples.Scharfschiessen
             }
         }
 
+        // Show HighScore
+        public void ShowFirstFiveHighScore()
+        {
+            string query = "SELECT `key`, `PlayerName`, `HighScore` FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
+            //open connection
+            if (this.OpenConnection() == true)
+            {
+                //create command and assign the query and connection from the constructor
+                var cmd = new MySqlCommand(query, _connection);
+
+                //Execute command
+                cmd.ExecuteNonQuery();
+
+                //close connection
+                this.CloseConnection();
+            }
+        }
+
+
+
         //Insert statement
         public void Insert()
         {
-            const string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values( 'Ramo', 10000)";
+             string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values'("+ _gui.playername + "," + _gui._points + ")";
 
             //open connection
             if (this.OpenConnection() == true)
