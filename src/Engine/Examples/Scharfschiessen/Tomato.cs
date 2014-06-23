@@ -14,14 +14,14 @@ namespace Examples.Scharfschiessen
         
 
         private RigidBody _tomatoRB;
-        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor, Game game, SceneRenderer sc, RigidBody tomatoRigidBody)
+        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor, Game game, SceneRenderer sc, RigidBody tomatoRigidBody, ImageData imgData)
             : base(rc, mesh, position, rotation, scaleFactor, game, sc)
         {
             _tomatoRB = tomatoRigidBody;
             Color = new float4(0.5f, 0.1f, 0.1f, 1);
             Radius = 2;
             // load texture
-            var imgData = rc.LoadImage("Assets/TomateOberflächenfarbe.jpg");
+           // var imgData = rc.LoadImage("Assets/TomateOberflächenfarbe.jpg");
             _iTex = rc.CreateTexture(imgData);
         }
 

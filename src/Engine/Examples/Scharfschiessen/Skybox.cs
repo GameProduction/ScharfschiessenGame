@@ -31,7 +31,7 @@ namespace Examples.Scharfschiessen
 
         public void Render(float4x4 camMtx)
         {
-            _rc.ModelView = camMtx*float4x4.CreateTranslation(0,0,0) * float4x4.Scale(100,50,100);
+            _rc.ModelView = camMtx*float4x4.CreateTranslation(0,0,0) * float4x4.Scale(40,15,40);
             _rc.SetShader(MoreShaders.GetSkyboxShader(_rc));
             _iTex = _rc.CreateTexture(imgData);
             _rc.Render(_syboxMesh);

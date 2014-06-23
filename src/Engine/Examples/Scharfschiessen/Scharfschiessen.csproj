@@ -159,9 +159,6 @@
     <None Include="Assets\schaf.fus">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Assets\schafFus.fus">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Assets\skybox.fus">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

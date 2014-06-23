@@ -40,11 +40,13 @@ namespace Examples.Scharfschiessen
         {
             base.Update();
             
-            Move();
+            MoveTo();
         }
 
-        public void Move()
+        public void MoveTo()
         {
+            Random rand = new Random();
+            float3 pos = new float3(rand.Next(-20, 20), 1, rand.Next(-20, 20));
             if (_alpha == 2 * Math.PI)
             {
                 _alpha = 0;
@@ -53,8 +55,8 @@ namespace Examples.Scharfschiessen
             {
                 _alpha += (float)Time.Instance.DeltaTime * Speed;
             }
-            P.x = 50 * (float)Math.Sin(_alpha/3);
-            P.z = 50 * (float)Math.Cos(_alpha/3);
+            P.x = 50 * (float)Math.Sin(_alpha/5);
+            P.z = 50 * (float)Math.Cos(_alpha/5);
 
             ObjectMtx *= float4x4.CreateTranslation(-ObjectMtx.Column3.xyz) * float4x4.CreateTranslation(P);
         }

@@ -21,8 +21,9 @@ namespace Examples.Scharfschiessen
             SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height/5, true, 0, 0);
             
             RC.ClearColor = new float4(0.2f, 0.5f, 0.9f, 1);
-
+           
             GameHandler = new GameHandler(RC, this);
+            Resize();
         }
 
 
@@ -45,7 +46,7 @@ namespace Examples.Scharfschiessen
             RC.Viewport(0, 0, Width, Height);
             var aspectRatio = Width / (float)Height;
 
-            RC.Projection = float4x4.CreatePerspectiveFieldOfView(MathHelper.PiOver4/5, aspectRatio, 1, 100000);
+            RC.Projection = float4x4.CreatePerspectiveFieldOfView(MathHelper.PiOver4/5, aspectRatio, 1, 15000);
 
             GameHandler.Gui.Refresh();
         }
