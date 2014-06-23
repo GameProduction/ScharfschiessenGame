@@ -59,6 +59,7 @@ namespace Examples.Scharfschiessen
             //Nachladen
             if (Input.Instance.IsButton(MouseButtons.Right))
             {
+                Debug.WriteLine("reaload");
                 Magazin = 10;
             }
         }

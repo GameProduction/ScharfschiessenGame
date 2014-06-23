@@ -17,7 +17,7 @@ namespace Examples.Scharfschiessen
             get { return gui; }
         }
 
-
+        public DbConnection DbConnection { get; private set; }
         public GameState GameState{ get; private set; }
 
         public Game Game { get; set; }

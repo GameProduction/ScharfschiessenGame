@@ -38,13 +38,15 @@ namespace Examples.Scharfschiessen
         private GUIImage[] _guiImages;
 
         private double _countdown;
-        private double _points;
+        public double _points;
         private int _munition ;
         public GUIText nameInput;
         private bool _inputToggle;
         private bool _highscore;
         public string playername;
+        private string _hs;
 
+        
         private enum _buttons
         {
             btnStart,
@@ -59,7 +61,8 @@ namespace Examples.Scharfschiessen
             btniStart,
             btniNochmal,
             btniHighscore,
-            btniMouse
+            btniMouse,
+            btniFadenkreuz
         };
 
         public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler)
@@ -78,9 +81,10 @@ namespace Examples.Scharfschiessen
             _highScoreHandler = new GUIHandler(RC);
             _guiDiffs = new GUIButton[4];
             _guiImageTomato = new GUIImage[10];
-            _guiImages = new GUIImage[4];
+            _guiImages = new GUIImage[5];
 
-            _guiImages[(int)_btnimages.btniMouse] = new GUIImage("Assets/Mouse.png", width/4, 0, -1, 70, 100);
+            _guiImages[(int)_btnimages.btniMouse] = new GUIImage("Assets/Mouse.png", width / 4, 0, -1, (int)(height / 1.322), height);
+            _guiImages[(int)_btnimages.btniFadenkreuz] = new GUIImage("Assets/Fadenkreuz.png", width / 2, height/2, 0, 325, 325);
 
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
@@ -146,7 +150,7 @@ namespace Examples.Scharfschiessen
                 _guiText6.PosX - (int) textwidth/2, _guiText6.PosY - (int) (texthight*1.5), -1, (int) textwidth*2,
                 (int) texthight*2);
 
-            _guiDiffs[(int) _buttons.btnInGame] = new GUIButton(0, 0, -3, width, height);
+           // _guiDiffs[(int) _buttons.btnInGame] = new GUIButton(0, 0, -3, width, height);
             
         }
 
@@ -234,6 +238,7 @@ namespace Examples.Scharfschiessen
             _munition = _gameHandler.Game.Weapon.Magazin;
             _inGameHandler.Add(_guiText1);
             _inGameHandler.Add(_guiText2);
+            _mainmenuHandler.Add(_guiImages[(int)_btnimages.btniFadenkreuz]);
             DrawMunition();
         }
 
@@ -241,7 +246,7 @@ namespace Examples.Scharfschiessen
         {
              int tomatoposition = 10;
 
-            for (int i = 0; i < 10; i++) // ... dann neu zeichnen so viel ich brauch.
+            for (int i = 0; i < 10; i++)
             {
                 var height = _rCanvas.Height;
                  _guiImageTomato[i]=new GUIImage("Assets/tomateAmmoTexture.png", tomatoposition, height - 30, -1, 20, 20);
@@ -249,23 +254,68 @@ namespace Examples.Scharfschiessen
                 tomatoposition = tomatoposition + 20;
             }
         }
-
+    
        private void UpdateMunition(int munition)
         {
-           if (munition < _munition)
+           if (munition < _munition) // wenn die Munition weniger wurde (= Schuss), dann entferne letzte Tomate
            {
                Debug.WriteLine("neu: " + munition + "alt: "+_munition);
                Debug.WriteLine("_guiImageTomato.count: " + _guiImageTomato.Length);
-               _guiHandler.Remove(_guiImageTomato[munition]);
+               _guiHandler.Remove(_guiImageTomato[munition]); // 1. Schuss => munition=9 => letzte Stelle des Array wird entfernt
            }
-           else
+           if (munition == 10) // wenn die Munition mehr wurde (=Reload), dann auf 
            {
-               for (int i = 0; i < 10; i++)
+               /* munition = 10 ->nicht nachladen
+              alte munition = 10 -> aufladen um 0
+              alte munition = 9 -> aufladen um 1 -> an der stelle 9
+              alte munition = 8 -> aufladen um 2 -> an der stelle 8&9
+              alte munition = 7 -> aufladen um 3 -> an der stelle 7&8&9
+               ...
+               */
+
+               if (munition <= 9)
                {
-                   _guiHandler.Remove(_guiImageTomato[i]);
+                   _guiHandler.Add(_guiImageTomato[9]);
+                   if (munition <= 8)
+                   {
+                       _guiHandler.Add(_guiImageTomato[8]);
+                       if (munition <= 7)
+                       {
+                           _guiHandler.Add(_guiImageTomato[7]);
+                           if (munition <= 6)
+                           {
+                               _guiHandler.Add(_guiImageTomato[6]);
+                               if (munition <= 5)
+                               {
+                                   _guiHandler.Add(_guiImageTomato[5]);
+                                   if (munition <= 4)
+                                   {
+                                       _guiHandler.Add(_guiImageTomato[4]);
+                                       if (munition <= 3)
+                                       {
+                                           _guiHandler.Add(_guiImageTomato[3]);
+                                           if (munition <= 2)
+                                           {
+                                               _guiHandler.Add(_guiImageTomato[2]);
+                                               if (munition <= 1)
+                                               {
+                                                   _guiHandler.Add(_guiImageTomato[1]);
+                                                   if (munition == 0)
+                                                   {
+                                                       _guiHandler.Add(_guiImageTomato[0]);
+                                                   }
+                                               }
+                                           }
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                   }
                }
                
-               DrawMunition();
+               
+              // DrawMunition();
            }
             
         }
@@ -277,7 +327,7 @@ namespace Examples.Scharfschiessen
             Console.WriteLine("HighScoreGui");
             _highscore = true;
             _guiHandler = _highScoreHandler;
-            for (int j = 1; j <= 10; j++) //Erst alle weg...
+            for (int j = 0; j <= _munition; j++) // alle weg...
             {
                 _guiHandler.Remove(_guiImageTomato[j]);
             }
@@ -436,6 +486,8 @@ namespace Examples.Scharfschiessen
         {
             //To-Do: Hier verlinken zur Datenbank
             System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
+            //_gameHandler.DbConnection.ShowFirstFiveHighScore();
+           // _hs = _gameHandler.DbConnection.ToString(_gameHandler.DbConnection.ShowFirstFiveHighScore());
             Console.Write("Name = " + nameInput.Text);
             playername = nameInput.Text;
            _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
