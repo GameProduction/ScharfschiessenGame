@@ -21,7 +21,7 @@ namespace Examples.Scharfschiessen
         public int Radius { get; set; }
         private float3 _scale = new float3(1,1,1);
 
-
+        public String Tag { get; internal set; }
         internal ITexture _iTex;
         internal float4 Color;
         internal SceneRenderer SceneRenderer;
@@ -39,6 +39,7 @@ namespace Examples.Scharfschiessen
 
             Position = position;
             Rotation = rotation;
+            Tag = "GameObject";
         }
 
         public void SetTexture(string name)

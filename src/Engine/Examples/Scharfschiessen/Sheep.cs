@@ -37,6 +37,7 @@ namespace Examples.Scharfschiessen
             var imgData = rc.LoadImage("Assets/SchafOberflächenfarbe.jpg");
 
             _iTex = rc.CreateTexture(imgData);
+            Tag = "ActionObject";
         }
 
         public override void Update()

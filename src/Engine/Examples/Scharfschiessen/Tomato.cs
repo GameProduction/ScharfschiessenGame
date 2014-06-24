@@ -24,6 +24,7 @@ namespace Examples.Scharfschiessen
             // load texture
            // var imgData = rc.LoadImage("Assets/TomateOberflächenfarbe.jpg");
             _iTex = rc.CreateTexture(imgData);
+            Tag = "ActionObject";
         }
 
 

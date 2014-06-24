@@ -38,6 +38,9 @@ namespace Examples.Scharfschiessen
         private readonly SceneRenderer srSheep;
         private readonly SceneRenderer srSkybox;
         private readonly SceneRenderer srLandschaft;
+        private readonly SceneRenderer srTrees;
+        private readonly SceneRenderer srChicken;
+        private readonly SceneRenderer srCows ;
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
@@ -51,6 +54,9 @@ namespace Examples.Scharfschiessen
             SceneLoader = new SceneLoader();
             srTomato = SceneLoader.LoadTomato();
             srSheep = SceneLoader.LoadSheep();
+            srTrees = SceneLoader.LoadTrees();
+            srChicken = SceneLoader.LoadChicken();
+            srCows = SceneLoader.LoadCows();
             //srSkybox = SceneLoader.LoadSkybox();
             srLandschaft = SceneLoader.LoadEnvironment();
             CreateEnvironment();
@@ -81,13 +87,22 @@ namespace Examples.Scharfschiessen
             //LevelObjects.Add(tomato);
             //var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
             //LevelObjects.Add(go);
+            var chicken = new GameObject(RC, null, new float3(0, -50, 0), float3.Zero, new float3(1, 1, 1), srChicken);
+            chicken.SetTexture("HühnerOberflächenfarbe");
+            LevelObjects.Add(chicken);
+            var cows = new GameObject(RC, null, new float3(0, -50, 0), float3.Zero, new float3(1, 1, 1), srCows);
+            cows.SetTexture("KüheOberflächenfarbe");
+            LevelObjects.Add(cows);
+            var trees = new GameObject(RC, null, new float3(0, -50, 0), float3.Zero, new float3(1, 1, 1), srTrees);
+            trees.SetTexture("treesOberflächenfarbe");
+            LevelObjects.Add(trees);
             var ebene = new GameObject(RC, null, new float3(0, -100, 0), float3.Zero, new float3(20,1,20), srLandschaft);
             ebene.SetTexture("EbeneOberflächenfarbe");
             LevelObjects.Add(ebene);
-            var sheep1 = new Sheep(RC, _meshSheep, new float3(0, 0,10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
+            var sheep1 = new Sheep(RC, _meshSheep, new float3(50, 0,50), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep1);
             var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
-            LevelObjects.Add(sheep2);
+            //LevelObjects.Add(sheep2);
         }
 
         
@@ -141,22 +156,25 @@ namespace Examples.Scharfschiessen
                 
                     for (int i = 0; i < LevelObjects.Count; i++)
                     {
-                        if (LevelObjects[i] != null && LevelObjects[t] != LevelObjects[i] && CheckForCollision(LevelObjects[t], LevelObjects[i]))
+                        if(LevelObjects[i] != null && LevelObjects[t] != LevelObjects[i])
                         {
-                            LevelObjects[t].Collided();
-                            LevelObjects[i].Collided();
-                            var p1 = LevelObjects.IndexOf(LevelObjects[t]);
-                            var p2 = LevelObjects.IndexOf(LevelObjects[i]);
-                            LevelObjects[p1] = null;
-                            LevelObjects[p2] = null;
+                            if ((LevelObjects[i].Tag == "ActionObject" && LevelObjects[t].Tag == "ActionObject") && CheckForCollision(LevelObjects[t], LevelObjects[i]))
+                            {
+                                LevelObjects[t].Collided();
+                                LevelObjects[i].Collided();
+                                var p1 = LevelObjects.IndexOf(LevelObjects[t]);
+                                var p2 = LevelObjects.IndexOf(LevelObjects[i]);
+                                LevelObjects[p1] = null;
+                                LevelObjects[p2] = null;
                             
                             
+                            }
                         }
                     }
                 }
             }
 
-            _skybox.Render(_mtxCam);
+            //_skybox.Render(_mtxCam);
             
             UpdateLevelObjectList();
             //Debug.WriteLine(Time.Instance.FramePerSecond);
@@ -206,21 +224,21 @@ namespace Examples.Scharfschiessen
             _angleVert += _angleVelVert;
             
             //Bewegungsferiheit an Fadenkeruz anpassen
-            /*if (_angleVert >= 0.5f)
+            if (_angleVert >= 0.9f)
             {
-                _angleVert = 0.5f;
+                _angleVert = 0.9f;
             }
-            if (_angleVert <= -0.1f)
+            if (_angleVert <= -0.8f)
             {
-                _angleVert = -0.1f;
-            }*/
+                _angleVert = -0.8f;
+            }
 
             _rotY = float4x4.CreateRotationY(_angleHorz);
             _rotX = float4x4.CreateRotationX(_angleVert);
             var mtxRot = float4x4.CreateRotationX(_angleVert) * float4x4.CreateRotationY(_angleHorz);
 
-            _mtxCam = mtxRot * float4x4.LookAt(0, 20, -1, 0, 20, 1, 0, 1, 0);
-            _mtxCam *= float4x4.CreateTranslation(0, 20, -1);
+            _mtxCam = mtxRot * float4x4.LookAt(0, 40, -1, 0, 40, 1, 0, 1, 0);
+            _mtxCam *= float4x4.CreateTranslation(0, 40, -1);
             //Schiessen
             Weapon.WeaponInput(_mtxCam);
         }
