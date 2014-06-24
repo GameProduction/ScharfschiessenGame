@@ -44,7 +44,7 @@ namespace Examples.Scharfschiessen
         {
             base.Update();
             
-            //MoveTo();
+            MoveTo();
         }
 
         public void MoveTo()
@@ -59,8 +59,8 @@ namespace Examples.Scharfschiessen
             {
                 _alpha += (float)Time.Instance.DeltaTime * Speed;
             }
-            P.x = 50 * (float)Math.Sin(_alpha/5);
-            P.z = 50 * (float)Math.Cos(_alpha/5);
+            P.x = 50 * (float)Math.Sin(_alpha/6);
+            P.z = 50 * (float)Math.Cos(_alpha/6);
 
             ObjectMtx *= float4x4.CreateTranslation(-ObjectMtx.Column3.xyz) * float4x4.CreateTranslation(P);
         }

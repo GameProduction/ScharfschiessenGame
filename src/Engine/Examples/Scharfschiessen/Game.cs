@@ -158,7 +158,7 @@ namespace Examples.Scharfschiessen
                     {
                         if(LevelObjects[i] != null && LevelObjects[t] != LevelObjects[i])
                         {
-                            if ((LevelObjects[i].Tag == "ActionObject" && LevelObjects[t].Tag == "ActionObject") && CheckForCollision(LevelObjects[t], LevelObjects[i]))
+                            if (CheckForCollision(LevelObjects[t], LevelObjects[i]))
                             {
                                 LevelObjects[t].Collided();
                                 LevelObjects[i].Collided();
@@ -199,11 +199,15 @@ namespace Examples.Scharfschiessen
         {
             if (gameObject1 != null && gameObject2 != null)
             {
-                var dist = (gameObject1.Position - gameObject2.Position).Length;
-                if (dist <= gameObject1.Radius + gameObject2.Radius)
+                if (gameObject1.Tag =="ActionObject" && gameObject2.Tag == "ActionObject")
                 {
-                    return true;
+                    var dist = (gameObject1.Position - gameObject2.Position).Length;
+                    if (dist <= gameObject1.Radius + gameObject2.Radius)
+                    {
+                        return true;
+                    }
                 }
+                
             }
                 
             return false;
