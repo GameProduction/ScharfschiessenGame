@@ -19,7 +19,7 @@ namespace Examples.Scharfschiessen
 
         public SceneRenderer LoadEnvironment()
         {
-            return Loader("Landschaft");
+            return Loader("Landschaft1");
         }
 
         public SceneRenderer LoadTomato()
@@ -31,10 +31,22 @@ namespace Examples.Scharfschiessen
         {
             return Loader("schaf");
         }
-
+        public SceneRenderer LoadCows()
+        {
+            return Loader("kühe");
+        }
         public SceneRenderer LoadSkybox()
         {
             return Loader("skybox");
+        }
+
+        public SceneRenderer LoadTrees()
+        {
+            return Loader("trees");
+        }
+        public SceneRenderer LoadChicken()
+        {
+            return Loader("hühner");
         }
 
 
@@ -65,7 +77,7 @@ namespace Examples.Scharfschiessen
             _modelScaleOffset = float4x4.CreateScale(200.0f / scale) * float4x4.CreateTranslation(-bbox.Center);
         }
 
-        
 
+        
     }
 }
