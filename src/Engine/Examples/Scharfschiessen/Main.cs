@@ -18,12 +18,16 @@ namespace Examples.Scharfschiessen
       // is called on startup
         public override void Init()
         {
-            SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height/5, true, 0, 0);
-            
+            //Position des fensters wir erst bei zweitem aufruf von Setwindow gesezt...
+            SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
+            SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);
             RC.ClearColor = new float4(0.2f, 0.5f, 0.9f, 1);
            
             GameHandler = new GameHandler(RC, this);
             Resize();
+            
+
+            
         }
 
 
