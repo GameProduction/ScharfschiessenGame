@@ -55,9 +55,8 @@ namespace Examples.Scharfschiessen
             srTomato = SceneLoader.LoadTomato();
             srSheep = SceneLoader.LoadSheep();
             srTrees = SceneLoader.LoadTrees();
-            srChicken = SceneLoader.LoadChicken();
+            //srChicken = SceneLoader.LoadChicken();
             srCows = SceneLoader.LoadCows();
-            //srSkybox = SceneLoader.LoadSkybox();
             srLandschaft = SceneLoader.LoadEnvironment();
             CreateEnvironment();
             Points = 0;
@@ -87,9 +86,9 @@ namespace Examples.Scharfschiessen
             //LevelObjects.Add(tomato);
             //var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
             //LevelObjects.Add(go);
-            var chicken = new GameObject(RC, null, new float3(0, -50, 0), float3.Zero, new float3(1, 1, 1), srChicken);
+           /* var chicken = new GameObject(RC, null, new float3(0, -300, 0), float3.Zero, new float3(1, 1, 1), srChicken);
             chicken.SetTexture("HühnerOberflächenfarbe");
-            LevelObjects.Add(chicken);
+            LevelObjects.Add(chicken);*/
             var cows = new GameObject(RC, null, new float3(0, -50, 0), float3.Zero, new float3(1, 1, 1), srCows);
             cows.SetTexture("KüheOberflächenfarbe");
             LevelObjects.Add(cows);
@@ -102,7 +101,7 @@ namespace Examples.Scharfschiessen
             var sheep1 = new Sheep(RC, _meshSheep, new float3(50, 0,50), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep1);
             var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
-            //LevelObjects.Add(sheep2);
+            LevelObjects.Add(sheep2);
         }
 
         
@@ -146,38 +145,23 @@ namespace Examples.Scharfschiessen
 
                 PlayerInput();               
             }
-            
-            for (int t = 0; t < LevelObjects.Count; t++)
-            {
-                if (LevelObjects[t] != null)
-                {
-                    LevelObjects[t].Render(_mtxCam);
-                    LevelObjects[t].Update();
-                
-                    for (int i = 0; i < LevelObjects.Count; i++)
-                    {
-                        if(LevelObjects[i] != null && LevelObjects[t] != LevelObjects[i])
-                        {
-                            if (CheckForCollision(LevelObjects[t], LevelObjects[i]))
-                            {
-                                LevelObjects[t].Collided();
-                                LevelObjects[i].Collided();
-                                var p1 = LevelObjects.IndexOf(LevelObjects[t]);
-                                var p2 = LevelObjects.IndexOf(LevelObjects[i]);
-                                LevelObjects[p1] = null;
-                                LevelObjects[p2] = null;
-                            
-                            
-                            }
-                        }
-                    }
-                }
-            }
 
-            //_skybox.Render(_mtxCam);
-            
+            RenderObjects();
+            CollisionUpdate();
             UpdateLevelObjectList();
-            //Debug.WriteLine(Time.Instance.FramePerSecond);
+           // Debug.WriteLine(Time.Instance.FramePerSecond);
+        }
+
+        
+        private void RenderObjects()
+        {
+            for (int i = 0; i < LevelObjects.Count; i++)
+            {
+                LevelObjects[i].Render(_mtxCam);
+                //muss nach LevelObjects[i].Render() aufgerufen werden, da sonst LevelObjects[i] out of range passieren kann
+                LevelObjects[i].Update();
+            }
+            _skybox.Render(_mtxCam);
         }
 
         private void UpdateLevelObjectList()
@@ -194,20 +178,41 @@ namespace Examples.Scharfschiessen
             LevelObjects = helper;
             helper = null;
         }
-    
+
+        private void CollisionUpdate()
+        {
+            for (int t = 0; t < LevelObjects.Count; t++)
+            {
+                if (LevelObjects[t] != null && LevelObjects[t].Tag == "ActionObject")
+                {
+                    for (int i = 0; i < LevelObjects.Count; i++)
+                    {
+                        if (LevelObjects[i] != null && LevelObjects[i].Tag == "ActionObject" && LevelObjects[t] != LevelObjects[i])
+                        {
+                            if (CheckForCollision(LevelObjects[t], LevelObjects[i]))
+                            {
+                                LevelObjects[t].Collided();
+                                LevelObjects[i].Collided();
+                                var p1 = LevelObjects.IndexOf(LevelObjects[t]);
+                                var p2 = LevelObjects.IndexOf(LevelObjects[i]);
+                                LevelObjects[p1] = null;
+                                LevelObjects[p2] = null;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private bool CheckForCollision(GameObject gameObject1, GameObject gameObject2)
         {
             if (gameObject1 != null && gameObject2 != null)
             {
-                if (gameObject1.Tag =="ActionObject" && gameObject2.Tag == "ActionObject")
+                var dist = (gameObject1.Position - gameObject2.Position).Length;
+                if (dist <= gameObject1.Radius + gameObject2.Radius)
                 {
-                    var dist = (gameObject1.Position - gameObject2.Position).Length;
-                    if (dist <= gameObject1.Radius + gameObject2.Radius)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-                
             }
                 
             return false;

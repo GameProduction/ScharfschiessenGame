@@ -35,9 +35,8 @@ namespace Examples.Scharfschiessen
         private void Shoot(float4x4 mtxcam)
         {
             RigidBody tomatoRb = _world.AddRigidBody(1, mtxcam.Column3.xyz, float3.Zero, _sphereCollider);
-            Tomato tomato = new Tomato(RC, null, tomatoRb.Position, float3.Zero, new float3(0.02f, 0.0f, 0.02f), _srTomato, tomatoRb, imgData);
+            Tomato tomato = new Tomato(RC, null, tomatoRb.Position, float3.Zero, new float3(0.02f, 0.0f, 0.02f), _srTomato, tomatoRb, imgData, _game);
             _game.LevelObjects.Add(tomato);
-            float3 alt = new float3(mtxcam.Column3.xyz);
             float3 one = new float3(0, 0, 1);
             float3 to;
             float3.TransformVector(ref one, ref mtxcam, out to);

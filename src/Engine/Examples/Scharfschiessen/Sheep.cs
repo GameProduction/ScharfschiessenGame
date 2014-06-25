@@ -29,13 +29,9 @@ namespace Examples.Scharfschiessen
             Speed = 1;
             Radius = 5;
             _game = game;
-
-
             Pos = position;
-            
-            _alpha =  (float) Math.Tan(position.x/position.z);
+            _alpha =  (float) Math.PI;
             var imgData = rc.LoadImage("Assets/SchafOberflächenfarbe.jpg");
-
             _iTex = rc.CreateTexture(imgData);
             Tag = "ActionObject";
         }
@@ -59,16 +55,19 @@ namespace Examples.Scharfschiessen
             {
                 _alpha += (float)Time.Instance.DeltaTime * Speed;
             }
-            P.x = 50 * (float)Math.Sin(_alpha/6);
-            P.z = 50 * (float)Math.Cos(_alpha/6);
+            P.x = _distance* (float)Math.Sin(_alpha/6);
+            P.z = _distance* (float)Math.Cos(_alpha/6);
 
+         
+            //ObjectMtx *= float4x4.CreateTranslation(P);
+            //Debug.WriteLine(Position);
             ObjectMtx *= float4x4.CreateTranslation(-ObjectMtx.Column3.xyz) * float4x4.CreateTranslation(P);
+
+            //ObjectMtx *= float4x4.CreateTranslation(new float3(ObjectMtx.Column3.x+0.1f,ObjectMtx.Column3.y,ObjectMtx.Column3.z+0.1f ));
         }
 
         public override void Collided()
         {
-            Debug.WriteLine("Sheep Collided");
-            base.Collided();
             _game.Points++;
         }
     }

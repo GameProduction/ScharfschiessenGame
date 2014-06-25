@@ -14,7 +14,12 @@ namespace Examples.Scharfschiessen
     {
         internal readonly RenderContext _rc;
         private readonly Mesh _mesh;
-        internal float3 Position { get; set; }
+
+        public float3 Position
+        {
+            get { return ObjectMtx.Column3.xyz; }
+        }
+
         internal float3 Rotation { get; set; }
         internal float4x4 ObjectMtx;
 
@@ -37,7 +42,6 @@ namespace Examples.Scharfschiessen
                      *float4x4.CreateRotationZ(rotation.z)
                      *float4x4.CreateTranslation(position);
 
-            Position = position;
             Rotation = rotation;
             Tag = "GameObject";
         }
@@ -51,9 +55,7 @@ namespace Examples.Scharfschiessen
 
         public virtual void Update()
         {
-           
-            //setPosition
-            //setOrientaion
+
         }
 
         public virtual void Collided()
@@ -63,7 +65,7 @@ namespace Examples.Scharfschiessen
 
         public virtual void Render(float4x4 camMtx)
         {
-            _rc.ModelView = camMtx * ObjectMtx/* float4x4.CreateTranslation(Position.x, Position.y, Position.z) */* float4x4.Scale(_scale);
+            _rc.ModelView = camMtx * ObjectMtx * float4x4.Scale(_scale);
          
            // _rc.SetShader(_spTexture);
            // _rc.SetShaderParamTexture(_textureParam, _iTex);

@@ -14,17 +14,19 @@ namespace Examples.Scharfschiessen
 
 
         public RigidBody TomatoRB { get; set; }
-    
-        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor,SceneRenderer sc, RigidBody tomatoRigidBody, ImageData imgData)
+        private double timer;
+        private bool active;
+        private Game _game;
+        public Tomato(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor,SceneRenderer sc, RigidBody tomatoRigidBody, ImageData imgData, Game game)
             : base(rc, mesh, position, rotation, scaleFactor, sc)
         {
             TomatoRB = tomatoRigidBody;
             Color = new float4(0.5f, 0.1f, 0.1f, 1);
             Radius = 2;
-            // load texture
-           // var imgData = rc.LoadImage("Assets/TomateOberflächenfarbe.jpg");
             _iTex = rc.CreateTexture(imgData);
             Tag = "ActionObject";
+            timer = 1.0f;
+            _game = game;
         }
 
 
@@ -32,20 +34,36 @@ namespace Examples.Scharfschiessen
         {
             if (TomatoRB != null)
             {
-                Position = TomatoRB.Position;
-                ObjectMtx *= float4x4.CreateTranslation(Position);
+                ObjectMtx *= float4x4.CreateTranslation(TomatoRB.Position);
+            }
+            
+            timer -= Time.Instance.DeltaTime;
+            if (timer <= 0)
+            {
+                DeleteMe();
+                
+
             }
         }
 
         public override void Render(float4x4 camMtx)
         {
+
             _rc.ModelView = camMtx * ObjectMtx* float4x4.Scale(0.02f);
             SceneRenderer.Render(_rc);
+ 
+            
         }
         public override void Collided()
         {
-            Debug.WriteLine("Tomato Collided");
-            
+            TomatoRB = null;
+        }
+
+
+        private void DeleteMe()
+        {
+            TomatoRB = null;
+            _game.LevelObjects.Remove(this);
         }
 
     }
