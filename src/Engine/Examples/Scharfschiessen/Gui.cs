@@ -284,11 +284,11 @@ namespace Examples.Scharfschiessen
             Console.WriteLine("HighScoreGui");
             _highscore = true;
             _guiHandler = _highScoreHandler;
-            for (int j = 0; j <= _munition; j++) // alle weg...
+ /*           for (int j = 0; j <= _munition; j++) // alle weg...
             {
-                _guiHandler.Remove(_guiImageTomato[j]);
+                _highScoreHandler.Remove(_guiImageTomato[j]);
             }
-            _highScoreHandler.Add(_guiImages[(int) _btnimages.btniNochmal]);
+*/            _highScoreHandler.Add(_guiImages[(int) _btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int) _btnimages.btniHighscore]);
             _highScoreHandler.Add(_guiText4);
             _highScoreHandler.Add(_guiText5);
@@ -316,7 +316,7 @@ namespace Examples.Scharfschiessen
                     }
                     Console.Write("Name = " + nameInput.Text);
                     playername = nameInput.Text;
-                    System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Points: " + _points + "\n" + "Hier könnte Ihr Highscore stehen!!!");
+                   // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Points: " + _points + "\n" + "Hier könnte Ihr Highscore stehen!!!");
                 }
 
                 if (_inputToggle)
@@ -442,12 +442,13 @@ namespace Examples.Scharfschiessen
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
             //To-Do: Hier verlinken zur Datenbank
-            System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
-           //_gameHandler.DbConnection.ShowFirstFiveHighScore();
-           // _hs = _gameHandler.DbConnection.ShowFirstFiveHighScore();
-            System.Windows.MessageBox.Show(_hs);
+           // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
             Console.Write("Name = " + nameInput.Text);
-            playername = nameInput.Text;
+            playername = nameInput.Text; 
+            _gameHandler.DbConnection.Insert(playername, (int)_points);
+           // _hs = _gameHandler.DbConnection.ShowFirstFiveHighScore();
+            Console.WriteLine(_hs);
+            //System.Windows.MessageBox.Show(_hs);
            _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
         }
 

@@ -81,7 +81,7 @@ namespace Examples.Scharfschiessen
         // Show HighScore
         public string ShowFirstFiveHighScore()
         {
-            string query = "SELECT `key`, `PlayerName`, `HighScore` FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
+            string query = "SELECT 'key', 'PlayerName', 'HighScore' FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
             //open connection
             if (this.OpenConnection() == true)
             {
@@ -100,9 +100,9 @@ namespace Examples.Scharfschiessen
 
 
         //Insert statement
-        public void Insert()
+        public void Insert( string name, int points)
         {
-             string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values'("+ _gui.playername + "," + _gui._points + ")";
+             string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values'("+ name + "," + points + ")";
 
             //open connection
             if (this.OpenConnection() == true)
