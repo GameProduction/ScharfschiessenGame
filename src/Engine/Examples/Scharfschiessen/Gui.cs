@@ -45,6 +45,7 @@ namespace Examples.Scharfschiessen
         private bool _highscore;
         public string playername;
         private string _hs;
+        private int _aimimage;
 
         
         private enum _buttons
@@ -82,9 +83,10 @@ namespace Examples.Scharfschiessen
             _guiDiffs = new GUIButton[4];
             _guiImageTomato = new GUIImage[10];
             _guiImages = new GUIImage[5];
+            _aimimage = 80;
 
             _guiImages[(int)_btnimages.btniMouse] = new GUIImage("Assets/Mouse.png", width / 4, 0, -1, (int)(height / 1.322), height);
-            _guiImages[(int)_btnimages.btniFadenkreuz] = new GUIImage("Assets/Fadenkreuz.png", width / 2, height/2, 0, 325, 325);
+            _guiImages[(int)_btnimages.btniFadenkreuz] = new GUIImage("Assets/Fadenkreuz.png", width / 2 - _aimimage / 2, height / 2 - _aimimage / 2, -2, _aimimage, _aimimage);
 
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
@@ -221,7 +223,7 @@ namespace Examples.Scharfschiessen
             _mainmenuHandler.Add(_guiImages[(int) _btnimages.btniStart]);
             _mainmenuHandler.Add(_guiTextTitel);
             _mainmenuHandler.Add(_guiText3);
-            _guiHandler.Add(_guiDiffs[(int) _buttons.btnStart]);
+            _mainmenuHandler.Add(_guiDiffs[(int) _buttons.btnStart]);
             _guiDiffs[(int) _buttons.btnStart].OnGUIButtonDown += OnbtnPlay;
             _mainmenuHandler.Add(_guiImages[(int)_btnimages.btniMouse]);
         }
@@ -230,15 +232,16 @@ namespace Examples.Scharfschiessen
         {
             //set guiHander für während das Spiel läuft (während der Pause?)
             Console.WriteLine("InGameGui");
-            _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown -= OnbtnHighscore;
+            // _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown -= OnbtnHighscore;
            // _guiDiffs[(int)_buttons.btnInGame].OnGUIButtonDown += Shoot;
+            _guiHandler.Clear();
             _guiHandler = _inGameHandler; 
             _inGameHandler.Remove(_guiTextTitel);
             _countdown = _gameHandler.Game.Countdown;
             _munition = _gameHandler.Game.Weapon.Magazin;
             _inGameHandler.Add(_guiText1);
             _inGameHandler.Add(_guiText2);
-            _mainmenuHandler.Add(_guiImages[(int)_btnimages.btniFadenkreuz]);
+           _inGameHandler.Add(_guiImages[(int)_btnimages.btniFadenkreuz]);
             DrawMunition();
         }
 
@@ -254,70 +257,24 @@ namespace Examples.Scharfschiessen
                 tomatoposition = tomatoposition + 20;
             }
         }
-    
-       private void UpdateMunition(int munition)
-        {
-           if (munition < _munition) // wenn die Munition weniger wurde (= Schuss), dann entferne letzte Tomate
-           {
-               Debug.WriteLine("neu: " + munition + "alt: "+_munition);
-               Debug.WriteLine("_guiImageTomato.count: " + _guiImageTomato.Length);
-               _guiHandler.Remove(_guiImageTomato[munition]); // 1. Schuss => munition=9 => letzte Stelle des Array wird entfernt
-           }
-           if (munition == 10) // wenn die Munition mehr wurde (=Reload), dann auf 
-           {
-               /* munition = 10 ->nicht nachladen
-              alte munition = 10 -> aufladen um 0
-              alte munition = 9 -> aufladen um 1 -> an der stelle 9
-              alte munition = 8 -> aufladen um 2 -> an der stelle 8&9
-              alte munition = 7 -> aufladen um 3 -> an der stelle 7&8&9
-               ...
-               */
 
-               if (munition <= 9)
-               {
-                   _guiHandler.Add(_guiImageTomato[9]);
-                   if (munition <= 8)
-                   {
-                       _guiHandler.Add(_guiImageTomato[8]);
-                       if (munition <= 7)
-                       {
-                           _guiHandler.Add(_guiImageTomato[7]);
-                           if (munition <= 6)
-                           {
-                               _guiHandler.Add(_guiImageTomato[6]);
-                               if (munition <= 5)
-                               {
-                                   _guiHandler.Add(_guiImageTomato[5]);
-                                   if (munition <= 4)
-                                   {
-                                       _guiHandler.Add(_guiImageTomato[4]);
-                                       if (munition <= 3)
-                                       {
-                                           _guiHandler.Add(_guiImageTomato[3]);
-                                           if (munition <= 2)
-                                           {
-                                               _guiHandler.Add(_guiImageTomato[2]);
-                                               if (munition <= 1)
-                                               {
-                                                   _guiHandler.Add(_guiImageTomato[1]);
-                                                   if (munition == 0)
-                                                   {
-                                                       _guiHandler.Add(_guiImageTomato[0]);
-                                                   }
-                                               }
-                                           }
-                                       }
-                                   }
-                               }
-                           }
-                       }
-                   }
-               }
-               
-               
-              // DrawMunition();
-           }
-            
+        private void UpdateMunition(int munition)
+        {
+            if (munition < _munition) // wenn die Munition weniger wurde (= Schuss), dann entferne letzte Tomate
+            {
+                Debug.WriteLine("neu: " + munition + "alt: " + _munition);
+                Debug.WriteLine("_guiImageTomato.count: " + _guiImageTomato.Length);
+                _guiHandler.Remove(_guiImageTomato[munition]);
+                //DrawMunition();
+            }
+            else
+            { 
+                for (int i = 0; i < 10; i++)
+                {
+                    _guiHandler.Remove(_guiImageTomato[i]);
+                }
+                DrawMunition();
+            }
         }
 
 
@@ -327,11 +284,11 @@ namespace Examples.Scharfschiessen
             Console.WriteLine("HighScoreGui");
             _highscore = true;
             _guiHandler = _highScoreHandler;
-            for (int j = 0; j <= _munition; j++) // alle weg...
+ /*           for (int j = 0; j <= _munition; j++) // alle weg...
             {
-                _guiHandler.Remove(_guiImageTomato[j]);
+                _highScoreHandler.Remove(_guiImageTomato[j]);
             }
-            _highScoreHandler.Add(_guiImages[(int) _btnimages.btniNochmal]);
+*/            _highScoreHandler.Add(_guiImages[(int) _btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int) _btnimages.btniHighscore]);
             _highScoreHandler.Add(_guiText4);
             _highScoreHandler.Add(_guiText5);
@@ -359,7 +316,7 @@ namespace Examples.Scharfschiessen
                     }
                     Console.Write("Name = " + nameInput.Text);
                     playername = nameInput.Text;
-                    System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Points: " + _points + "\n" + "Hier könnte Ihr Highscore stehen!!!");
+                   // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Points: " + _points + "\n" + "Hier könnte Ihr Highscore stehen!!!");
                 }
 
                 if (_inputToggle)
@@ -485,17 +442,22 @@ namespace Examples.Scharfschiessen
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
             //To-Do: Hier verlinken zur Datenbank
-            System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
-            //_gameHandler.DbConnection.ShowFirstFiveHighScore();
-           // _hs = _gameHandler.DbConnection.ToString(_gameHandler.DbConnection.ShowFirstFiveHighScore());
+           // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
             Console.Write("Name = " + nameInput.Text);
-            playername = nameInput.Text;
+            playername = nameInput.Text; 
+            _gameHandler.DbConnection.Insert(playername, 10);
+            _hs = _gameHandler.DbConnection.ShowFirstFiveHighScore();
+            Console.WriteLine(_hs);
+            System.Windows.MessageBox.Show(_hs);
            _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
         }
 
         private void OnbtnPlay(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
-            _gameHandler.GameState.CurrentState = GameState.State.Playing;
+            if (_gameHandler.GameState.CurrentState != GameState.State.Playing)
+            {
+                _gameHandler.GameState.CurrentState = GameState.State.Playing;
+            }
         }
     }
 }

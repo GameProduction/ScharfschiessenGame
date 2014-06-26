@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 //using Examples.Scharfschiessen.Gui;
@@ -22,8 +23,8 @@ namespace Examples.Scharfschiessen
 
         private void Initialize()
         {
-            _server = "87.106.27.181:3306";
-            _database = "schafschiessenDB";
+            _server = "87.106.27.181";
+            _database = "schafschiessenDB"; 
             _uid = "db_anwendung";
             _password = "FEKnnqERy7MHEDpr";
 
@@ -79,35 +80,38 @@ namespace Examples.Scharfschiessen
         }
 
         // Show HighScore
-        public void ShowFirstFiveHighScore()
+        public string ShowFirstFiveHighScore()
         {
-            string query = "SELECT `key`, `PlayerName`, `HighScore` FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
+            string query = "SELECT 'key', 'PlayerName', 'HighScore' FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
             //open connection
+            
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
                 var cmd = new MySqlCommand(query, _connection);
 
                 //Execute command
-                cmd.ExecuteNonQuery();
-
+                var bla =cmd.ExecuteNonQuery();
+                
                 //close connection
                 this.CloseConnection();
+                Debug.WriteLine(bla.ToString());
             }
+            return "bl";
         }
 
 
 
         //Insert statement
-        public void Insert()
+        public void Insert( string name, int points)
         {
-             string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values'("+ _gui.playername + "," + _gui._points + ")";
+             string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values('"+ name + "'," + points + ")";
 
             //open connection
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
-                var cmd = new MySqlCommand(query, _connection);
+                MySqlCommand cmd = new MySqlCommand(query, _connection);
 
                 //Execute command
                 cmd.ExecuteNonQuery();
@@ -151,6 +155,19 @@ namespace Examples.Scharfschiessen
                 this.CloseConnection();
             }
         }
+        //Delete all rows in a table without deleting the table. This means that the table structure, attributes, and indexes will be intact
+        public void DeleteAllRows()
+        {
+            var query = "DELETE FROM PlayerPoints";
+
+            if (this.OpenConnection() == true)
+            {
+                //MySqlCommand cmd = new MySqlCommand(query, _connection);
+                //cmd.ExecuteNonQuery();
+                this.CloseConnection();
+            }
+        }
+
 
         //Select statement
         public List<string>[] Select()
@@ -217,18 +234,6 @@ namespace Examples.Scharfschiessen
                 return count;
             }
         }
-
-        //Backup
-        public void Backup()
-        {
-        }
-
-        //Restore
-        public void Restore()
-        {
-        }
-
-
 
     }
 }
