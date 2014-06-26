@@ -13,7 +13,6 @@ namespace Examples.Scharfschiessen
     public class GameObject
     {
         internal readonly RenderContext _rc;
-        private readonly Mesh _mesh;
 
         public float3 Position
         {
@@ -27,15 +26,14 @@ namespace Examples.Scharfschiessen
         private float3 _scale = new float3(1,1,1);
 
         public String Tag { get; internal set; }
-        internal ITexture _iTex;
         internal float4 Color;
         internal SceneRenderer SceneRenderer;
 
-        public GameObject(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor, SceneRenderer sc)
+        public GameObject(RenderContext rc, float3 position, float3 rotation, float3 scaleFactor, SceneRenderer sc)
         {
             SceneRenderer = sc;
             _rc = rc;
-            _mesh = mesh;
+
             _scale = scaleFactor;
             ObjectMtx = float4x4.CreateRotationX(rotation.x)
                      *float4x4.CreateRotationY(rotation.y)
@@ -44,13 +42,6 @@ namespace Examples.Scharfschiessen
 
             Rotation = rotation;
             Tag = "GameObject";
-        }
-
-        public void SetTexture(string name)
-        {
-
-            var imgData = _rc.LoadImage("Assets/"+name+".jpg");
-            _iTex = _rc.CreateTexture(imgData);
         }
 
         public virtual void Update()
@@ -66,13 +57,6 @@ namespace Examples.Scharfschiessen
         public virtual void Render(float4x4 camMtx)
         {
             _rc.ModelView = camMtx * ObjectMtx * float4x4.Scale(_scale);
-         
-           // _rc.SetShader(_spTexture);
-           // _rc.SetShaderParamTexture(_textureParam, _iTex);
-            //_rc.SetShader(_spColor);
-            //_rc.SetShaderParam(_colorParam, new float4(0.5f, 0.8f, 0, 1));
-            //_rc.SetRenderState(new RenderStateSet { AlphaBlendEnable = false, ZEnable = true });
-            //_rc.Render(_mesh);
             
             SceneRenderer.Render(_rc);
 

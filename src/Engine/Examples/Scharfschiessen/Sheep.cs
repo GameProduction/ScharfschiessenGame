@@ -23,8 +23,8 @@ namespace Examples.Scharfschiessen
         private int _score;
 
 
-        public Sheep(RenderContext rc, Mesh mesh, float3 position, float3 rotation, float3 scaleFactor,  SceneRenderer sc, Game game)
-            : base(rc, mesh, position, rotation, scaleFactor, sc)
+        public Sheep(RenderContext rc, float3 position, float3 rotation, float3 scaleFactor,  SceneRenderer sc, Game game)
+            : base(rc, position, rotation, scaleFactor, sc)
         {
             Color = new float4(0.5f, 0.8f, 0.8f, 1);
             _distance = position.Length;
@@ -41,8 +41,6 @@ namespace Examples.Scharfschiessen
             _game = game;
             Pos = position;
             _alpha =  (float) Math.PI;
-            var imgData = rc.LoadImage("Assets/SchafOberflächenfarbe.jpg");
-            _iTex = rc.CreateTexture(imgData);
             Tag = "ActionObject";
         }
 

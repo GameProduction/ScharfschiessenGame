@@ -84,20 +84,15 @@ namespace Examples.Scharfschiessen
 
         private void CreateEnvironment()
         {
-            var houses = new GameObject(RC, null, new float3(0, 0, 0), float3.Zero, new float3(1f, 1f, 1f), srBuildings);
-            houses.SetTexture("GebäudeOberflächenfarbe");
+            var houses = new GameObject(RC, new float3(0, 0, 0), float3.Zero, new float3(1f, 1f, 1f), srBuildings);
             LevelObjects.Add(houses);
-            var cows = new GameObject(RC, null, new float3(0, 0, 0), new float3(0,-20,0), new float3(1f, 1f, 1f), srCows);
-            cows.SetTexture("KuhOberflächenfarbe");
+            var cows = new GameObject(RC, new float3(0, 0, 0), new float3(0,-20,0), new float3(1f, 1f, 1f), srCows);
             LevelObjects.Add(cows);
-            var cows1 = new GameObject(RC, null, new float3(-20, 0, 0), new float3(0,-180,0), new float3(1f, 1f, 1f), srCows);
-            cows1.SetTexture("KuhOberflächenfarbe");
+            var cows1 = new GameObject(RC, new float3(-20, 0, 0), new float3(0,-180,0), new float3(1f, 1f, 1f), srCows);
             LevelObjects.Add(cows1);
-            var trees = new GameObject(RC, null, new float3(0, -60, 0), new float3(0, 0, 0), new float3(1.5f, 1.5f, 1.5f), srTrees);
-            trees.SetTexture("treesOberflächenfarbe");
+            var trees = new GameObject(RC, new float3(0, -60, 0), new float3(0, 0, 0), new float3(1.5f, 1.5f, 1.5f), srTrees);
             LevelObjects.Add(trees);
-            var ebene = new GameObject(RC, null, new float3(0, -100, 0), float3.Zero, new float3(20,1,20), srLandschaft);
-            ebene.SetTexture("EbeneOberflächenfarbe");
+            var ebene = new GameObject(RC, new float3(0, -100, 0), float3.Zero, new float3(20,1,20), srLandschaft);
             LevelObjects.Add(ebene);
             /*var sheep1 = new Sheep(RC, _meshSheep, new float3(50, 0,50), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep1);
@@ -127,7 +122,7 @@ namespace Examples.Scharfschiessen
             float3 pos = float3.Zero;
             float3 rot = float3.Zero;
             FindPosition(out pos, out rot);
-            var sheep = new Sheep(RC, _meshSheep, pos, rot, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
+            var sheep = new Sheep(RC, pos, rot, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep);
             Debug.WriteLine("Sheep At: " + sheep.Position);
         }
