@@ -37,8 +37,7 @@ namespace Examples.Scharfschiessen
         }
         public SceneRenderer LoadSkybox()
         {
-            return Loader("skybox");
-        }
+            return Loader("skybox");}
 
         public SceneRenderer LoadTrees()
         {
@@ -47,6 +46,10 @@ namespace Examples.Scharfschiessen
         public SceneRenderer LoadChicken()
         {
             return Loader("hühner");
+        }
+        public SceneRenderer LoadBuildings()
+        {
+            return Loader("Gebäude");
         }
 
 

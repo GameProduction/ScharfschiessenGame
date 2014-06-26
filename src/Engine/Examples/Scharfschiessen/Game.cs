@@ -41,6 +41,7 @@ namespace Examples.Scharfschiessen
         private readonly SceneRenderer srTrees;
         private readonly SceneRenderer srChicken;
         private readonly SceneRenderer srCows ;
+        private readonly SceneRenderer srBuildings;
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
@@ -58,6 +59,7 @@ namespace Examples.Scharfschiessen
             //srChicken = SceneLoader.LoadChicken();
             srCows = SceneLoader.LoadCows();
             srLandschaft = SceneLoader.LoadEnvironment();
+            srBuildings = SceneLoader.LoadBuildings();
             CreateEnvironment();
             Points = 0;
             LoadLevel(1);
@@ -82,17 +84,16 @@ namespace Examples.Scharfschiessen
 
         private void CreateEnvironment()
         {
-            //var tomato = new Tomato(_rc, _meshTomtato, new float3(0, 0, 60), float3.Zero, 0.2f, this, srTomato);
-            //LevelObjects.Add(tomato);
-            //var go = new GameObject(_rc, mesh, new float3(0, 0, 250), float3.Zero, 0.2f, this);
-            //LevelObjects.Add(go);
-           /* var chicken = new GameObject(RC, null, new float3(0, -300, 0), float3.Zero, new float3(1, 1, 1), srChicken);
-            chicken.SetTexture("HühnerOberflächenfarbe");
-            LevelObjects.Add(chicken);*/
-            var cows = new GameObject(RC, null, new float3(0, -50, 0), float3.Zero, new float3(1, 1, 1), srCows);
-            cows.SetTexture("KüheOberflächenfarbe");
+            var houses = new GameObject(RC, null, new float3(0, 0, 0), float3.Zero, new float3(1f, 1f, 1f), srBuildings);
+            houses.SetTexture("GebäudeOberflächenfarbe");
+            LevelObjects.Add(houses);
+            var cows = new GameObject(RC, null, new float3(0, 0, 0), new float3(0,-20,0), new float3(1f, 1f, 1f), srCows);
+            cows.SetTexture("KuhOberflächenfarbe");
             LevelObjects.Add(cows);
-            var trees = new GameObject(RC, null, new float3(0, -50, 0), float3.Zero, new float3(1, 1, 1), srTrees);
+            var cows1 = new GameObject(RC, null, new float3(-20, 0, 0), new float3(0,-180,0), new float3(1f, 1f, 1f), srCows);
+            cows1.SetTexture("KuhOberflächenfarbe");
+            LevelObjects.Add(cows1);
+            var trees = new GameObject(RC, null, new float3(0, -50, 0), new float3(0, 0, 0), new float3(1.5f, 1.5f, 1.5f), srTrees);
             trees.SetTexture("treesOberflächenfarbe");
             LevelObjects.Add(trees);
             var ebene = new GameObject(RC, null, new float3(0, -100, 0), float3.Zero, new float3(20,1,20), srLandschaft);
@@ -102,6 +103,8 @@ namespace Examples.Scharfschiessen
             LevelObjects.Add(sheep1);
             var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep2);
+            var sheep3 = new Sheep(RC, _meshSheep, new float3(-150, 0, 80), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
+            LevelObjects.Add(sheep3);
         }
 
         
