@@ -79,7 +79,7 @@ namespace Examples.Scharfschiessen
         }
 
         // Show HighScore
-        public void ShowFirstFiveHighScore()
+        public string ShowFirstFiveHighScore()
         {
             string query = "SELECT `key`, `PlayerName`, `HighScore` FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
             //open connection
@@ -94,6 +94,7 @@ namespace Examples.Scharfschiessen
                 //close connection
                 this.CloseConnection();
             }
+            return query;
         }
 
 
@@ -151,6 +152,19 @@ namespace Examples.Scharfschiessen
                 this.CloseConnection();
             }
         }
+        //Delete all rows in a table without deleting the table. This means that the table structure, attributes, and indexes will be intact
+        public void DeleteAllRows()
+        {
+            var query = "DELETE FROM PlayerPoints";
+
+            if (this.OpenConnection() == true)
+            {
+                //MySqlCommand cmd = new MySqlCommand(query, _connection);
+                //cmd.ExecuteNonQuery();
+                this.CloseConnection();
+            }
+        }
+
 
         //Select statement
         public List<string>[] Select()
@@ -217,18 +231,6 @@ namespace Examples.Scharfschiessen
                 return count;
             }
         }
-
-        //Backup
-        public void Backup()
-        {
-        }
-
-        //Restore
-        public void Restore()
-        {
-        }
-
-
 
     }
 }
