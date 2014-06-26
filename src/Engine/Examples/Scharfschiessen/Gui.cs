@@ -445,10 +445,10 @@ namespace Examples.Scharfschiessen
            // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
             Console.Write("Name = " + nameInput.Text);
             playername = nameInput.Text; 
-            _gameHandler.DbConnection.Insert(playername, (int)_points);
-           // _hs = _gameHandler.DbConnection.ShowFirstFiveHighScore();
+            _gameHandler.DbConnection.Insert(playername, 10);
+            _hs = _gameHandler.DbConnection.ShowFirstFiveHighScore();
             Console.WriteLine(_hs);
-            //System.Windows.MessageBox.Show(_hs);
+            System.Windows.MessageBox.Show(_hs);
            _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
         }
 

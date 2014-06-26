@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 //using Examples.Scharfschiessen.Gui;
@@ -22,8 +23,8 @@ namespace Examples.Scharfschiessen
 
         private void Initialize()
         {
-            _server = "87.106.27.181:3306";
-            _database = "schafschiessenDB";
+            _server = "87.106.27.181";
+            _database = "schafschiessenDB"; 
             _uid = "db_anwendung";
             _password = "FEKnnqERy7MHEDpr";
 
@@ -83,18 +84,20 @@ namespace Examples.Scharfschiessen
         {
             string query = "SELECT 'key', 'PlayerName', 'HighScore' FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
             //open connection
+            
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
                 var cmd = new MySqlCommand(query, _connection);
 
                 //Execute command
-                cmd.ExecuteNonQuery();
-
+                var bla =cmd.ExecuteNonQuery();
+                
                 //close connection
                 this.CloseConnection();
+                Debug.WriteLine(bla.ToString());
             }
-            return query;
+            return "bl";
         }
 
 
@@ -102,13 +105,13 @@ namespace Examples.Scharfschiessen
         //Insert statement
         public void Insert( string name, int points)
         {
-             string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values'("+ name + "," + points + ")";
+             string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values('"+ name + "'," + points + ")";
 
             //open connection
             if (this.OpenConnection() == true)
             {
                 //create command and assign the query and connection from the constructor
-                var cmd = new MySqlCommand(query, _connection);
+                MySqlCommand cmd = new MySqlCommand(query, _connection);
 
                 //Execute command
                 cmd.ExecuteNonQuery();
