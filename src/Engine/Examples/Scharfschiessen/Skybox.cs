@@ -15,12 +15,15 @@ namespace Examples.Scharfschiessen
         private ShaderProgram _skyBoxShaderParam;
         private ShaderProgram TextureSp;
         private Mesh _syboxMesh;
+        public Dictionary<String,ImageData> SkyboxImages; 
 
         private ImageData imgData;
         public Skybox(RenderContext rc)
         {
+            SkyboxImages = new Dictionary<string, ImageData>();
+            
+
             // load texture
-           
             imgData = rc.LoadImage("Assets/skyboxOberflächenfarbe.jpg");
             _iTex = rc.CreateTexture(imgData);
             _rc = rc;

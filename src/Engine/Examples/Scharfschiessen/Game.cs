@@ -45,7 +45,7 @@ namespace Examples.Scharfschiessen
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
-        private Skybox _skybox;
+        private readonly Skybox _skybox;
 
         
         public Game(GameHandler gh,RenderContext rc)
@@ -93,25 +93,31 @@ namespace Examples.Scharfschiessen
             var cows1 = new GameObject(RC, null, new float3(-20, 0, 0), new float3(0,-180,0), new float3(1f, 1f, 1f), srCows);
             cows1.SetTexture("KuhOberflächenfarbe");
             LevelObjects.Add(cows1);
-            var trees = new GameObject(RC, null, new float3(0, -50, 0), new float3(0, 0, 0), new float3(1.5f, 1.5f, 1.5f), srTrees);
+            var trees = new GameObject(RC, null, new float3(0, -60, 0), new float3(0, 0, 0), new float3(1.5f, 1.5f, 1.5f), srTrees);
             trees.SetTexture("treesOberflächenfarbe");
             LevelObjects.Add(trees);
             var ebene = new GameObject(RC, null, new float3(0, -100, 0), float3.Zero, new float3(20,1,20), srLandschaft);
             ebene.SetTexture("EbeneOberflächenfarbe");
             LevelObjects.Add(ebene);
-            var sheep1 = new Sheep(RC, _meshSheep, new float3(50, 0,50), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
+            /*var sheep1 = new Sheep(RC, _meshSheep, new float3(50, 0,50), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep1);
             var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep2);
             var sheep3 = new Sheep(RC, _meshSheep, new float3(-150, 0, 80), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
-            LevelObjects.Add(sheep3);
+            LevelObjects.Add(sheep3);*/
+            for (int i = 0; i < 5; i++)
+            {
+                InstantiateSheep();
+            }
         }
 
         
         //posiotion für neues Schaf
         public void FindPosition(out float3 pos, out float3 rot)
         {
-            pos = new float3(0, 0, 0);
+            Random rand = new Random();
+
+            pos = new float3(rand.Next(20, 70), rand.Next(20, 50), rand.Next(20, 70));
             rot = new float3(0, 0, 0);
             //Rechenen
         }
@@ -121,8 +127,9 @@ namespace Examples.Scharfschiessen
             float3 pos = float3.Zero;
             float3 rot = float3.Zero;
             FindPosition(out pos, out rot);
-            //var sheep = new Sheep(_rc, _meshSheep, pos, rot, 0.02f, this);
-            //LevelObjects.Add(sheep);
+            var sheep = new Sheep(RC, _meshSheep, pos, rot, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
+            LevelObjects.Add(sheep);
+            Debug.WriteLine("Sheep At: " + sheep.Position);
         }
 
 
