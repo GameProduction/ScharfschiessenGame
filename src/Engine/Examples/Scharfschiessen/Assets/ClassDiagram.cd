@@ -30,8 +30,11 @@
   </Class>
   <Class Name="Examples.Scharfschiessen.GameState">
     <Position X="23.5" Y="4" Width="3.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
-      <Enum Name="Examples.Scharfschiessen.GameState.State" Collapsed="true">
+      <Enum Name="Examples.Scharfschiessen.GameState.State">
         <TypeIdentifier>
           <NewMemberFileName>GameState.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -44,13 +47,16 @@
   </Class>
   <Class Name="Examples.Scharfschiessen.Gui">
     <Position X="33.75" Y="4" Width="5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
-      <Enum Name="Examples.Scharfschiessen.Gui._buttons" Collapsed="true">
+      <Enum Name="Examples.Scharfschiessen.Gui._buttons">
         <TypeIdentifier>
           <NewMemberFileName>Gui.cs</NewMemberFileName>
         </TypeIdentifier>
       </Enum>
-      <Enum Name="Examples.Scharfschiessen.Gui._btnimages" Collapsed="true">
+      <Enum Name="Examples.Scharfschiessen.Gui._btnimages">
         <TypeIdentifier>
           <NewMemberFileName>Gui.cs</NewMemberFileName>
         </TypeIdentifier>
