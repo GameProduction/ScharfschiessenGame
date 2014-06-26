@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Examples.Scharfschiessen.DbConnection">
+    <Position X="19.75" Y="4" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AgQAAkAAAAAAAQAAQAACABQABQEAAAQAAAAAYAAABAA=</HashCode>
+      <FileName>DbConnection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.Game">
+    <Position X="27.75" Y="4" Width="5.25" />
+    <TypeIdentifier>
+      <HashCode>AcaAwBCEAJAAiAABAAQSkAAEABIBAAhDQNAQIgEQQAA=</HashCode>
+      <FileName>Game.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.GameHandler">
+    <Position X="43" Y="4" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AEQAACBAAABCAAAAEAAAAAAgAAgAAAAAAAAAAAAIIAA=</HashCode>
+      <FileName>GameHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.GameObject">
+    <Position X="6.25" Y="4" Width="7" />
+    <TypeIdentifier>
+      <HashCode>AAQIIAAAAAAgAIQgAAAAAAAAgCAgQAAAADAAgAAAACA=</HashCode>
+      <FileName>GameObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.GameState">
+    <Position X="23.5" Y="4" Width="3.5" />
+    <NestedTypes>
+      <Enum Name="Examples.Scharfschiessen.GameState.State" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>GameState.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAIAAAAAAAAAAAAACAAAAAAAAAAAEAAAAAAABA=</HashCode>
+      <FileName>GameState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.Gui">
+    <Position X="33.75" Y="4" Width="5" />
+    <NestedTypes>
+      <Enum Name="Examples.Scharfschiessen.Gui._buttons" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Gui.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Examples.Scharfschiessen.Gui._btnimages" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Gui.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>CAAAMEkEBARAHwCEiCAgAEAEFBAQAAAIAgAACAAgAgE=</HashCode>
+      <FileName>Gui.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.Scharfschiessen">
+    <Position X="55.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAEACBAEAAAA=</HashCode>
+      <FileName>Main.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.SceneLoader">
+    <Position X="47.5" Y="4" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIECAEQAAAAAAAQEAACAAEAgCAAAAAAAACAAQA=</HashCode>
+      <FileName>SceneLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.Sheep">
+    <Position X="0.5" Y="9.25" Width="7.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgQEAAAAAAABAACIAAAAAAAAAABAIAQ=</HashCode>
+      <FileName>Sheep.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.Skybox">
+    <Position X="39.5" Y="4" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AABAIAAAAAAEAAAAABAAAAAAAAAAAAAAADIAAAAAAAA=</HashCode>
+      <FileName>Skybox.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.Tomato">
+    <Position X="8.75" Y="9.25" Width="10.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAQABEAAAAAAAAAAAAAAABAAIAAAAAQ=</HashCode>
+      <FileName>Tomato.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Examples.Scharfschiessen.Weapon">
+    <Position X="51" Y="4" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAACAADAEAAAAAAgAAAAAAAAAAAAAAEAAAAEQ=</HashCode>
+      <FileName>Weapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Object">
+    <Position X="25.75" Y="0.5" Width="3.25" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
