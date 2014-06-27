@@ -84,7 +84,7 @@ namespace Examples.Scharfschiessen
         // Show HighScore
         public string[] ShowFirstFiveHighScore()
         {
-            string query = "SELECT `key`, PlayerName, HighScore FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
+            string query = "SELECT `key`, PlayerName, HighScore, Level FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
             string []s = new string[5];
             //open connection
             if (this.OpenConnection() == true)
@@ -95,7 +95,7 @@ namespace Examples.Scharfschiessen
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 while (reader.Read())
                 {
-                   s[i] = string.Format("PlayerName: {0} HighScore: {1}", reader.GetString(1), reader.GetString(2));
+                   s[i] = string.Format("PlayerName: {0} HighScore: {1} Level: {2}", reader.GetString(1), reader.GetString(2), reader.GetString(3));
                     i++;
                 }
                 //DialogResult dialogResult = MessageBox.Show(s);
@@ -108,9 +108,9 @@ namespace Examples.Scharfschiessen
 
       
         //Insert statement
-        public void Insert( string name, int points)
+        public void Insert( string name, int points, int level)
         {
-             string query = "INSERT INTO PlayerPoints (PlayerName, HighScore) Values('"+ name + "'," + points + ")";
+            string query = "INSERT INTO PlayerPoints (PlayerName, HighScore, Level) Values('" + name + "'," + points + ", " + level + ")";
 
             //open connection
             if (this.OpenConnection() == true)

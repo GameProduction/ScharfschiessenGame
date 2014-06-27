@@ -46,9 +46,12 @@ namespace Examples.Scharfschiessen
         private GUIButton[] _guiDiffs;
         private GUIImage[] _guiImages;
         private GUIImage[] _guiImageTomato;
+        private GUIImage[] _highscoreBretter;
 
         // Diverse public Variablen (für Datenbank )
         public int _points;
+        public int _level;
+        public int endlevel;
         public GUIText nameInput;   // Textfeld zur Namenseingabe
         public string playername;   //eingegebener name an DB
 
@@ -104,12 +107,14 @@ namespace Examples.Scharfschiessen
             _guiDiffs = new GUIButton[3];
             _guiImageTomato = new GUIImage[10];
             _guiImages = new GUIImage[7];
+            _highscoreBretter = new GUIImage[5];
 
             float textwidth;
             float texthight;
             _highscore = false;
             _neustart = true;
             _hsYpos = 50;
+            _level = 1;
 
       #endregion
 
@@ -126,7 +131,8 @@ namespace Examples.Scharfschiessen
             //Fadenkreuz flexibel (Falls es zwecks Schwierigkeitsstufe kleiner werden soll)
             _aimimage = 80;
             _guiImages[(int)_btnimages.btniFadenkreuz] = new GUIImage("Assets/Fadenkreuz.png", width / 2 - _aimimage / 2, height / 2 - _aimimage / 2, -2, _aimimage, _aimimage);
-    #endregion
+
+            #endregion
 
     #region Beschriftungen
             //Schriften
@@ -157,11 +163,6 @@ namespace Examples.Scharfschiessen
             textwidth = GUIText.GetTextWidth("Time: ", _guiFontCabin18);
             _guiText2 = new GUIText("Points: " + _points, _guiFontCabin18, width - (int)(textwidth * 3), (int)(texthight*2));
             _guiText2.TextColor = new float4(0, 0, 0, 1);
-
-            // Text HighscoreMenü: Game Over
-            textwidth = GUIText.GetTextWidth("You reached --- Points!", _guiFontWESTERN30);
-            _guiText4 = new GUIText("You reached " + _points + " Points!", _guiFontWESTERN30, width/2 - (int) (textwidth/2), (height/3));
-            _guiText4.TextColor = new float4(1, 0, 0, 1);
 
             //Text LevelUp
             textwidth = GUIText.GetTextWidth("Level Up!", _guiFontCabin600);
@@ -320,6 +321,8 @@ namespace Examples.Scharfschiessen
         public void ShowLevelUp()
         {
             _showLevelUp = true;
+            _level++;
+            endlevel = _level;
             _inGameHandler.Add(_guiText7);
             time = 1;
         }
@@ -351,11 +354,20 @@ namespace Examples.Scharfschiessen
             Console.WriteLine("HighScoreGui");
             _guiHandler.Clear(); // Alte Infos aus dem GameHandler entfernen (z.B. Stand der Tomaten)
             _highscore = true;
+            var height = _rCanvas.Height;
+            var width = _rCanvas.Width;
             _guiHandler = _highScoreHandler;
             for (int i = 0; i < 10; i++)
             {
                 _guiHandler.Remove(_guiImageTomato[i]);
             }
+
+            // Text HighscoreMenü: Game Over
+            float textwidth;
+            textwidth = GUIText.GetTextWidth("You reached --- Points!", _guiFontWESTERN30);
+            _guiText4 = new GUIText("You reached " + _points + " Points!", _guiFontWESTERN30, width / 2 - (int)(textwidth / 2), (height / 3));
+            _guiText4.TextColor = new float4(1, 0, 0, 1);
+
             _highScoreHandler.Add(_guiImages[(int)_btnimages.Endbild]);
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniHighscore]);
@@ -542,15 +554,21 @@ namespace Examples.Scharfschiessen
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
            // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
-            Console.Write("Name = " + nameInput.Text);
             playername = nameInput.Text; 
-            _gameHandler.DbConnection.Insert(playername, _points);
+            _gameHandler.DbConnection.Insert(playername, _points, endlevel);
            
              highscoreEintraege = _gameHandler.DbConnection.ShowFirstFiveHighScore();
              foreach (string _highscoreEintrag in highscoreEintraege)
              {
-                 _highScoreHandler.Add(new GUIText(_highscoreEintrag, _guiFontWESTERN18, 120, _hsYpos, new float4(1, 1, 1, 1)));
+                 _highScoreHandler.Add(new GUIText(_highscoreEintrag, _guiFontCabin12, 120, _hsYpos, -1, new float4(1, 1, 1, 1)));
                     _hsYpos = _hsYpos + 20;
+             }
+             int _brettposition = 35;
+             for (int i = 0; i < 5; i++)
+             {
+                 _highscoreBretter[i] = new GUIImage("Assets/Holz.png", 115, _brettposition, -2, 300, 15);
+                 _highScoreHandler.Add(_highscoreBretter[i]);
+                 _brettposition = _brettposition + 20;
              }
         }
 
