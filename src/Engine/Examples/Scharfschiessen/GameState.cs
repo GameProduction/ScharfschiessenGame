@@ -27,7 +27,7 @@ namespace Examples.Scharfschiessen
             set
             {
                 LastState = _currentState;
-                if (value == State.Playing || value == State.HiddenPause)
+                if (value == State.Playing)
                 {
                     Input.Instance.CursorVisible = false;
                     Input.Instance.FixMouseAtCenter = true;   
