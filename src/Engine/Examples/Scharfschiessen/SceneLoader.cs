@@ -15,7 +15,7 @@ namespace Examples.Scharfschiessen
         public SceneRenderer _sr;
         private float4x4 _modelScaleOffset;
 
-        private Mesh _meshTomtato;
+        
 
         public SceneRenderer LoadEnvironment()
         {

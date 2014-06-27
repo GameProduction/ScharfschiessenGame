@@ -13,7 +13,7 @@ namespace Examples.Scharfschiessen
         private RenderContext _rc;
         private ITexture _iTex;
         private ShaderProgram _skyBoxShaderParam;
-        private ShaderProgram TextureSp;
+        //private ShaderProgram TextureSp;
         private Mesh _syboxMesh;
         public Dictionary<String,ImageData> SkyboxImages; 
 

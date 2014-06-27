@@ -41,13 +41,16 @@ namespace Examples.Scharfschiessen
             _game = game;
             Pos = position;
             _alpha =  (float) Math.PI;
-            Tag = "ActionObject";
+            Tag = "Sheep";
         }
 
         public override void Update()
         {
-            base.Update();
+            
             //anim Flügel
+           // var pos = ObjectMtx.Column3.xyz;
+            //pos.z += 2f;
+           // ObjectMtx *=  float4x4.CreateTranslation(pos);
             MoveTo();
         }
 
@@ -61,16 +64,18 @@ namespace Examples.Scharfschiessen
             }
             else
             {
-                _alpha += (float) Time.Instance.DeltaTime*Speed;
+                _alpha -= (float) Time.Instance.DeltaTime*Speed;
             }
             P.x = _distance*(float) Math.Sin(_alpha/6);
             P.z = _distance*(float) Math.Cos(_alpha/6);
-
-            ObjectMtx *= float4x4.CreateTranslation(-ObjectMtx.Column3.xyz) * float4x4.CreateTranslation(P);
+            float betha = (float) ((2 * Math.PI) - (_alpha / 6));
+            ObjectMtx = float4x4.CreateTranslation(P)* float4x4.CreateRotationY(-betha );
         }
+
 
         public override void Collided()
         {
+            Debug.WriteLine("Schaf Kollodiert");
             _game.Points += _score;
         }
     }

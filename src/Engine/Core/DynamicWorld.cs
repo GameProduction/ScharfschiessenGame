@@ -115,6 +115,11 @@ namespace Fusee.Engine
             return retval;
         }
 
+        public void RemoveRigidBody(RigidBody rigidbody)
+        {
+            _dwi.RemoveRigidBody(rigidbody._iRigidBodyImp);
+        }
+
         public int StepSimulation(float timeSteps, int maxSubSteps, float fixedTimeSteps = 1/60)
         {
             return _dwi.StepSimulation(timeSteps, maxSubSteps, fixedTimeSteps);

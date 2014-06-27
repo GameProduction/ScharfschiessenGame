@@ -15,17 +15,19 @@ namespace Examples.Scharfschiessen
 
         private RigidBody TomatoRb { get; set; }
         private double timer;
-        private bool active;
-        private readonly Game _game;
-        public Tomato(RenderContext rc, float3 position, float3 rotation, float3 scaleFactor,SceneRenderer sc, RigidBody tomatoRigidBody, Game game)
+       private readonly Game _game;
+        private readonly DynamicWorld _world;
+
+        public Tomato(RenderContext rc, float3 position, float3 rotation, float3 scaleFactor,SceneRenderer sc, RigidBody tomatoRigidBody, Game game, DynamicWorld world)
             : base(rc, position, rotation, scaleFactor, sc)
         {
             TomatoRb = tomatoRigidBody;
             Color = new float4(0.5f, 0.1f, 0.1f, 1);
             Radius = 2;
-            Tag = "ActionObject";
+            Tag = "Tomato";
             timer = 2.0f;
             _game = game;
+            _world = world;
         }
 
 
@@ -45,24 +47,26 @@ namespace Examples.Scharfschiessen
             }
         }
 
-        public override void Render(float4x4 camMtx)
+      /*  public override void Render(float4x4 camMtx)
         {
 
             _rc.ModelView = camMtx * ObjectMtx* float4x4.Scale(0.02f);
             SceneRenderer.Render(_rc);
- 
-            
-        }
+        }*/
+
         public override void Collided()
         {
-            TomatoRb = null;
+            _world.RemoveRigidBody(TomatoRb);
+            //TomatoRb = null;
         }
 
 
         private void DeleteMe()
         {
-            TomatoRb = null;
+            //TomatoRb = null;
+            _world.RemoveRigidBody(TomatoRb);
             _game.LevelObjects.Remove(this);
+            
         }
 
     }

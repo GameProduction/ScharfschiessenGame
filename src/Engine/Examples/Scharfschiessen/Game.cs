@@ -25,28 +25,24 @@ namespace Examples.Scharfschiessen
         private float4x4 _mtxCam;
         private GameHandler _gameHandler;
         public List<GameObject> LevelObjects = new List<GameObject>();
-        private Mesh _meshTomtato;
-        private Mesh _meshSheep;
         public DynamicWorld World { get; set; }
         public  SphereShape SphereCollider { get; private set; }
         private List<Sheep> SheepList = new List<Sheep>();
         public Weapon Weapon;
-
+        
         public SceneLoader SceneLoader { get; private set; }
     
         private readonly SceneRenderer srTomato;
         private readonly SceneRenderer srSheep;
-        private readonly SceneRenderer srSkybox;
         private readonly SceneRenderer srLandschaft;
         private readonly SceneRenderer srTrees;
-        private readonly SceneRenderer srChicken;
         private readonly SceneRenderer srCows ;
         private readonly SceneRenderer srBuildings;
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
         private readonly Skybox _skybox;
-
+        private Random rand;
         
         public Game(GameHandler gh,RenderContext rc)
         {
@@ -61,10 +57,12 @@ namespace Examples.Scharfschiessen
             srLandschaft = SceneLoader.LoadEnvironment();
             srBuildings = SceneLoader.LoadBuildings();
             CreateEnvironment();
+            
             Points = 0;
             LoadLevel(1);
             _skybox = new Skybox(RC);
-            
+           
+
         }
 
        
@@ -100,6 +98,7 @@ namespace Examples.Scharfschiessen
             LevelObjects.Add(sheep2);
             var sheep3 = new Sheep(RC, _meshSheep, new float3(-150, 0, 80), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep3);*/
+            rand = new Random();
             for (int i = 0; i < 5; i++)
             {
                 InstantiateSheep();
@@ -110,11 +109,31 @@ namespace Examples.Scharfschiessen
         //posiotion für neues Schaf
         public void FindPosition(out float3 pos, out float3 rot)
         {
-            Random rand = new Random();
-
-            pos = new float3(rand.Next(20, 70), rand.Next(20, 50), rand.Next(20, 70));
+            //Quadrant wählen 
+            // I  :  X(20,70) - Z(20,70)
+            // II :  X(-20,-70) - Z(20,70)
+            // III:  X:(20,70) - Z(-20,-70)
+            // IV :  X(-20,-70) - Z(-20,-70)
+            
+            if (rand.Next(-1, 1) > 0)
+            {
+                pos.x = rand.Next(20, 70);
+            }
+            else
+            {
+                pos.x = rand.Next(-70, -20);
+            }
+            if (rand.Next(-1, 1) > 0)
+            {
+                pos.z = rand.Next(20, 70);
+            }
+            else
+            {
+                pos.z = rand.Next(-70, -20);
+            }
+            pos.y = rand.Next(30, 50);
+           // pos = new float3(rand.Next(20, 70), rand.Next(20, 50), rand.Next(20, 70));
             rot = new float3(0, 0, 0);
-            //Rechenen
         }
         //neues Schaf wird gespawned
         public void InstantiateSheep()
@@ -188,11 +207,11 @@ namespace Examples.Scharfschiessen
         {
             for (int t = 0; t < LevelObjects.Count; t++)
             {
-                if (LevelObjects[t] != null && LevelObjects[t].Tag == "ActionObject")
+                if (LevelObjects[t] != null && LevelObjects[t].Tag == "Sheep")
                 {
                     for (int i = 0; i < LevelObjects.Count; i++)
                     {
-                        if (LevelObjects[i] != null && LevelObjects[i].Tag == "ActionObject" && LevelObjects[t] != LevelObjects[i])
+                        if (LevelObjects[i] != null && LevelObjects[i].Tag == "Tomato" && LevelObjects[t] != LevelObjects[i])
                         {
                             if (CheckForCollision(LevelObjects[t], LevelObjects[i]))
                             {

@@ -271,6 +271,21 @@ namespace Fusee.Engine
             return retval;
         }
 
+
+        public void RemoveRigidBody(IRigidBodyImp iRigidBodyImp)
+        {
+            var rigidBodyImp = (RigidBodyImp)iRigidBodyImp;
+            var btRigidBody = rigidBodyImp._rbi;
+            CollisionObject obj = (CollisionObject)btRigidBody;
+            RigidBody body = btRigidBody;
+            if (body != null && body.MotionState != null)
+            {
+                body.MotionState.Dispose();
+            }
+            BtWorld.RemoveCollisionObject(obj);
+            obj.Dispose();
+        }
+
         public int StepSimulation(float timeSteps, int maxSubSteps, float fixedTimeSteps)
         {
             return BtWorld.StepSimulation(timeSteps, maxSubSteps);//, maxSubSteps, fixedTimeSteps);  
