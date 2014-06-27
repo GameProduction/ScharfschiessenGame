@@ -446,13 +446,7 @@ namespace Examples.Scharfschiessen
             Console.Write("Name = " + nameInput.Text);
             playername = nameInput.Text; 
             _gameHandler.DbConnection.Insert(playername, _points);
-<<<<<<< HEAD
             _gameHandler.DbConnection.ShowFirstFiveHighScore();
-=======
-            _hs = _gameHandler.DbConnection.ShowFirstFiveHighScore();
-            Console.WriteLine(_hs);
-            System.Windows.MessageBox.Show(_hs);
->>>>>>> origin/Fusee
            _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
         }
 
