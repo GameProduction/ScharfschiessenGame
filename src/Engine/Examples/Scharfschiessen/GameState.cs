@@ -49,6 +49,13 @@ namespace Examples.Scharfschiessen
                 {
                     LastState = _currentState;
                 }
+                if (value != State.Playing || value != State.HiddenPause)
+                {
+                    if (GameHandler.Game.World != null)
+                    {
+                        GameHandler.Game.World.Dispose();
+                    }
+                }
                 _currentState = value;
                 Gui.SetGui(_currentState);
             }
