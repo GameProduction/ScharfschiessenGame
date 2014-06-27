@@ -89,14 +89,16 @@ namespace Examples.Scharfschiessen
             //open connection
             if (this.OpenConnection() == true)
             {
-                string s = "";
+                int i = 0;
+                string []s = new string[5];
                 using (MySqlCommand cmd = new MySqlCommand(query, _connection))
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 while (reader.Read())
                 {
-                   s += string.Format("PlayerName: {0} HighScore: {1}\n", reader.GetString(1), reader.GetString(2));
+                   s[i] = string.Format("PlayerName: {0} HighScore: {1}", reader.GetString(1), reader.GetString(2));
+                    i++;
                 }
-                DialogResult dialogResult = MessageBox.Show(s);
+                //DialogResult dialogResult = MessageBox.Show(s);
 
                 //close connection
                 this.CloseConnection();

@@ -14,6 +14,7 @@ namespace Examples.Scharfschiessen
 
     public class Gui
     {
+#region klassenvariable
         private RenderCanvas _rCanvas;
         private readonly GameHandler _gameHandler;
         private GUIHandler _guiHandler;
@@ -42,10 +43,15 @@ namespace Examples.Scharfschiessen
         private GUIImage[] _guiImages;
         private GUIImage[] _guiImageTomato;
 
-        // Diverse public Variablen (für Highscore)
+        // Diverse public Variablen (für Datenbank )
         public int _points;
-        public GUIText nameInput;
-        public string playername;
+        public GUIText nameInput;   // Textfeld zur Namenseingabe
+        public string playername;   //eingegebener name an DB
+
+        //variablen für Anzeige des Highscores
+       // public string _highscoreEintrag;
+       // public string[] highscoreEintraege;
+       // public GUIText _guiTexthighscore; 
 
         // Diverse private Variablen
         private double _countdown;
@@ -55,6 +61,7 @@ namespace Examples.Scharfschiessen
         private bool _inputToggle; // Eingabe des Spielernamens
         private string _hs;     // Empfangsversuch für die String-Daten aus der Datenbank
         private int _aimimage; // für die flexible Größe des Fadenkreuzes
+#endregion
 
         private enum _buttons
         {
@@ -94,7 +101,6 @@ namespace Examples.Scharfschiessen
             float texthight;
             _highscore = false;
             _neustart = true;
-
       #endregion
 
     #region Bilder
@@ -113,12 +119,15 @@ namespace Examples.Scharfschiessen
             _guiFontAlphaWood18 = RC.LoadFont("Assets/AlphaWood.ttf", 18);
             _guiFontWESTERN30 = RC.LoadFont("Assets/WESTERN.ttf", 30);
 
+            // Anzeige Highscore
+           // _guiTexthighscore = new GUIText("", _guiFontCabin12, (width - width / 2), (height / 2), new float4(1, 0, 0, 1));
+           
             //Eingabetext Name für Highscore
             texthight = GUIText.GetTextHeight("Lorem ipsum", _guiFontCabin12);
             textwidth = GUIText.GetTextWidth("Write name: ", _guiFontCabin12);
             _name = new GUIText("Write name: ", _guiFontCabin12, (width / 2) - (int)(textwidth), (height / 2) - (int)(texthight), new float4(0, 0, 0, 1));
             nameInput = new GUIText("", _guiFontCabin12, (width / 2), (height / 2) - (int)(texthight), new float4(1, 0, 0, 1));
-
+           
             //Text Mainmenü: Scha(r)fschießen
             textwidth = GUIText.GetTextWidth("Scha(r)fschießen", _guiFontWESTERN30);
             _guiTextTitel = new GUIText("Scha(r)fschießen", _guiFontWESTERN30, (width/2) - (int) (textwidth/2), (height/3));
@@ -176,7 +185,6 @@ namespace Examples.Scharfschiessen
         #endregion
         }
 
-       
         public void DrawGui()
         {
             //Gui Rendern
@@ -289,11 +297,10 @@ namespace Examples.Scharfschiessen
             Console.WriteLine("HighScoreGui");
             _highscore = true;
             _guiHandler = _highScoreHandler;
-            /*           for (int j = 0; j <= _munition; j++) // alle weg...
-                       {
-                           _highScoreHandler.Remove(_guiImageTomato[j]);
-                       }
-           */
+            for (int i = 0; i < 10; i++)
+            {
+                _guiHandler.Remove(_guiImageTomato[i]);
+            }
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniHighscore]);
             _highScoreHandler.Add(_guiText4);
@@ -305,6 +312,7 @@ namespace Examples.Scharfschiessen
             _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown += OnbtnHighscore;
             _highScoreHandler.Add(nameInput);
             _highScoreHandler.Add(_name);
+            //_highScoreHandler.Add(_guiTexthighscore); ----------------------------------------------------------------------
         }
 
         public void DrawMunition() // Alle 10 Tomaten einmalig hinmalen
@@ -482,8 +490,30 @@ namespace Examples.Scharfschiessen
             Console.Write("Name = " + nameInput.Text);
             playername = nameInput.Text; 
             _gameHandler.DbConnection.Insert(playername, _points);
-            _gameHandler.DbConnection.ShowFirstFiveHighScore();
-           _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
+           
+            #region VARIANTE 1
+            /*
+             highscoreEintraege = _gameHandler.DbConnection.ShowFirstFiveHighScore();
+             foreach (string _highscoreEintrag in highscoreEintraege)
+             {
+                 _highScoreHandler.Add(_highscoreEintrag);
+             }
+          */
+             #endregion
+
+            #region VARIANTE 2
+            /* List<string> highscoreEintraege = new List<string>(_gameHandler.DbConnection.ShowFirstFiveHighScore());
+             foreach (string highscoreEintrag in highscoreEintraege)
+             {
+                 for (int i = 0; i < 5; i++)
+                 {
+
+                     _guiTexthighscore = new GUIText("" + highscoreEintrag, _guiFontCabin12, 50, 50);
+                     Console.WriteLine(_guiTexthighscore.Text);
+                 }
+             }
+            */
+            #endregion
         }
 
         private void OnbtnPlay(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
