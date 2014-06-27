@@ -239,6 +239,7 @@ namespace Examples.Scharfschiessen
                                 var p2 = LevelObjects.IndexOf(LevelObjects[i]);
                                 LevelObjects[p1] = null;
                                 LevelObjects[p2] = null;
+                                InstantiateSheep();
                             }
                         }
                     }
