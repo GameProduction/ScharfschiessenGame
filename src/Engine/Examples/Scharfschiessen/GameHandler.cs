@@ -68,7 +68,7 @@ namespace Examples.Scharfschiessen
                     -Screen.PrimaryScreen.Bounds.Height / 5);
                 Time.Instance.TimeFlow = 0;
             }
-            else if (Input.Instance.IsKeyUp(KeyCodes.Tab))
+            else if (Input.Instance.IsKeyUp(KeyCodes.Tab) && GameState.CurrentState == GameState.State.HiddenPause)
             {
                 GameState.CurrentState = GameState.LastState;
                 RCanvas.SetWindowSize(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height / 5, true, 0, 0);

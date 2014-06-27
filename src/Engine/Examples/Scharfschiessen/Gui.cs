@@ -38,7 +38,7 @@ namespace Examples.Scharfschiessen
         private GUIImage[] _guiImages;
 
         private double _countdown;
-        public double _points;
+        public int _points;
         private int _munition ;
         public GUIText nameInput;
         private bool _inputToggle;
@@ -84,6 +84,8 @@ namespace Examples.Scharfschiessen
             _guiImageTomato = new GUIImage[10];
             _guiImages = new GUIImage[5];
             _aimimage = 80;
+
+            
 
             _guiImages[(int)_btnimages.btniMouse] = new GUIImage("Assets/Mouse.png", width / 4, 0, -1, (int)(height / 1.322), height);
             _guiImages[(int)_btnimages.btniFadenkreuz] = new GUIImage("Assets/Fadenkreuz.png", width / 2 - _aimimage / 2, height / 2 - _aimimage / 2, -2, _aimimage, _aimimage);
@@ -198,7 +200,6 @@ namespace Examples.Scharfschiessen
                     InGameGui();
                     break;
                 case GameState.State.HiddenPause:
-                    //InGameGui(); 
                     // keine Gui anzeigen, da sonst Null-Referenz-Exeption auftreten kann wenn zb. im MainMenu pausiert wird.
                     // oder DummyFunktion() ist aber eigendlich nciht nötig.
                     break;
@@ -293,9 +294,9 @@ namespace Examples.Scharfschiessen
             _highScoreHandler.Add(_guiText4);
             _highScoreHandler.Add(_guiText5);
             _highScoreHandler.Add(_guiText6);
-            _guiHandler.Add(_guiDiffs[(int) _buttons.btnNochmal]);
+            _highScoreHandler.Add(_guiDiffs[(int)_buttons.btnNochmal]);
             _guiDiffs[(int) _buttons.btnNochmal].OnGUIButtonDown += OnbtnPlay;
-            _guiHandler.Add(_guiDiffs[(int) _buttons.btnHighscore]);
+            _highScoreHandler.Add(_guiDiffs[(int)_buttons.btnHighscore]);
             _guiDiffs[(int) _buttons.btnHighscore].OnGUIButtonDown += OnbtnHighscore;
             _highScoreHandler.Add(nameInput);
             _highScoreHandler.Add(_name); 
@@ -445,7 +446,7 @@ namespace Examples.Scharfschiessen
            // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
             Console.Write("Name = " + nameInput.Text);
             playername = nameInput.Text; 
-            _gameHandler.DbConnection.Insert(playername, 10);
+            _gameHandler.DbConnection.Insert(playername, _points);
             _hs = _gameHandler.DbConnection.ShowFirstFiveHighScore();
             Console.WriteLine(_hs);
             System.Windows.MessageBox.Show(_hs);
