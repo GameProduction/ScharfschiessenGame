@@ -185,7 +185,7 @@ namespace Examples.Scharfschiessen
                 //muss nach LevelObjects[i].Render() aufgerufen werden, da sonst LevelObjects[i] out of range passieren kann
                 LevelObjects[i].Update();
             }
-            _skybox.Render(_mtxCam);
+           // _skybox.Render(_mtxCam);
         }
 
         private void UpdateLevelObjectList()
