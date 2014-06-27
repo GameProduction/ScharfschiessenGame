@@ -169,12 +169,8 @@ namespace Examples.Scharfschiessen
                             Debug.WriteLine("LevelUp");
                             _nextLevel += 500;
 
-                            var temp = 0.5f;
-                            while (temp >= 0)
-                            {
-                                temp -= (float)Time.Instance.DeltaTime;
-                            }
                             //coole next level texture wird kurz eingeblendet
+                            _gameHandler.Gui.ShowLevelUp();
                         }
                     }
                 }

@@ -28,6 +28,7 @@ namespace Examples.Scharfschiessen
         private IFont _guiFontAlphaWood18;
         private IFont _guiFontWESTERN30;
         private IFont _guiFontCabin24;
+        private IFont _guiFontCabin600;
         private IFont _guiFontWESTERN18;
         
         //Texte:
@@ -37,6 +38,7 @@ namespace Examples.Scharfschiessen
         private GUIText _guiText4;
         private GUIText _guiText5;
         private GUIText _guiText6;
+        private GUIText _guiText7;
         private GUIText _name;
         private GUIText _guiTextTitel;
         
@@ -58,6 +60,8 @@ namespace Examples.Scharfschiessen
         // Diverse private Variablen
         private double _countdown;
         private int _munition;
+        private bool _showLevelUp;
+        private double time;
         private bool _highscore;
         private bool _neustart;
         private bool _inputToggle; // Eingabe des Spielernamens
@@ -129,6 +133,7 @@ namespace Examples.Scharfschiessen
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
             _guiFontCabin18 = RC.LoadFont("Assets/Cabin.ttf", 18);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
+            _guiFontCabin600 = RC.LoadFont("Assets/Cabin.ttf", 40);
             _guiFontAlphaWood18 = RC.LoadFont("Assets/AlphaWood.ttf", 18);
             _guiFontWESTERN30 = RC.LoadFont("Assets/WESTERN.ttf", 30);
             _guiFontWESTERN18 = RC.LoadFont("Assets/WESTERN.ttf", 18);
@@ -154,9 +159,15 @@ namespace Examples.Scharfschiessen
             _guiText2.TextColor = new float4(0, 0, 0, 1);
 
             // Text HighscoreMenü: Game Over
-            textwidth = GUIText.GetTextWidth("Game Over!", _guiFontWESTERN30);
-            _guiText4 = new GUIText("Game Over!", _guiFontWESTERN30, width/2 - (int) (textwidth/2), (height/3));
+            textwidth = GUIText.GetTextWidth("You reached --- Points!", _guiFontWESTERN30);
+            _guiText4 = new GUIText("You reached " + _points + " Points!", _guiFontWESTERN30, width/2 - (int) (textwidth/2), (height/3));
             _guiText4.TextColor = new float4(1, 0, 0, 1);
+
+            //Text LevelUp
+            textwidth = GUIText.GetTextWidth("Level Up!", _guiFontCabin600);
+            _guiText7 = new GUIText("Level               Up!!!", _guiFontCabin600, (width / 2) - (int)(textwidth), (height / 2));
+            _guiText7.TextColor = new float4(1, 0, 0, 0.5f);
+
     #endregion
 
     #region Buttons
@@ -213,6 +224,10 @@ namespace Examples.Scharfschiessen
                     UpdateMunition(_gameHandler.Game.Weapon.Magazin);   
                 }
                 _munition = _gameHandler.Game.Weapon.Magazin;
+                if (_showLevelUp)
+                {
+                    TimerLevelUp();
+                }
             }
 
             if (_highscore = true) //Namen eingeben nur nach dem Spiel
@@ -298,8 +313,35 @@ namespace Examples.Scharfschiessen
             _inGameHandler.Add(_guiText2);
             _inGameHandler.Add(_guiImages[(int)_btnimages.btniFadenkreuz]);
             _munition = _gameHandler.Game.Weapon.Magazin;
-            //_countdown = _gameHandler.Game.Countdown;
             DrawMunition();
+            }
+        }
+
+        public void ShowLevelUp()
+        {
+            _showLevelUp = true;
+            _inGameHandler.Add(_guiText7);
+            time = 1;
+        }
+
+        private void RemoveLevelUp()
+        {
+            Debug.WriteLine("Remove");
+            _inGameHandler.Remove(_guiText7);
+        }
+
+        private void TimerLevelUp()
+        {
+            
+            if (time > 0)
+            {
+                time -= Time.Instance.DeltaTime;
+            }
+            else
+            {
+                RemoveLevelUp();
+                _showLevelUp = false;
+                time = 1;
             }
         }
 
@@ -335,9 +377,9 @@ namespace Examples.Scharfschiessen
             for (int i = 0; i < 10; i++)
             {
                 var height = _rCanvas.Height;
-                 _guiImageTomato[i]=new GUIImage("Assets/tomateAmmoTexture.png", tomatoposition, height - 30, -1, 20, 20);
+                 _guiImageTomato[i]=new GUIImage("Assets/tomateAmmoTexture.png", tomatoposition, height - 50, -1, 40, 40);
                 _guiHandler.Add(_guiImageTomato[i]);
-                tomatoposition = tomatoposition + 20;
+                tomatoposition = tomatoposition + 40;
             }
         }
 
