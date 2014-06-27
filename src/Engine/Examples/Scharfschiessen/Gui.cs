@@ -27,6 +27,7 @@ namespace Examples.Scharfschiessen
         private IFont _guiFontAlphaWood18;
         private IFont _guiFontWESTERN30;
         private IFont _guiFontCabin24;
+        private IFont _guiFontWESTERN18;
         
         //Texte:
         private GUIText _guiText1;
@@ -49,8 +50,9 @@ namespace Examples.Scharfschiessen
         public string playername;   //eingegebener name an DB
 
         //variablen für Anzeige des Highscores
-       // public string _highscoreEintrag;
-       // public string[] highscoreEintraege;
+        public GUIText _highscoreEintrag;
+        public string[] highscoreEintraege;
+        public int _hsYpos;
        // public GUIText _guiTexthighscore; 
 
         // Diverse private Variablen
@@ -101,6 +103,8 @@ namespace Examples.Scharfschiessen
             float texthight;
             _highscore = false;
             _neustart = true;
+            _hsYpos = 50;
+
       #endregion
 
     #region Bilder
@@ -118,10 +122,8 @@ namespace Examples.Scharfschiessen
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
             _guiFontAlphaWood18 = RC.LoadFont("Assets/AlphaWood.ttf", 18);
             _guiFontWESTERN30 = RC.LoadFont("Assets/WESTERN.ttf", 30);
+            _guiFontWESTERN18 = RC.LoadFont("Assets/WESTERN.ttf", 18);
 
-            // Anzeige Highscore
-           // _guiTexthighscore = new GUIText("", _guiFontCabin12, (width - width / 2), (height / 2), new float4(1, 0, 0, 1));
-           
             //Eingabetext Name für Highscore
             texthight = GUIText.GetTextHeight("Lorem ipsum", _guiFontCabin12);
             textwidth = GUIText.GetTextWidth("Write name: ", _guiFontCabin12);
@@ -491,29 +493,13 @@ namespace Examples.Scharfschiessen
             playername = nameInput.Text; 
             _gameHandler.DbConnection.Insert(playername, _points);
            
-            #region VARIANTE 1
-            /*
              highscoreEintraege = _gameHandler.DbConnection.ShowFirstFiveHighScore();
              foreach (string _highscoreEintrag in highscoreEintraege)
              {
-                 _highScoreHandler.Add(_highscoreEintrag);
+                 _highScoreHandler.Add(new GUIText(_highscoreEintrag, _guiFontWESTERN18, 50, _hsYpos, new float4(0, 0, 1, 1)));
+                    _hsYpos = _hsYpos + 20;
+                 Console.WriteLine("bla");
              }
-          */
-             #endregion
-
-            #region VARIANTE 2
-            /* List<string> highscoreEintraege = new List<string>(_gameHandler.DbConnection.ShowFirstFiveHighScore());
-             foreach (string highscoreEintrag in highscoreEintraege)
-             {
-                 for (int i = 0; i < 5; i++)
-                 {
-
-                     _guiTexthighscore = new GUIText("" + highscoreEintrag, _guiFontCabin12, 50, 50);
-                     Console.WriteLine(_guiTexthighscore.Text);
-                 }
-             }
-            */
-            #endregion
         }
 
         private void OnbtnPlay(GUIButton sender, Fusee.Engine.MouseEventArgs mea)

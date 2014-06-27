@@ -82,15 +82,15 @@ namespace Examples.Scharfschiessen
         }
 
         // Show HighScore
-        public void ShowFirstFiveHighScore()
+        public string[] ShowFirstFiveHighScore()
         {
             string query = "SELECT `key`, PlayerName, HighScore FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
-            
+            string []s = new string[5];
             //open connection
             if (this.OpenConnection() == true)
             {
                 int i = 0;
-                string []s = new string[5];
+                
                 using (MySqlCommand cmd = new MySqlCommand(query, _connection))
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 while (reader.Read())
@@ -103,6 +103,7 @@ namespace Examples.Scharfschiessen
                 //close connection
                 this.CloseConnection();
             }
+            return s;
         }
 
       
