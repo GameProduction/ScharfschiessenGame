@@ -38,7 +38,7 @@ namespace Examples.Scharfschiessen
         private GUIImage[] _guiImages;
 
         private double _countdown;
-        public double _points;
+        public int _points;
         private int _munition ;
         public GUIText nameInput;
         private bool _inputToggle;
@@ -441,14 +441,11 @@ namespace Examples.Scharfschiessen
 
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
-            //To-Do: Hier verlinken zur Datenbank
            // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
             Console.Write("Name = " + nameInput.Text);
             playername = nameInput.Text; 
-            _gameHandler.DbConnection.Insert(playername, 10);
-            _hs = _gameHandler.DbConnection.ShowFirstFiveHighScore();
-            Console.WriteLine(_hs);
-            System.Windows.MessageBox.Show(_hs);
+            _gameHandler.DbConnection.Insert(playername, _points);
+            _gameHandler.DbConnection.ShowFirstFiveHighScore();
            _gameHandler.GameState.CurrentState = GameState.State.MainMenu;
         }
 

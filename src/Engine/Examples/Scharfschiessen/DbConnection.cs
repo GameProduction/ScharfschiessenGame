@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 //using Examples.Scharfschiessen.Gui;
@@ -80,28 +82,28 @@ namespace Examples.Scharfschiessen
         }
 
         // Show HighScore
-        public string ShowFirstFiveHighScore()
+        public void ShowFirstFiveHighScore()
         {
-            string query = "SELECT 'key', 'PlayerName', 'HighScore' FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
-            //open connection
+            string query = "SELECT `key`, PlayerName, HighScore FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
             
+            //open connection
             if (this.OpenConnection() == true)
             {
-                //create command and assign the query and connection from the constructor
-                var cmd = new MySqlCommand(query, _connection);
+                string s = "";
+                using (MySqlCommand cmd = new MySqlCommand(query, _connection))
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                while (reader.Read())
+                {
+                   s += string.Format("PlayerName: {0} HighScore: {1}\n", reader.GetString(1), reader.GetString(2));
+                }
+                DialogResult dialogResult = MessageBox.Show(s);
 
-                //Execute command
-                var bla =cmd.ExecuteNonQuery();
-                
                 //close connection
                 this.CloseConnection();
-                Debug.WriteLine(bla.ToString());
             }
-            return "bl";
         }
 
-
-
+      
         //Insert statement
         public void Insert( string name, int points)
         {
