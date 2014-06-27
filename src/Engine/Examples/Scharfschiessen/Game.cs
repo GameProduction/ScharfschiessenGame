@@ -41,6 +41,7 @@ namespace Examples.Scharfschiessen
         
         // Gibt die altuelle Punktzahl an
         public int Points { get; set; }
+        private int _nextLevel;
         private readonly Skybox _skybox;
         private Random rand;
         
@@ -57,12 +58,10 @@ namespace Examples.Scharfschiessen
             srLandschaft = SceneLoader.LoadEnvironment();
             srBuildings = SceneLoader.LoadBuildings();
             CreateEnvironment();
-            
+            _nextLevel = 500;
             Points = 0;
             LoadLevel(1);
             _skybox = new Skybox(RC);
-           
-
         }
 
        
@@ -74,8 +73,14 @@ namespace Examples.Scharfschiessen
             World = new DynamicWorld();
             SphereCollider = World.AddSphereShape(1);
             Level = i;
-            Countdown = 30;
+            Countdown = 60;
+            
             Weapon = new Weapon(World, this);
+            rand = new Random();
+            for (int j = 0; j < 5; j++)
+            {
+                InstantiateSheep();
+            }
         }
 
         //private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
@@ -91,18 +96,7 @@ namespace Examples.Scharfschiessen
             var trees = new GameObject(RC, new float3(0, -60, 0), new float3(0, 0, 0), new float3(1.5f, 1.5f, 1.5f), srTrees);
             LevelObjects.Add(trees);
             var ebene = new GameObject(RC, new float3(0, -100, 0), float3.Zero, new float3(20,1,20), srLandschaft);
-            LevelObjects.Add(ebene);
-            /*var sheep1 = new Sheep(RC, _meshSheep, new float3(50, 0,50), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
-            LevelObjects.Add(sheep1);
-            var sheep2 = new Sheep(RC, _meshSheep, new float3(-50, 0, 10), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
-            LevelObjects.Add(sheep2);
-            var sheep3 = new Sheep(RC, _meshSheep, new float3(-150, 0, 80), float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
-            LevelObjects.Add(sheep3);*/
-            rand = new Random();
-            for (int i = 0; i < 5; i++)
-            {
-                InstantiateSheep();
-            }
+            LevelObjects.Add(ebene);           
         }
 
         
@@ -132,7 +126,6 @@ namespace Examples.Scharfschiessen
                 pos.z = rand.Next(-70, -20);
             }
             pos.y = rand.Next(30, 50);
-           // pos = new float3(rand.Next(20, 70), rand.Next(20, 50), rand.Next(20, 70));
             rot = new float3(0, 0, 0);
         }
         //neues Schaf wird gespawned
@@ -160,11 +153,36 @@ namespace Examples.Scharfschiessen
                 if (Countdown > 0)
                 {
                     Countdown -= Time.Instance.DeltaTime;
+                    if (Level < 3)
+                    {
+                        if (Points >= _nextLevel)
+                        {
+                            Level++;
+                            foreach (var levelObject in LevelObjects)
+                            {
+                                if (levelObject.Tag == "Sheep")
+                                {
+                                    var sheep = (Sheep) levelObject;
+                                    sheep.SetSpeed(Level);
+                                }
+                            }
+                            Debug.WriteLine("LevelUp");
+                            _nextLevel += 500;
+
+                            var temp = 0.5f;
+                            while (temp >= 0)
+                            {
+                                temp -= (float)Time.Instance.DeltaTime;
+                            }
+                            //coole next level texture wird kurz eingeblendet
+                        }
+                    }
                 }
                 else
                 {
                     _active = false;
                     _gameHandler.GameState.CurrentState = GameState.State.Highscore;
+                    
                 }
 
                 PlayerInput();               

@@ -22,8 +22,7 @@ namespace Examples.Scharfschiessen
             : base(rc, position, rotation, scaleFactor, sc)
         {
             TomatoRb = tomatoRigidBody;
-            Color = new float4(0.5f, 0.1f, 0.1f, 1);
-            Radius = 2;
+            Radius = 2f;
             Tag = "Tomato";
             timer = 2.0f;
             _game = game;
@@ -47,23 +46,14 @@ namespace Examples.Scharfschiessen
             }
         }
 
-      /*  public override void Render(float4x4 camMtx)
-        {
-
-            _rc.ModelView = camMtx * ObjectMtx* float4x4.Scale(0.02f);
-            SceneRenderer.Render(_rc);
-        }*/
-
         public override void Collided()
         {
             _world.RemoveRigidBody(TomatoRb);
-            //TomatoRb = null;
         }
 
 
         private void DeleteMe()
         {
-            //TomatoRb = null;
             _world.RemoveRigidBody(TomatoRb);
             _game.LevelObjects.Remove(this);
             

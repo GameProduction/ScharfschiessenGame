@@ -324,8 +324,8 @@ namespace Examples.Scharfschiessen
         {
             if (munition < _munition) // wenn die Munition weniger wurde (= Schuss), dann entferne letzte Tomate
             {
-                Debug.WriteLine("neu: " + munition + "alt: " + _munition);
-                Debug.WriteLine("_guiImageTomato.count: " + _guiImageTomato.Length);
+                //Debug.WriteLine("neu: " + munition + "alt: " + _munition);
+                //Debug.WriteLine("_guiImageTomato.count: " + _guiImageTomato.Length);
                 _guiHandler.Remove(_guiImageTomato[munition]);
             }
             else

@@ -22,7 +22,7 @@ namespace Examples.Scharfschiessen
         internal float3 Rotation { get; set; }
         internal float4x4 ObjectMtx;
 
-        public int Radius { get; set; }
+        public float Radius { get; set; }
         private float3 _scale = new float3(1,1,1);
 
         public String Tag { get; internal set; }

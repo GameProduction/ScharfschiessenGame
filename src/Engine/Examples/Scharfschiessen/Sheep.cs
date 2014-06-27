@@ -22,7 +22,6 @@ namespace Examples.Scharfschiessen
         private Game _game;
         private int _score;
 
-
         public Sheep(RenderContext rc, float3 position, float3 rotation, float3 scaleFactor,  SceneRenderer sc, Game game)
             : base(rc, position, rotation, scaleFactor, sc)
         {
@@ -36,21 +35,20 @@ namespace Examples.Scharfschiessen
             {
                 _score = 50;
             }
-            Speed = 1;
-            Radius = 5;
+            Speed = (50 / _distance) * game.Level;
+            Radius = 4f;
             _game = game;
             Pos = position;
             _alpha =  (float) Math.PI;
             Tag = "Sheep";
         }
 
+        public void SetSpeed(int level)
+        {
+            Speed = (50 / _distance) * level;
+        }
         public override void Update()
         {
-            
-            //anim Flügel
-           // var pos = ObjectMtx.Column3.xyz;
-            //pos.z += 2f;
-           // ObjectMtx *=  float4x4.CreateTranslation(pos);
             MoveTo();
         }
 
