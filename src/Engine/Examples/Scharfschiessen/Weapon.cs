@@ -49,7 +49,7 @@ namespace Examples.Scharfschiessen
         public void WeaponInput(float4x4 mtxcam)
         {
             //Schießen wenn Magazin != 0
-           // if (Input.Instance.IsButton(MouseButtons.Left))
+         // if (Input.Instance.IsButton(MouseButtons.Left))
           if (Input.Instance.IsKeyUp(KeyCodes.Space))
                {
                    if (Magazin > 0)

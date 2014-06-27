@@ -8,10 +8,8 @@ using Fusee.Engine;
 using Fusee.Math;
 using MouseButtons = Fusee.Engine.MouseButtons;
 
-
 namespace Examples.Scharfschiessen
 {
-
     public class Gui
     {
 #region klassenvariable
@@ -113,7 +111,6 @@ namespace Examples.Scharfschiessen
             float texthight;
             _highscore = false;
             _neustart = true;
-            _hsYpos = 50;
             _level = 1;
 
       #endregion
@@ -208,30 +205,29 @@ namespace Examples.Scharfschiessen
         #endregion
         }
 
-        public void DrawGui()
+        public void DrawGui() // Wird jeden Frame aufgerufen
         {
             //Gui Rendern
             _guiHandler.RenderGUI();
-         
-           // if (_gameHandler.Game != null) //Countdown nur während dem Spiel
-            if (_gameHandler.GameState.CurrentState == GameState.State.Playing) 
+
+            if (_gameHandler.GameState.CurrentState == GameState.State.Playing)  //Countdown nur während dem Spiel
             {
-                _countdown = (int) _gameHandler.Game.Countdown;
-                _guiText1.Text = "Time:  " + _countdown;
-                _points = (int)_gameHandler.Game.Points;
-                _guiText2.Text = "Points: " + _points;
-                if (_munition != _gameHandler.Game.Weapon.Magazin)
+                _countdown = (int) _gameHandler.Game.Countdown; //Hole Info aus Game-Klasse
+                _guiText1.Text = "Time:  " + _countdown;    //Zeige Zeit an
+                _points = _gameHandler.Game.Points;     //Hole Info aus Game-Klasse
+                _guiText2.Text = "Points: " + _points;  //Zeige Countdown an
+                if (_munition != _gameHandler.Game.Weapon.Magazin) //Wenn sich die Munition verändert hat = Wenn geschossen wurde
                 {
                     UpdateMunition(_gameHandler.Game.Weapon.Magazin);   
                 }
-                _munition = _gameHandler.Game.Weapon.Magazin;
-                if (_showLevelUp)
+                _munition = _gameHandler.Game.Weapon.Magazin; // Munition nimmt den neuen Wert an um wieder auf Veränderung getestet werden zu können
+                if (_showLevelUp) // Wenn LevelUp-Info Angezeigt wird...
                 {
-                    TimerLevelUp();
+                    TimerLevelUp(); //... dann starte den Timer, wie lange die Info angezeigt wird
                 }
             }
 
-            if (_highscore = true) //Namen eingeben nur nach dem Spiel
+            if (_highscore = true) //Eingegebener Name nur nach dem Spiel sichtbar
             {
                 UpdateCustomText();
             }
@@ -267,10 +263,7 @@ namespace Examples.Scharfschiessen
 
         internal void MainMenuGui()
         {
-
             Console.WriteLine("MainMenuGui");
-            //set guiHander GUI für Hauptmenu
-            //_guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown -= OnbtnHighscore;
             var height = _rCanvas.Height;
             var width = _rCanvas.Width;
             _guiHandler = _mainmenuHandler;
@@ -278,9 +271,9 @@ namespace Examples.Scharfschiessen
             _mainmenuHandler.Add(_guiImages[(int) _btnimages.btniStart]);
             _mainmenuHandler.Add(_guiTextTitel);
             _mainmenuHandler.Add(_guiText3);
+            _mainmenuHandler.Add(_guiImages[(int)_btnimages.btniMouse]); //Mouse-Anleitung wird angezeigt
             _mainmenuHandler.Add(_guiDiffs[(int) _buttons.btnStart]);
             _guiDiffs[(int) _buttons.btnStart].OnGUIButtonDown += OnbtnPlay;
-            _mainmenuHandler.Add(_guiImages[(int)_btnimages.btniMouse]);
         }
 
         internal void InGameGui()
@@ -291,20 +284,18 @@ namespace Examples.Scharfschiessen
 
             // Erst if-Abfrage, ob ich grad aus der Pause komme, weil ich dann nichts überschreiben will
             if (_gameHandler.GameState.LastState == GameState.State.HiddenPause && _gameHandler.GameState.CurrentState == GameState.State.Playing)
-            {
-                _neustart = false;
-                Console.WriteLine("Neustart = false");
-            }
-            else
+                {
+                 _neustart = false; // Komme also aus der Pause und will nichts verändern
+                }
+            else // Starte neues Spiel
             {
                 _neustart = true;
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 10; i++) //alle Tomaten noch weg
                 {
                     _guiHandler.Remove(_guiImageTomato[i]);
                 }
-                Console.WriteLine("Neustart = true");
             }
-
+            #region Neustart
             if (_neustart)
             {
             _guiHandler.Clear();
@@ -316,6 +307,7 @@ namespace Examples.Scharfschiessen
             _munition = _gameHandler.Game.Weapon.Magazin;
             DrawMunition();
             }
+            #endregion
         }
 
         public void ShowLevelUp()
@@ -323,19 +315,18 @@ namespace Examples.Scharfschiessen
             _showLevelUp = true;
             _level++;
             endlevel = _level;
-            _inGameHandler.Add(_guiText7);
+            _inGameHandler.Add(_guiText7);  //oder _guiHandler???
             time = 1;
         }
 
         private void RemoveLevelUp()
         {
             Debug.WriteLine("Remove");
-            _inGameHandler.Remove(_guiText7);
+            _inGameHandler.Remove(_guiText7); //oder _guiHandler???
         }
 
         private void TimerLevelUp()
         {
-            
             if (time > 0)
             {
                 time -= Time.Instance.DeltaTime;
@@ -350,36 +341,38 @@ namespace Examples.Scharfschiessen
 
         internal void HighScoreGui()
         {
-            //set guiHander für die Highscore Anzeige
             Console.WriteLine("HighScoreGui");
             _guiHandler.Clear(); // Alte Infos aus dem GameHandler entfernen (z.B. Stand der Tomaten)
             _highscore = true;
             var height = _rCanvas.Height;
             var width = _rCanvas.Width;
             _guiHandler = _highScoreHandler;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++) //Restliche Tomaten aus dem Spiel noch entfernen
             {
-                _guiHandler.Remove(_guiImageTomato[i]);
+                _highScoreHandler.Remove(_guiImageTomato[i]);
             }
 
-            // Text HighscoreMenü: Game Over
+            #region Text HighscoreMenü: Game Over
             float textwidth;
             textwidth = GUIText.GetTextWidth("You reached --- Points!", _guiFontWESTERN30);
             _guiText4 = new GUIText("You reached " + _points + " Points!", _guiFontWESTERN30, width / 2 - (int)(textwidth / 2), (height / 3));
             _guiText4.TextColor = new float4(1, 0, 0, 1);
+            #endregion
 
+            #region Bilder&Texte hinzufügen
             _highScoreHandler.Add(_guiImages[(int)_btnimages.Endbild]);
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniHighscore]);
             _highScoreHandler.Add(_guiText4);
             _highScoreHandler.Add(_guiText5);
             _highScoreHandler.Add(_guiText6);
-            _highScoreHandler.Add(_guiDiffs[(int)_buttons.btnNochmal]);
-            _guiDiffs[(int)_buttons.btnNochmal].OnGUIButtonDown += OnbtnPlay;
-            _highScoreHandler.Add(_guiDiffs[(int)_buttons.btnHighscore]);
-            _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown += OnbtnHighscore;
             _highScoreHandler.Add(nameInput);
             _highScoreHandler.Add(_name);
+            _highScoreHandler.Add(_guiDiffs[(int)_buttons.btnNochmal]);
+            _highScoreHandler.Add(_guiDiffs[(int)_buttons.btnHighscore]);
+            _guiDiffs[(int)_buttons.btnNochmal].OnGUIButtonDown += OnbtnPlay;
+            _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown += OnbtnHighscore;
+            #endregion
         }
 
         public void DrawMunition() // Alle 10 Tomaten einmalig hinmalen
@@ -399,11 +392,9 @@ namespace Examples.Scharfschiessen
         {
             if (munition < _munition) // wenn die Munition weniger wurde (= Schuss), dann entferne letzte Tomate
             {
-                //Debug.WriteLine("neu: " + munition + "alt: " + _munition);
-                //Debug.WriteLine("_guiImageTomato.count: " + _guiImageTomato.Length);
                 _guiHandler.Remove(_guiImageTomato[munition]);
             }
-            else
+            else // wenn aufgeladen wurde, alle weg verbleibenden weg und neu zeichnen
             { 
                 for (int i = 0; i < 10; i++)
                 {
@@ -416,33 +407,30 @@ namespace Examples.Scharfschiessen
         public void UpdateCustomText()
         {
             _inputToggle = true;
-            //Console.Write("Bitte Namen eingeben");
-
-                if (Input.Instance.IsKeyDown(KeyCodes.Enter))
+            #region Brauch ich das?!
+            if (Input.Instance.IsKeyDown(KeyCodes.Enter))
                 {
                     _inputToggle = !_inputToggle;
                     _highscore = false;
-                    if (nameInput.Text.Length <= 0)
-                    {
-                        nameInput.Text = "Player1";
-                    }
+                         if (nameInput.Text.Length <= 0)
+                         {
+                              nameInput.Text = "Player1";
+                         }
                     Console.Write("Name = " + nameInput.Text);
                     playername = nameInput.Text;
-                   // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Points: " + _points + "\n" + "Hier könnte Ihr Highscore stehen!!!");
                 }
-
-                if (_inputToggle)
+            #endregion
+            #region Namenseingabe
+            if (_inputToggle)
                 {
                     if (Input.Instance.IsKeyDown(KeyCodes.A))
                     {
                         nameInput.Text = nameInput.Text + "A";
-                        Console.WriteLine("A");
                     }
-                        /*else if (Input.Instance.IsKeyDown(KeyCodes.B))
-                {
-                    _customText.Text = _customText.Text + "B";
-                }
-               */
+                    else if (Input.Instance.IsKeyDown(KeyCodes.B))
+                    {
+                        nameInput.Text = nameInput.Text + "B";
+                    }
                     else if (Input.Instance.IsKeyDown(KeyCodes.C))
                     {
                         nameInput.Text = nameInput.Text + "C";
@@ -463,15 +451,14 @@ namespace Examples.Scharfschiessen
                     {
                         nameInput.Text = nameInput.Text + "G";
                     }
-                        /*else if (Input.Instance.IsKeyDown(KeyCodes.H))
-                {
-                    _customText.Text = _customText.Text + "H";
-                }
-                else if (Input.Instance.IsKeyDown(KeyCodes.I))
-                {
-                    _customText.Text = _customText.Text + "I";
-                }
-               */
+                    else if (Input.Instance.IsKeyDown(KeyCodes.H))
+                    {
+                        nameInput.Text = nameInput.Text + "H";
+                    }
+                    else if (Input.Instance.IsKeyDown(KeyCodes.I))
+                    {
+                        nameInput.Text = nameInput.Text + "I";
+                    }
                     else if (Input.Instance.IsKeyDown(KeyCodes.J))
                     {
                         nameInput.Text = nameInput.Text + "J";
@@ -484,11 +471,10 @@ namespace Examples.Scharfschiessen
                     {
                         nameInput.Text = nameInput.Text + "L";
                     }
-                        /* else if (Input.Instance.IsKeyDown(KeyCodes.M))
-                {
-                    _customText.Text = _customText.Text + "M";
-                }
-               */
+                    else if (Input.Instance.IsKeyDown(KeyCodes.M))
+                    {
+                        nameInput.Text = nameInput.Text + "M";
+                    }
                     else if (Input.Instance.IsKeyDown(KeyCodes.N))
                     {
                         nameInput.Text = nameInput.Text + "N";
@@ -549,25 +535,25 @@ namespace Examples.Scharfschiessen
                         }
                     }
                 }
+                #endregion    
         }
 
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
-           // System.Windows.MessageBox.Show("Name = " + nameInput.Text + "\n" + "Hier könnte Ihr Highscore stehen!!!");
-            playername = nameInput.Text; 
-            _gameHandler.DbConnection.Insert(playername, _points, endlevel);
-           
-             highscoreEintraege = _gameHandler.DbConnection.ShowFirstFiveHighScore();
-             foreach (string _highscoreEintrag in highscoreEintraege)
+              playername = nameInput.Text; 
+             _gameHandler.DbConnection.Insert(playername, _points, endlevel); //Übergebe Daten an DB
+             _hsYpos = 50;  //Schleifenvariable um die Einträge zeilenweise untereinander zu setzen
+             highscoreEintraege = _gameHandler.DbConnection.ShowFirstFiveHighScore(); //Hole Daten von DB
+             foreach (string _highscoreEintrag in highscoreEintraege) // Setze Strings aus Datenbank in Zeilen untereinander
              {
-                 _highScoreHandler.Add(new GUIText(_highscoreEintrag, _guiFontCabin12, 120, _hsYpos, -1, new float4(1, 1, 1, 1)));
+                 _guiHandler.Add(new GUIText(_highscoreEintrag, _guiFontCabin12, 120, _hsYpos, -1, new float4(1, 1, 1, 1))); // oder highscoreHandler???
                     _hsYpos = _hsYpos + 20;
              }
-             int _brettposition = 35;
+             int _brettposition = 35; //Schleifenvariable um die Bretter zeilenweise untereinander zu setzen
              for (int i = 0; i < 5; i++)
              {
-                 _highscoreBretter[i] = new GUIImage("Assets/Holz.png", 115, _brettposition, -2, 300, 15);
-                 _highScoreHandler.Add(_highscoreBretter[i]);
+                 _highscoreBretter[i] = new GUIImage("Assets/Holz.png", 115, _brettposition, -2, 300, 15); //Bretterbilder anlegen
+                 _guiHandler.Add(_highscoreBretter[i]); // oder highscoreHandler???
                  _brettposition = _brettposition + 20;
              }
         }
