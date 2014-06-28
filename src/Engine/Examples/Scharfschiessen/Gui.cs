@@ -37,8 +37,15 @@ namespace Examples.Scharfschiessen
         private GUIText _guiText5;
         private GUIText _guiText6;
         private GUIText _guiText7;
+        private GUIText _guiCredits;
+        private GUIText _guiTextCredits;
         private GUIText _name;
         private GUIText _guiTextTitel;
+        private GUIText _guiTextCredits1;
+        private GUIText _guiTextCredits2;
+        private GUIText _guiTextCredits3;
+        private GUIText _guiTextCredits4;
+        private GUIText _guiTextCredits5;
         
         //Arrays für Buttons und Images
         private GUIButton[] _guiDiffs;
@@ -63,9 +70,8 @@ namespace Examples.Scharfschiessen
         private int _munition;
         private bool _showLevelUp;
         private double time;
-        private bool _highscore;
+        private bool _highscore; // Eingabe des Spielernamens
         private bool _neustart;
-        private bool _inputToggle; // Eingabe des Spielernamens
         private string _hs;     // Empfangsversuch für die String-Daten aus der Datenbank
         private int _aimimage; // für die flexible Größe des Fadenkreuzes
 #endregion
@@ -75,6 +81,7 @@ namespace Examples.Scharfschiessen
             btnStart,
             btnNochmal,
             btnHighscore,
+            btnCredits
         };
 
         private enum _btnimages
@@ -85,7 +92,8 @@ namespace Examples.Scharfschiessen
             btniMouse,
             btniFadenkreuz,
             Startbild,
-            Endbild
+            Endbild,
+            btniCredits
         };
 
         public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler)
@@ -102,9 +110,9 @@ namespace Examples.Scharfschiessen
             _inGameHandler = new GUIHandler(RC);
             _highScoreHandler = new GUIHandler(RC);
 
-            _guiDiffs = new GUIButton[3];
+            _guiDiffs = new GUIButton[4];
             _guiImageTomato = new GUIImage[10];
-            _guiImages = new GUIImage[7];
+            _guiImages = new GUIImage[8];
             _highscoreBretter = new GUIImage[5];
 
             float textwidth;
@@ -140,6 +148,15 @@ namespace Examples.Scharfschiessen
             _guiFontAlphaWood18 = RC.LoadFont("Assets/AlphaWood.ttf", 18);
             _guiFontWESTERN30 = RC.LoadFont("Assets/WESTERN.ttf", 30);
             _guiFontWESTERN18 = RC.LoadFont("Assets/WESTERN.ttf", 18);
+
+            //Credits
+            texthight = GUIText.GetTextHeight("Tobias Winterhalder", _guiFontCabin24);
+            textwidth = GUIText.GetTextWidth("Tobias Winterhalder", _guiFontCabin18);
+            _guiTextCredits1 = new GUIText("Ramazan Gündogdu", _guiFontCabin18, (width) - (int)(textwidth), (height / 10), new float4(1, 1, 1, 1));
+            _guiTextCredits2 = new GUIText("Kathleen Hübel", _guiFontCabin18, (width) - (int)(textwidth), (int)(_guiTextCredits1.PosY + texthight), new float4(1, 1, 1, 1));
+            _guiTextCredits3 = new GUIText("Linda Schey", _guiFontCabin18, (width) - (int)(textwidth), (int)(_guiTextCredits2.PosY + texthight), new float4(1, 1, 1, 1));
+            _guiTextCredits4 = new GUIText("Susanne Schmidt", _guiFontCabin18, (width) - (int)(textwidth), (int)(_guiTextCredits3.PosY + texthight), new float4(1, 1, 1, 1));
+            _guiTextCredits5 = new GUIText("Tobias Winterhalder ", _guiFontCabin18, (width) - (int)(textwidth), (int)(_guiTextCredits4.PosY + texthight), new float4(1, 1, 1, 1));
 
             //Eingabetext Name für Highscore
             texthight = GUIText.GetTextHeight("Lorem ipsum", _guiFontCabin18);
@@ -202,6 +219,15 @@ namespace Examples.Scharfschiessen
             _guiImages[(int) _btnimages.btniHighscore] = new GUIImage("Assets/holz.png",
                 _guiText6.PosX - (int)textwidth / 4, _guiText6.PosY - (int)(texthight * 1.5), -1, (int)(textwidth * 1.5),
                 (int) texthight*2);  
+
+            //Button Credits
+            textwidth = GUIText.GetTextWidth("Tobias Winterhalder", _guiFontCabin18);
+            _guiCredits = new GUIText("Credits", _guiFontCabin18, width - (int)(textwidth), (height / 10));
+            _guiImages[(int)_btnimages.btniCredits] = new GUIImage("Assets/Holz.png", _guiCredits.PosX, _guiCredits.PosY - (int)texthight, -1,
+               (int)textwidth, (int)texthight);
+            _guiDiffs[(int)_buttons.btnCredits] = new GUIButton(_guiCredits.PosX, _guiCredits.PosY - (int)texthight, -2,
+               (int)textwidth, (int)texthight);
+
         #endregion
         }
 
@@ -361,6 +387,7 @@ namespace Examples.Scharfschiessen
 
             #region Bilder&Texte&Buttons hinzufügen
             _highScoreHandler.Add(_guiImages[(int)_btnimages.Endbild]);
+            _highScoreHandler.Add(_guiImages[(int)_btnimages.btniCredits]); 
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniHighscore]);
             _highScoreHandler.Add(_guiText4);
@@ -368,10 +395,13 @@ namespace Examples.Scharfschiessen
             _highScoreHandler.Add(_guiText6);
             _highScoreHandler.Add(nameInput);
             _highScoreHandler.Add(_name);
+            _highScoreHandler.Add(_guiCredits);
+            _highScoreHandler.Add(_guiDiffs[(int)_buttons.btnCredits]);
             _highScoreHandler.Add(_guiDiffs[(int)_buttons.btnNochmal]);
             _highScoreHandler.Add(_guiDiffs[(int)_buttons.btnHighscore]);
             _guiDiffs[(int)_buttons.btnNochmal].OnGUIButtonDown += OnbtnPlay;
             _guiDiffs[(int)_buttons.btnHighscore].OnGUIButtonDown += OnbtnHighscore;
+            _guiDiffs[(int)_buttons.btnCredits].OnGUIButtonDown += Credits;
             #endregion
         }
 
@@ -406,11 +436,10 @@ namespace Examples.Scharfschiessen
 
         public void UpdateCustomText()
         {
-            _inputToggle = true;
+            //_highscore = true;
             #region Name mit Enter eintragen
             if (Input.Instance.IsKeyDown(KeyCodes.Enter))
                 {
-                    _inputToggle = !_inputToggle;
                     _highscore = false;
                          if (nameInput.Text.Length <= 0)
                          {
@@ -420,7 +449,7 @@ namespace Examples.Scharfschiessen
             #endregion
 
             #region Namenseingabe
-            if (_inputToggle)
+            if (_highscore)
                 {
                     if (Input.Instance.IsKeyDown(KeyCodes.A))
                     {
@@ -566,6 +595,21 @@ namespace Examples.Scharfschiessen
             if (_gameHandler.GameState.CurrentState != GameState.State.Playing)
             {
                 _gameHandler.GameState.CurrentState = GameState.State.Playing;
+            }
+        }
+        private void Credits(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
+        {
+            if (_gameHandler.GameState.CurrentState == GameState.State.Highscore)
+            {
+                _guiHandler.Remove(_guiCredits);
+                _guiHandler.Remove(_guiDiffs[(int)_buttons.btnCredits]);
+                _guiHandler.Remove(_guiImages[(int)_btnimages.btniCredits]); 
+                _guiDiffs[(int)_buttons.btnCredits].OnGUIButtonDown -= Credits;
+                _guiHandler.Add(_guiTextCredits1);
+                _guiHandler.Add(_guiTextCredits2);
+                _guiHandler.Add(_guiTextCredits3);
+                _guiHandler.Add(_guiTextCredits4);
+                _guiHandler.Add(_guiTextCredits5);
             }
         }
     }

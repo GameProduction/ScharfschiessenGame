@@ -37,7 +37,7 @@ namespace Examples.Scharfschiessen
             RC.Clear(ClearFlags.Color | ClearFlags.Depth);
 
             GameHandler.Update();
-            GameHandler.TestInput();
+            //GameHandler.TestInput();
             GameHandler.Hide();
           
             Present();
