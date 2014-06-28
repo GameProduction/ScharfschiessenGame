@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
@@ -8,6 +9,13 @@ using MySql.Data.MySqlClient;
 
 namespace Examples.Scharfschiessen
 {
+    public struct PlayerDataDb
+    {
+        public string Name;
+        public int Level;
+        public int Score;
+    }
+
     public class DbConnection
     {
         private MySqlConnection _connection;
@@ -81,11 +89,14 @@ namespace Examples.Scharfschiessen
             }
         }
 
+        
+
         // Show HighScore
-        public string[] ShowFirstFiveHighScore()
+        public PlayerDataDb[] ShowFirstFiveHighScore()
         {
             string query = "SELECT `key`, PlayerName, HighScore, Level FROM PlayerPoints ORDER BY HighScore DESC LIMIT 5";
-            string []s = new string[5];
+            PlayerDataDb[] paketDataDb = new PlayerDataDb[5];
+            //string []s = new string[5];
             //open connection
             if (this.OpenConnection() == true)
             {
@@ -95,7 +106,10 @@ namespace Examples.Scharfschiessen
                 using (MySqlDataReader reader = cmd.ExecuteReader())
                 while (reader.Read())
                 {
-                   s[i] = string.Format("PlayerName: {0} HighScore: {1} Level: {2}", reader.GetString(1), reader.GetString(2), reader.GetString(3));
+                    paketDataDb[i].Name = string.Format(reader.GetString(1));
+                    paketDataDb[i].Score = int.Parse(string.Format(reader.GetString(2)));
+                    paketDataDb[i].Level = int.Parse(string.Format(reader.GetString(3)));
+                  // s[i] = string.Format("PlayerName: {0} HighScore: {1} Level: {2}", reader.GetString(1), reader.GetString(2), reader.GetString(3));
                     i++;
                 }
                 //DialogResult dialogResult = MessageBox.Show(s);
@@ -103,7 +117,7 @@ namespace Examples.Scharfschiessen
                 //close connection
                 this.CloseConnection();
             }
-            return s;
+            return paketDataDb;
         }
 
       
