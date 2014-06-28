@@ -22,11 +22,12 @@ namespace Examples.Scharfschiessen
        
         //Schriften
         private IFont _guiFontCabin12;
+        private IFont _guiFontCabin14;
         private IFont _guiFontCabin18;
         private IFont _guiFontAlphaWood18;
         private IFont _guiFontWESTERN30;
         private IFont _guiFontCabin24;
-        private IFont _guiFontCabin600;
+        private IFont _guiFontCabin100;
         private IFont _guiFontWESTERN18;
         
         //Texte:
@@ -93,7 +94,8 @@ namespace Examples.Scharfschiessen
             btniFadenkreuz,
             Startbild,
             Endbild,
-            btniCredits
+            btniCreditsA,
+            btniCreditsB,
         };
 
         public Gui(RenderContext RC, RenderCanvas rCanvas, GameHandler gameHandler)
@@ -112,7 +114,7 @@ namespace Examples.Scharfschiessen
 
             _guiDiffs = new GUIButton[4];
             _guiImageTomato = new GUIImage[10];
-            _guiImages = new GUIImage[8];
+            _guiImages = new GUIImage[9];
             _highscoreBretter = new GUIImage[5];
 
             float textwidth;
@@ -137,26 +139,31 @@ namespace Examples.Scharfschiessen
             _aimimage = 80;
             _guiImages[(int)_btnimages.btniFadenkreuz] = new GUIImage("Assets/Fadenkreuz.png", width / 2 - _aimimage / 2, height / 2 - _aimimage / 2, -2, _aimimage, _aimimage);
 
+            // Credits Klohaus
+            _guiImages[(int)_btnimages.btniCreditsA] = new GUIImage("Assets/kloClosed.png", width - height, 0, -1, height, height);
+            _guiImages[(int)_btnimages.btniCreditsB] = new GUIImage("Assets/kloOpen.png", width - height, 0, -1, height, height);
+            
             #endregion
 
     #region Beschriftungen
             //Schriften
             _guiFontCabin12 = RC.LoadFont("Assets/Cabin.ttf", 12);
+            _guiFontCabin14 = RC.LoadFont("Assets/Cabin.ttf", 14);
             _guiFontCabin18 = RC.LoadFont("Assets/Cabin.ttf", 18);
             _guiFontCabin24 = RC.LoadFont("Assets/Cabin.ttf", 24);
-            _guiFontCabin600 = RC.LoadFont("Assets/Cabin.ttf", 40);
+            _guiFontCabin100 = RC.LoadFont("Assets/Cabin.ttf", 100);
             _guiFontAlphaWood18 = RC.LoadFont("Assets/AlphaWood.ttf", 18);
             _guiFontWESTERN30 = RC.LoadFont("Assets/WESTERN.ttf", 30);
             _guiFontWESTERN18 = RC.LoadFont("Assets/WESTERN.ttf", 18);
 
             //Credits
-            texthight = GUIText.GetTextHeight("Tobias Winterhalder", _guiFontCabin24);
-            textwidth = GUIText.GetTextWidth("Tobias Winterhalder", _guiFontCabin18);
-            _guiTextCredits1 = new GUIText("Ramazan Gündogdu", _guiFontCabin18, (width) - (int)(textwidth), (height / 10), new float4(1, 1, 1, 1));
-            _guiTextCredits2 = new GUIText("Kathleen Hübel", _guiFontCabin18, (width) - (int)(textwidth), (int)(_guiTextCredits1.PosY + texthight), new float4(1, 1, 1, 1));
-            _guiTextCredits3 = new GUIText("Linda Schey", _guiFontCabin18, (width) - (int)(textwidth), (int)(_guiTextCredits2.PosY + texthight), new float4(1, 1, 1, 1));
-            _guiTextCredits4 = new GUIText("Susanne Schmidt", _guiFontCabin18, (width) - (int)(textwidth), (int)(_guiTextCredits3.PosY + texthight), new float4(1, 1, 1, 1));
-            _guiTextCredits5 = new GUIText("Tobias Winterhalder ", _guiFontCabin18, (width) - (int)(textwidth), (int)(_guiTextCredits4.PosY + texthight), new float4(1, 1, 1, 1));
+            texthight = GUIText.GetTextHeight("So hoch.", _guiFontCabin18);
+            textwidth = GUIText.GetTextWidth("Sooooooooo laaaaaang", _guiFontCabin14);
+            _guiTextCredits1 = new GUIText("Ramazan Gündogdu", _guiFontCabin14, (width) - (int)(textwidth), (height / 3)+ (int)(texthight/2), new float4(1, 1, 1, 1));
+            _guiTextCredits2 = new GUIText("Kathleen Hübel", _guiFontCabin14, (width) - (int)(textwidth), (int)(_guiTextCredits1.PosY + texthight), new float4(1, 1, 1, 1));
+            _guiTextCredits3 = new GUIText("Linda Schey", _guiFontCabin14, (width) - (int)(textwidth), (int)(_guiTextCredits2.PosY + texthight), new float4(1, 1, 1, 1));
+            _guiTextCredits4 = new GUIText("Susanne Schmidt", _guiFontCabin14, (width) - (int)(textwidth), (int)(_guiTextCredits3.PosY + texthight), new float4(1, 1, 1, 1));
+            _guiTextCredits5 = new GUIText("Tobias Winterhalder ", _guiFontCabin14, (width) - (int)(textwidth), (int)(_guiTextCredits4.PosY + texthight), new float4(1, 1, 1, 1));
 
             //Eingabetext Name für Highscore
             texthight = GUIText.GetTextHeight("Lorem ipsum", _guiFontCabin18);
@@ -179,8 +186,8 @@ namespace Examples.Scharfschiessen
             _guiText2.TextColor = new float4(0, 0, 0, 1);
 
             //Text LevelUp
-            textwidth = GUIText.GetTextWidth("Level Up!", _guiFontCabin600);
-            _guiText7 = new GUIText("Level               Up!!!", _guiFontCabin600, (width / 2) - (int)(textwidth), (height / 2));
+            textwidth = GUIText.GetTextWidth("Level Up!", _guiFontCabin100);
+            _guiText7 = new GUIText("Level Up!", _guiFontCabin100, (width / 2) - (int)(textwidth/2), (height / 2));
             _guiText7.TextColor = new float4(1, 0, 0, 0.5f);
 
     #endregion
@@ -221,12 +228,12 @@ namespace Examples.Scharfschiessen
                 (int) texthight*2);  
 
             //Button Credits
-            textwidth = GUIText.GetTextWidth("Tobias Winterhalder", _guiFontCabin18);
-            _guiCredits = new GUIText("Credits", _guiFontCabin18, width - (int)(textwidth), (height / 10));
-            _guiImages[(int)_btnimages.btniCredits] = new GUIImage("Assets/Holz.png", _guiCredits.PosX, _guiCredits.PosY - (int)texthight, -1,
-               (int)textwidth, (int)texthight);
+            textwidth = GUIText.GetTextWidth("Credits", _guiFontCabin18);
+            texthight = GUIText.GetTextWidth("Credits", _guiFontCabin18);
+            _guiCredits = new GUIText("Credits", _guiFontCabin18, width - (int)(textwidth*1.5), (height / 2), new float4(1, 1, 1, 1));
             _guiDiffs[(int)_buttons.btnCredits] = new GUIButton(_guiCredits.PosX, _guiCredits.PosY - (int)texthight, -2,
                (int)textwidth, (int)texthight);
+
 
         #endregion
         }
@@ -253,7 +260,7 @@ namespace Examples.Scharfschiessen
                 }
             }
 
-            if (_highscore = true) //Eingegebener Name nur nach dem Spiel sichtbar
+            if (_highscore == true) //Eingegebener Name nur nach dem Spiel sichtbar
             {
                 UpdateCustomText();
             }
@@ -387,7 +394,7 @@ namespace Examples.Scharfschiessen
 
             #region Bilder&Texte&Buttons hinzufügen
             _highScoreHandler.Add(_guiImages[(int)_btnimages.Endbild]);
-            _highScoreHandler.Add(_guiImages[(int)_btnimages.btniCredits]); 
+            _highScoreHandler.Add(_guiImages[(int)_btnimages.btniCreditsA]); 
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniHighscore]);
             _highScoreHandler.Add(_guiText4);
@@ -584,7 +591,7 @@ namespace Examples.Scharfschiessen
                  _guiHandler.Add(new GUIText("                                                           Punkte: "+data.Score.ToString(), _guiFontCabin12, 120, _hsYpos, -1, new float4(1, 1, 1, 1))); // oder highscoreHandler???
                  _hsYpos = _hsYpos + 20;
              }
-             int _brettposition = 35; //Schleifenvariable um die Bretter zeilenweise untereinander zu setzen
+             int _brettposition = 38; //Schleifenvariable um die Bretter zeilenweise untereinander zu setzen
              for (int i = 0; i < 5; i++)
              {
                  _highscoreBretter[i] = new GUIImage("Assets/Holz.png", 115, _brettposition, -2, 300, 15); //Bretterbilder anlegen
@@ -606,8 +613,9 @@ namespace Examples.Scharfschiessen
             {
                 _guiHandler.Remove(_guiCredits);
                 _guiHandler.Remove(_guiDiffs[(int)_buttons.btnCredits]);
-                _guiHandler.Remove(_guiImages[(int)_btnimages.btniCredits]); 
+                _guiHandler.Remove(_guiImages[(int)_btnimages.btniCreditsA]); 
                 _guiDiffs[(int)_buttons.btnCredits].OnGUIButtonDown -= Credits;
+                _guiHandler.Add(_guiImages[(int) _btnimages.btniCreditsB]);
                 _guiHandler.Add(_guiTextCredits1);
                 _guiHandler.Add(_guiTextCredits2);
                 _guiHandler.Add(_guiTextCredits3);
