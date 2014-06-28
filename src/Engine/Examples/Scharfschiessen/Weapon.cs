@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls.Primitives;
 using Fusee.Engine;
 using Fusee.Engine.SimpleScene;
 using Fusee.Math;
@@ -20,9 +21,11 @@ namespace Examples.Scharfschiessen
         private ImageData imgData;
         private readonly SceneRenderer _srTomato;
         private RenderContext RC;
+        private bool _click;
  
         public Weapon(DynamicWorld world, Game game)
         {
+            _click = true;
             _world = world;
             _sphereCollider = _world.AddSphereShape(1);
             _game = game;
@@ -49,8 +52,11 @@ namespace Examples.Scharfschiessen
         public void WeaponInput(float4x4 mtxcam)
         {
             //Schießen wenn Magazin != 0
-         // if (Input.Instance.IsButton(MouseButtons.Left))
-          if (Input.Instance.IsKeyUp(KeyCodes.Space))
+            if (Input.Instance.IsButton(MouseButtons.Left))
+            //if (Input.Instance.IsKeyUp(KeyCodes.Space))
+            {
+                
+                if (_click)
                {
                    if (Magazin > 0)
                    {
@@ -58,6 +64,13 @@ namespace Examples.Scharfschiessen
                        Magazin--;
                    }
                }
+                _click = false;
+            }
+            else
+            {
+                _click = true;
+            }
+            
 
             //Nachladen
             if (Input.Instance.IsButton(MouseButtons.Right))
