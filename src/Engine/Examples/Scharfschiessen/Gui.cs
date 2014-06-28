@@ -359,7 +359,7 @@ namespace Examples.Scharfschiessen
             _guiText4.TextColor = new float4(1, 0, 0, 1);
             #endregion
 
-            #region Bilder&Texte hinzufügen
+            #region Bilder&Texte&Buttons hinzufügen
             _highScoreHandler.Add(_guiImages[(int)_btnimages.Endbild]);
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniNochmal]);
             _highScoreHandler.Add(_guiImages[(int)_btnimages.btniHighscore]);
@@ -407,19 +407,18 @@ namespace Examples.Scharfschiessen
         public void UpdateCustomText()
         {
             _inputToggle = true;
-            #region Brauch ich das?!
+            #region Name mit Enter eintragen
             if (Input.Instance.IsKeyDown(KeyCodes.Enter))
                 {
                     _inputToggle = !_inputToggle;
                     _highscore = false;
                          if (nameInput.Text.Length <= 0)
                          {
-                              nameInput.Text = "Player1";
+                              nameInput.Text = "Anonymous";
                          }
-                    Console.Write("Name = " + nameInput.Text);
-                    playername = nameInput.Text;
                 }
             #endregion
+
             #region Namenseingabe
             if (_inputToggle && nameInput.Text.Length < 8)
                 {
@@ -541,6 +540,9 @@ namespace Examples.Scharfschiessen
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
             PlayerDataDb[] playerData = new PlayerDataDb[5];                 
+            {
+                nameInput.Text = "Anonymous";
+            }
               playername = nameInput.Text; 
              _gameHandler.DbConnection.Insert(playername, _points, endlevel); //Übergebe Daten an DB
              _hsYpos = 50;  //Schleifenvariable um die Einträge zeilenweise untereinander zu setzen
