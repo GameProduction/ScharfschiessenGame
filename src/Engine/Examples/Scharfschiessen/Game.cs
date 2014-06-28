@@ -153,26 +153,25 @@ namespace Examples.Scharfschiessen
                 if (Countdown > 0)
                 {
                     Countdown -= Time.Instance.DeltaTime;
-                    if (Level < 3)
-                    {
-                        if (Points >= _nextLevel)
-                        {
-                            Level++;
-                            foreach (var levelObject in LevelObjects)
-                            {
-                                if (levelObject.Tag == "Sheep")
-                                {
-                                    var sheep = (Sheep) levelObject;
-                                    sheep.SetSpeed(Level);
-                                }
-                            }
-                            Debug.WriteLine("LevelUp");
-                            _nextLevel += 500;
 
-                            //coole next level texture wird kurz eingeblendet
-                            _gameHandler.Gui.ShowLevelUp();
+                    if (Points >= _nextLevel)
+                    {
+                        Level++;
+                        foreach (var levelObject in LevelObjects)
+                        {
+                            if (levelObject.Tag == "Sheep")
+                            {
+                                var sheep = (Sheep) levelObject;
+                                sheep.SetSpeed(Level);
+                            }
                         }
+                        Debug.WriteLine("LevelUp");
+                        _nextLevel += 500;
+
+                        //coole next level texture wird kurz eingeblendet
+                        _gameHandler.Gui.ShowLevelUp();
                     }
+
                 }
                 else
                 {

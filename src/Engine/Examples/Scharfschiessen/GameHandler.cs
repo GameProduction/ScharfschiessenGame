@@ -75,21 +75,5 @@ namespace Examples.Scharfschiessen
                 Time.Instance.TimeFlow = 1;
             }
         }
-
-        public void TestInput()
-        {
-            if (Input.Instance.IsKeyUp(KeyCodes.M))
-            {
-                GameState.CurrentState = GameState.State.MainMenu;
-            }
-            if (Input.Instance.IsKeyUp(KeyCodes.I))
-            {
-                GameState.CurrentState = GameState.State.Playing;
-            }
-            if (Input.Instance.IsKeyUp(KeyCodes.H))
-            {
-                GameState.CurrentState = GameState.State.Highscore;
-            }
-        }
     }
 }
