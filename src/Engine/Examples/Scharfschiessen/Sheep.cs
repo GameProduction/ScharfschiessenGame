@@ -22,6 +22,7 @@ namespace Examples.Scharfschiessen
         private Game _game;
         private int _score;
 
+        
         public Sheep(RenderContext rc, float3 position, float3 rotation, float3 scaleFactor,  SceneRenderer sc, Game game)
             : base(rc, position, rotation, scaleFactor, sc)
         {
@@ -36,11 +37,13 @@ namespace Examples.Scharfschiessen
                 _score = 50;
             }
             Speed = (50 / _distance) * game.Level;
-            Radius = 4f;
+            Radius = 3f;
             _game = game;
             Pos = position;
             _alpha =  (float) Math.PI;
             Tag = "Sheep";
+
+            
         }
 
         public void SetSpeed(int level)

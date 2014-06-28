@@ -35,9 +35,10 @@ namespace Examples.Scharfschiessen
         {
             return Loader("kühe");
         }
-        public SceneRenderer LoadSkybox()
+        /*public SceneRenderer LoadSkybox()
         {
-            return Loader("skybox");}
+            return Loader("skybox");
+        }*/
 
         public SceneRenderer LoadTrees()
         {

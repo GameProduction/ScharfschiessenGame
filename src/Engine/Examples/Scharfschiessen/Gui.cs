@@ -449,7 +449,8 @@ namespace Examples.Scharfschiessen
             #endregion
 
             #region Namenseingabe
-            if (_highscore)
+
+            if (_highscore && nameInput.Text.Length < 8)
                 {
                     if (Input.Instance.IsKeyDown(KeyCodes.A))
                     {
@@ -568,18 +569,20 @@ namespace Examples.Scharfschiessen
 
         private void OnbtnHighscore(GUIButton sender, Fusee.Engine.MouseEventArgs mea)
         {
-            if (nameInput.Text.Length <= 0)
+            PlayerDataDb[] playerData = new PlayerDataDb[5];                 
             {
                 nameInput.Text = "Anonymous";
             }
               playername = nameInput.Text; 
              _gameHandler.DbConnection.Insert(playername, _points, endlevel); //Übergebe Daten an DB
              _hsYpos = 50;  //Schleifenvariable um die Einträge zeilenweise untereinander zu setzen
-             highscoreEintraege = _gameHandler.DbConnection.ShowFirstFiveHighScore(); //Hole Daten von DB
-             foreach (string _highscoreEintrag in highscoreEintraege) // Setze Strings aus Datenbank in Zeilen untereinander
+             playerData = _gameHandler.DbConnection.ShowFirstFiveHighScore(); //Hole Daten von DB
+             foreach (PlayerDataDb data in playerData) // Setze Strings aus Datenbank in Zeilen untereinander
              {
-                 _guiHandler.Add(new GUIText(_highscoreEintrag, _guiFontCabin12, 120, _hsYpos, -1, new float4(1, 1, 1, 1))); // oder highscoreHandler???
-                    _hsYpos = _hsYpos + 20;
+                 _guiHandler.Add(new GUIText("Name: "+data.Name, _guiFontCabin12, 120, _hsYpos, -1, new float4(1, 1, 1, 1))); // oder highscoreHandler???
+                 _guiHandler.Add(new GUIText("                                      Level: "+data.Level.ToString(), _guiFontCabin12, 120, _hsYpos, -1, new float4(1, 1, 1, 1))); // oder highscoreHandler???
+                 _guiHandler.Add(new GUIText("                                                           Punkte: "+data.Score.ToString(), _guiFontCabin12, 120, _hsYpos, -1, new float4(1, 1, 1, 1))); // oder highscoreHandler???
+                 _hsYpos = _hsYpos + 20;
              }
              int _brettposition = 35; //Schleifenvariable um die Bretter zeilenweise untereinander zu setzen
              for (int i = 0; i < 5; i++)

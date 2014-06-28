@@ -57,9 +57,7 @@ namespace Examples.Scharfschiessen
         public virtual void Render(float4x4 camMtx)
         {
             _rc.ModelView = camMtx * ObjectMtx * float4x4.Scale(_scale);
-            
             SceneRenderer.Render(_rc);
-
         }
     }
 }
