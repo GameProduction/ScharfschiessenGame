@@ -326,6 +326,10 @@ namespace Examples.Scharfschiessen
             _inGameHandler.Add(_guiText2);
             _inGameHandler.Add(_guiImages[(int)_btnimages.btniFadenkreuz]);
             _munition = _gameHandler.Game.Weapon.Magazin;
+            for (int i = 0; i < 10; i++)
+            {
+                _guiHandler.Remove(_guiImageTomato[i]);
+            }
             DrawMunition();
             }
             #endregion
@@ -410,7 +414,7 @@ namespace Examples.Scharfschiessen
 
         public void DrawMunition() // Alle 10 Tomaten einmalig hinmalen
         {
-             int tomatoposition = 10;
+            int tomatoposition = 10;
 
             for (int i = 0; i < 10; i++)
             {
@@ -433,7 +437,11 @@ namespace Examples.Scharfschiessen
                 {
                     _guiHandler.Remove(_guiImageTomato[i]);
                 }
-                DrawMunition();
+                for (int i = 0; i < 10; i++)
+                {
+                    _guiHandler.Add(_guiImageTomato[i]);
+                }
+               // DrawMunition();
             }
         }
 
