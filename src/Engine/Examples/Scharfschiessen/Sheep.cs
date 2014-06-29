@@ -26,7 +26,6 @@ namespace Examples.Scharfschiessen
         public Sheep(RenderContext rc, float3 position, float3 rotation, float3 scaleFactor,  SceneRenderer sc, Game game)
             : base(rc, position, rotation, scaleFactor, sc)
         {
-            Color = new float4(0.5f, 0.8f, 0.8f, 1);
             _distance = position.Length;
             if (_distance > 50)
             {
@@ -44,6 +43,7 @@ namespace Examples.Scharfschiessen
             Tag = "Sheep";
         }
 
+        //Speed bei LevelUp erhöhen
         public void SetSpeed(int level)
         {
             Speed = Speed *1.2f;
@@ -53,6 +53,7 @@ namespace Examples.Scharfschiessen
             MoveTo();
         }
 
+        //Bewegung des scahfes auf Keisbahn um den Spieler
         public void MoveTo()
         {
             if (_alpha == 2*Math.PI)
@@ -68,10 +69,11 @@ namespace Examples.Scharfschiessen
             P.z = _distance*(float) Math.Cos(_alpha);
             float betha = (float) ((2 * Math.PI) - (_alpha));
 
-            ObjectMtx = float4x4.CreateTranslation(P)*float4x4.CreateRotationY(-betha) ;
+            ObjectMtx = float4x4.CreateTranslation(P)*float4x4.CreateRotationY(-betha);
         }
 
 
+        //bei Kollision werden Punkte erhöt und das objekt gelöscht 
         public override void Collided()
         {
             _game.Points += _score;

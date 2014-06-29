@@ -12,10 +12,7 @@ namespace Examples.Scharfschiessen
 {
     public class SceneLoader
     {
-        public SceneRenderer _sr;
-        private float4x4 _modelScaleOffset;
-
-        
+        private SceneRenderer _sr;
 
         public SceneRenderer LoadEnvironment()
         {
@@ -35,19 +32,12 @@ namespace Examples.Scharfschiessen
         {
             return Loader("kühe");
         }
-        /*public SceneRenderer LoadSkybox()
-        {
-            return Loader("skybox");
-        }*/
 
         public SceneRenderer LoadTrees()
         {
             return Loader("trees");
         }
-        public SceneRenderer LoadChicken()
-        {
-            return Loader("hühner");
-        }
+
         public SceneRenderer LoadBuildings()
         {
             return Loader("Gebäude");
@@ -65,23 +55,7 @@ namespace Examples.Scharfschiessen
                 scene = ser.Deserialize(file, null, typeof(SceneContainer)) as SceneContainer;
             }
             _sr = new SceneRenderer(scene, "Assets");
-            AdjustModelScaleOffset();
             return _sr;
         }
-
-        public void AdjustModelScaleOffset()
-        {
-            AABBf? box = null;
-            if (_sr == null || (box = _sr.GetAABB()) == null)
-            {
-                _modelScaleOffset = float4x4.Identity;
-            }
-            var bbox = ((AABBf)box);
-            float scale = Math.Max(Math.Max(bbox.Size.x, bbox.Size.y), bbox.Size.z);
-            _modelScaleOffset = float4x4.CreateScale(200.0f / scale) * float4x4.CreateTranslation(-bbox.Center);
-        }
-
-
-        
     }
 }

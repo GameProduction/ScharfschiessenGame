@@ -30,6 +30,7 @@ namespace Examples.Scharfschiessen
         }
 
 
+        //Position wird an den RigidBody engepasst
         public override void Update()
         {
             if (TomatoRb != null)
@@ -41,8 +42,6 @@ namespace Examples.Scharfschiessen
             if (timer <= 0)
             {
                 DeleteMe();
-                
-
             }
         }
 
@@ -51,12 +50,11 @@ namespace Examples.Scharfschiessen
             DeleteMe();
         }
 
-
+        //RigidBody wird gelöscht, DANACH wird das objekt gelöscht
         private void DeleteMe()
         {
             _world.RemoveRigidBody(TomatoRb);
             _game.LevelObjects.Remove(this);
-            
         }
 
     }

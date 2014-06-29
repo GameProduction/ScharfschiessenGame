@@ -49,11 +49,12 @@ namespace Examples.Scharfschiessen
 
         }
 
+        //Wird bei Kollision aufgerufen
         public virtual void Collided()
         {
-            Debug.WriteLine("GameObject Collided");
         }
 
+        //Rendert das objekt
         public virtual void Render(float4x4 camMtx)
         {
             _rc.ModelView = camMtx * ObjectMtx * float4x4.Scale(_scale);

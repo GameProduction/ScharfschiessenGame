@@ -109,11 +109,8 @@ namespace Examples.Scharfschiessen
                     paketDataDb[i].Name = string.Format(reader.GetString(1));
                     paketDataDb[i].Score = int.Parse(string.Format(reader.GetString(2)));
                     paketDataDb[i].Level = int.Parse(string.Format(reader.GetString(3)));
-                  // s[i] = string.Format("PlayerName: {0} HighScore: {1} Level: {2}", reader.GetString(1), reader.GetString(2), reader.GetString(3));
                     i++;
                 }
-                //DialogResult dialogResult = MessageBox.Show(s);
-
                 //close connection
                 this.CloseConnection();
             }

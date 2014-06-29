@@ -49,33 +49,43 @@ namespace Examples.Scharfschiessen
         {
             _gameHandler = gh;
             RC = rc;
+            
+            //alle 3D Assets laden
             SceneLoader = new SceneLoader();
             srTomato = SceneLoader.LoadTomato();
             srSheep = SceneLoader.LoadSheep();
             srTrees = SceneLoader.LoadTrees();
-            //srChicken = SceneLoader.LoadChicken();
             srCows = SceneLoader.LoadCows();
             srLandschaft = SceneLoader.LoadEnvironment();
             srBuildings = SceneLoader.LoadBuildings();
             CreateEnvironment();
+            
+            //Hürde die zum Austieg zum nächsten level erreicht werden muss
             _nextLevel = 500;
             Points = 0;
-            LoadLevel(1);
+            LoadLevel();
             _skybox = new Skybox(RC);
         }
 
        
-
-        public void LoadLevel(int i)
+        //neues level Laden
+        public void LoadLevel()
         {
             _active = true;
+            //Sichergehen, dass nicht schon ein Objekt des Typs DynamicWorld existiert
             DisposePhysic();
+            //init Phyics
             World = new DynamicWorld();
             SphereCollider = World.AddSphereShape(1);
-            Level = i;
+
+            //Startlevel und Punkte sezten
+            Level = 1;
             Countdown = 60;
             
+            //Waffe zum werfen der Tomaten
             Weapon = new Weapon(World, this);
+           
+            //Start Schafe instanziieren
             rand = new Random();
             for (int j = 0; j < 15; j++)
             {
@@ -83,8 +93,7 @@ namespace Examples.Scharfschiessen
             }
         }
 
-        //private Mesh mesh = MeshReader.LoadMesh(@"Assets/Teapot.obj.model");
-
+        // Objekte der Umgebung instanziieren
         private void CreateEnvironment()
         {
             var houses = new GameObject(RC, new float3(0, 0, 0), float3.Zero, new float3(1f, 1f, 1f), srBuildings);
@@ -100,7 +109,7 @@ namespace Examples.Scharfschiessen
         }
 
         
-        //posiotion für neues Schaf
+        //Posiotionen für neuee Schafe berechnen
         public float3 FindPosition(int quadrant)
         {
             float3 pos;
@@ -123,29 +132,29 @@ namespace Examples.Scharfschiessen
             pos.y = rand.Next(0, 20);
             return pos;
         }
-        //neues Schaf wird gespawned
+
+        //Neues Schaf an position float3 at instanziieren
         public void InstantiateSheep(float3 at)
         {
             var sheep = new Sheep(RC, at, float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep);
-            Debug.WriteLine("Sheep At: " + sheep.Position);
         }
 
 
 
         public void Update()
         {
-            
-            if (_active)
+            if (_active)//wird nurapgedatet, wenn Spiel aktiv
             {
                 if (World != null)
                 {
                     World.StepSimulation((float)Time.Instance.DeltaTime, (Time.Instance.FramePerSecondSmooth / 60), 1 / 60);
                 }
-                if (Countdown > 0)
+                if (Countdown > 0) //Countdown für die Spieldauer
                 {
                     Countdown -= Time.Instance.DeltaTime;
 
+                    //Nächstes elvel erreicht
                     if (Points >= _nextLevel)
                     {
                         Level++;
@@ -157,10 +166,7 @@ namespace Examples.Scharfschiessen
                                 sheep.SetSpeed(Level);
                             }
                         }
-                        Debug.WriteLine("LevelUp");
                         _nextLevel += 500;
-
-                        //coole next level texture wird kurz eingeblendet
                         _gameHandler.Gui.ShowLevelUp();
                     }
 
@@ -175,24 +181,27 @@ namespace Examples.Scharfschiessen
                 PlayerInput();               
             }
 
+
             RenderObjects();
             CollisionUpdate();
             UpdateLevelObjectList();
-           // Debug.WriteLine(Time.Instance.FramePerSecond);
         }
 
-        
+        //rendert alle Objekte des Spiels
         private void RenderObjects()
         {
             for (int i = 0; i < LevelObjects.Count; i++)
             {
                 LevelObjects[i].Render(_mtxCam);
                 //muss nach LevelObjects[i].Render() aufgerufen werden, da sonst LevelObjects[i] out of range passieren kann
+                //fals eine Objekt in diesem momnet entfernt wird.
                 LevelObjects[i].Update();
             }
+            //Rendert Skybox
             _skybox.Render(_mtxCam);
         }
 
+        //Räumt doe Liste mit GameObjects auf
         private void UpdateLevelObjectList()
         {
             List<GameObject> helper = new List<GameObject>();
@@ -208,8 +217,11 @@ namespace Examples.Scharfschiessen
             helper = null;
         }
 
+        //Kollisionsabfrage
         private void CollisionUpdate()
         {
+            //Prüfz ob die Objekte vorhanden sind
+            //Stellt sicher, das nur Schafe und Tomaten miteinander kollidieren
             for (int t = 0; t < LevelObjects.Count; t++)
             {
                 if (LevelObjects[t] != null && LevelObjects[t].Tag == "Sheep")
@@ -223,8 +235,9 @@ namespace Examples.Scharfschiessen
                                 
                                 var p1 = LevelObjects[t];
                                 var p2 = LevelObjects[i];
-                                p1.Collided();
+                                p1.Collided(); 
                                 p2.Collided();
+                                //erstellt neues Schaf, außerhalb des Sichfeld des Spielers
                                 InstantiateSheep(new float3(p1.Position.x, p1.Position.y, -p1.Position.z));
                             }
                         }
@@ -232,7 +245,8 @@ namespace Examples.Scharfschiessen
                 }
             }
         }
-
+        
+        //Gibt true zurück wenn die Kollisionsradien der beiden objekte sich überschneiden 
         private bool CheckForCollision(GameObject gameObject1, GameObject gameObject2)
         {
             if (gameObject1 != null && gameObject2 != null)
@@ -252,6 +266,7 @@ namespace Examples.Scharfschiessen
         private float4x4 _rotX = float4x4.Identity;
         private const float RotationSpeed = 0.6f;
 
+        //Liest Eingabe des Spielers
         public void PlayerInput()
         {
 
@@ -261,7 +276,7 @@ namespace Examples.Scharfschiessen
             _angleHorz -= _angleVelHorz;
             _angleVert -= _angleVelVert;
             
-            //Bewegungsferiheit an Fadenkeruz anpassen
+            //Bewegungsferiheit einschränken um Orientierungslosigkeit des Spielers zu verhindern
             if (_angleVert >= 0.9f)
             {
                 _angleVert = 0.9f;
@@ -277,11 +292,13 @@ namespace Examples.Scharfschiessen
 
             _mtxCam = mtxRot * float4x4.LookAt(0, 40, -1, 0, 40, 1, 0, 1, 0);
             _mtxCam *= float4x4.CreateTranslation(0, 40, -1);
+            
             //Schiessen
             Weapon.WeaponInput(_mtxCam);
         }
        
 
+        //Sicherheitsabfrage 
         public void DisposePhysic()
         {
             if (World != null)

@@ -17,10 +17,12 @@ namespace Examples.Scharfschiessen
     public class GameState
     {
         private State _currentState;
+        //LastState ist der vorherige Status
         public State LastState { get; set; }
         internal Gui Gui;
         internal readonly GameHandler GameHandler;
 
+        //Getter und Setter für den Aktuellen Status des Spiels
         public State CurrentState
         {
             get { return _currentState; }
@@ -50,14 +52,13 @@ namespace Examples.Scharfschiessen
                 Gui.SetGui(_currentState);
             }
         }
-
+        //mögliche Status in denen sich das Spiel befinden kann
         public enum State
         {
             MainMenu,
             Playing,
             HiddenPause,
             Highscore
-
         }
         public GameState(ref Gui g, GameHandler gameHandler)
         {
