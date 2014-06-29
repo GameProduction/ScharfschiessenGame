@@ -17,7 +17,12 @@ namespace Examples.Scharfschiessen
     public class Game
     {
         public RenderContext RC { get; private set; }
-    
+
+        //PlayerInput Variablen
+        private static float _angleHorz, _angleVert, _angleVelHorz, _angleVelVert;
+        private float4x4 _rotY = float4x4.Identity;
+        private float4x4 _rotX = float4x4.Identity;
+        private const float RotationSpeed = 0.6f;
 
         public int Level { get; set; }
         public double Countdown { get; set; }
@@ -27,11 +32,10 @@ namespace Examples.Scharfschiessen
         public List<GameObject> LevelObjects = new List<GameObject>();
         public DynamicWorld World { get; set; }
         public  SphereShape SphereCollider { get; private set; }
-        private List<Sheep> SheepList = new List<Sheep>();
         public Weapon Weapon;
         
+        //Variablen zum Lden der .fus dateien
         public SceneLoader SceneLoader { get; private set; }
-    
         private readonly SceneRenderer srTomato;
         private readonly SceneRenderer srSheep;
         private readonly SceneRenderer srLandschaft;
@@ -261,10 +265,7 @@ namespace Examples.Scharfschiessen
             return false;
         }
 
-        private static float _angleHorz, _angleVert, _angleVelHorz, _angleVelVert;
-        private float4x4 _rotY = float4x4.Identity;
-        private float4x4 _rotX = float4x4.Identity;
-        private const float RotationSpeed = 0.6f;
+      
 
         //Liest Eingabe des Spielers
         public void PlayerInput()
