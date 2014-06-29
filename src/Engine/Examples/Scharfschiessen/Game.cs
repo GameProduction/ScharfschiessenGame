@@ -77,9 +77,9 @@ namespace Examples.Scharfschiessen
             
             Weapon = new Weapon(World, this);
             rand = new Random();
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < 15; j++)
             {
-                InstantiateSheep();
+                InstantiateSheep(FindPosition(j));
             }
         }
 
@@ -101,40 +101,32 @@ namespace Examples.Scharfschiessen
 
         
         //posiotion für neues Schaf
-        public void FindPosition(out float3 pos, out float3 rot)
+        public float3 FindPosition(int quadrant)
         {
-            //Quadrant wählen 
-            // I  :  X(20,70) - Z(20,70)
-            // II :  X(-20,-70) - Z(20,70)
-            // III:  X:(20,70) - Z(-20,-70)
-            // IV :  X(-20,-70) - Z(-20,-70)
-            
-            if (rand.Next(-1, 1) > 0)
+            float3 pos;
+            if (quadrant < 7) 
             {
-                pos.x = rand.Next(20, 70);
+                pos.z = rand.Next(-50, -20);
             }
             else
             {
-                pos.x = rand.Next(-70, -20);
+                pos.z = rand.Next(20, 50);
             }
-            if (rand.Next(-1, 1) > 0)
+            if (quadrant%2 == 0)
             {
-                pos.z = rand.Next(20, 70);
+                pos.x = rand.Next(-50, -20);
             }
             else
             {
-                pos.z = rand.Next(-70, -20);
+                pos.x = rand.Next(20, 50);
             }
-            pos.y = rand.Next(30, 50);
-            rot = new float3(0, 0, 0);
+            pos.y = rand.Next(0, 20);
+            return pos;
         }
         //neues Schaf wird gespawned
-        public void InstantiateSheep()
+        public void InstantiateSheep(float3 at)
         {
-            float3 pos = float3.Zero;
-            float3 rot = float3.Zero;
-            FindPosition(out pos, out rot);
-            var sheep = new Sheep(RC, pos, rot, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
+            var sheep = new Sheep(RC, at, float3.Zero, new float3(0.02f, 0.02f, 0.02f), srSheep, this);
             LevelObjects.Add(sheep);
             Debug.WriteLine("Sheep At: " + sheep.Position);
         }
@@ -198,7 +190,7 @@ namespace Examples.Scharfschiessen
                 //muss nach LevelObjects[i].Render() aufgerufen werden, da sonst LevelObjects[i] out of range passieren kann
                 LevelObjects[i].Update();
             }
-           // _skybox.Render(_mtxCam);
+            _skybox.Render(_mtxCam);
         }
 
         private void UpdateLevelObjectList()
@@ -228,13 +220,12 @@ namespace Examples.Scharfschiessen
                         {
                             if (CheckForCollision(LevelObjects[t], LevelObjects[i]))
                             {
-                                LevelObjects[t].Collided();
-                                LevelObjects[i].Collided();
-                                var p1 = LevelObjects.IndexOf(LevelObjects[t]);
-                                var p2 = LevelObjects.IndexOf(LevelObjects[i]);
-                                LevelObjects[p1] = null;
-                                LevelObjects[p2] = null;
-                                InstantiateSheep();
+                                
+                                var p1 = LevelObjects[t];
+                                var p2 = LevelObjects[i];
+                                p1.Collided();
+                                p2.Collided();
+                                InstantiateSheep(new float3(p1.Position.x, p1.Position.y, -p1.Position.z));
                             }
                         }
                     }
@@ -259,7 +250,7 @@ namespace Examples.Scharfschiessen
         private static float _angleHorz, _angleVert, _angleVelHorz, _angleVelVert;
         private float4x4 _rotY = float4x4.Identity;
         private float4x4 _rotX = float4x4.Identity;
-        private const float RotationSpeed = 0.71f;
+        private const float RotationSpeed = 0.6f;
 
         public void PlayerInput()
         {
@@ -267,8 +258,8 @@ namespace Examples.Scharfschiessen
             _angleVelHorz = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseX);
             _angleVelVert = RotationSpeed * Input.Instance.GetAxis(InputAxis.MouseY);
             
-            _angleHorz += _angleVelHorz;
-            _angleVert += _angleVelVert;
+            _angleHorz -= _angleVelHorz;
+            _angleVert -= _angleVelVert;
             
             //Bewegungsferiheit an Fadenkeruz anpassen
             if (_angleVert >= 0.9f)

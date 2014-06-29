@@ -48,7 +48,7 @@ namespace Examples.Scharfschiessen
 
         public override void Collided()
         {
-            _world.RemoveRigidBody(TomatoRb);
+            DeleteMe();
         }
 
 

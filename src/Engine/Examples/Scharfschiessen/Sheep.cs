@@ -36,19 +36,17 @@ namespace Examples.Scharfschiessen
             {
                 _score = 50;
             }
-            Speed = (50 / _distance) * game.Level;
-            Radius = 3f;
+            Speed = (10 / _distance) * game.Level;
+            Radius = 4f;
             _game = game;
             Pos = position;
-            _alpha =  (float) Math.PI;
+            _alpha = (float)Math.Tan(Pos.z/Pos.x);
             Tag = "Sheep";
-
-            
         }
 
         public void SetSpeed(int level)
         {
-            Speed = (50 / _distance) * level;
+            Speed = Speed *1.2f;
         }
         public override void Update()
         {
@@ -57,8 +55,6 @@ namespace Examples.Scharfschiessen
 
         public void MoveTo()
         {
-            //Random rand = new Random();
-            //float3 pos = new float3(rand.Next(-20, 20), 1, rand.Next(-20, 20));
             if (_alpha == 2*Math.PI)
             {
                 _alpha = 0;
@@ -66,18 +62,20 @@ namespace Examples.Scharfschiessen
             else
             {
                 _alpha -= (float) Time.Instance.DeltaTime*Speed;
+                P.y = (float)Math.Sin(_alpha);
             }
-            P.x = _distance*(float) Math.Sin(_alpha/6);
-            P.z = _distance*(float) Math.Cos(_alpha/6);
-            float betha = (float) ((2 * Math.PI) - (_alpha / 6));
-            ObjectMtx = float4x4.CreateTranslation(P)* float4x4.CreateRotationY(-betha );
+            P.x = _distance*(float) Math.Sin(_alpha);
+            P.z = _distance*(float) Math.Cos(_alpha);
+            float betha = (float) ((2 * Math.PI) - (_alpha));
+
+            ObjectMtx = float4x4.CreateTranslation(P)*float4x4.CreateRotationY(-betha) ;
         }
 
 
         public override void Collided()
         {
-            Debug.WriteLine("Schaf Kollodiert");
             _game.Points += _score;
+            _game.LevelObjects.Remove(this);
         }
     }
 }
