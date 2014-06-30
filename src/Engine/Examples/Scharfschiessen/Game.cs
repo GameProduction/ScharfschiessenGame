@@ -100,7 +100,7 @@ namespace Examples.Scharfschiessen
         // Objekte der Umgebung instanziieren
         private void CreateEnvironment()
         {
-            var houses = new GameObject(RC, new float3(0, 0, 0), float3.Zero, new float3(1f, 1f, 1f), srBuildings);
+            var houses = new GameObject(RC, new float3(0,0, 0), float3.Zero, new float3(1f, 1f, 1f), srBuildings);
             LevelObjects.Add(houses);
             var cows = new GameObject(RC, new float3(0, 0, 0), new float3(0,-20,0), new float3(1f, 1f, 1f), srCows);
             LevelObjects.Add(cows);
@@ -108,7 +108,7 @@ namespace Examples.Scharfschiessen
             LevelObjects.Add(cows1);
             var trees = new GameObject(RC, new float3(0, -60, 0), new float3(0, 0, 0), new float3(1.5f, 1.5f, 1.5f), srTrees);
             LevelObjects.Add(trees);
-            var ebene = new GameObject(RC, new float3(0, -100, 0), float3.Zero, new float3(20,1,20), srLandschaft);
+            var ebene = new GameObject(RC, new float3(0, -60, 0), float3.Zero, new float3(20,1,20), srLandschaft);
             LevelObjects.Add(ebene);           
         }
 
