@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
+//using MySql.Data.MySqlClient;
 //using Examples.Scharfschiessen.Gui;
 
 namespace Examples.Scharfschiessen
@@ -16,7 +16,7 @@ namespace Examples.Scharfschiessen
         public int Score;
     }
 
-    public class DbConnection
+    /*public class DbConnection
     {
         private MySqlConnection _connection;
         private string _server;
@@ -251,5 +251,5 @@ namespace Examples.Scharfschiessen
             }
         }
 
-    }
+    }*/
 }

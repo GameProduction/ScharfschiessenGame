@@ -17,7 +17,7 @@ namespace Examples.Scharfschiessen
             get { return gui; }
         }
 
-        public DbConnection DbConnection { get; private set; }
+        //public DbConnection DbConnection { get; private set; }
         public GameState GameState{ get; private set; }
 
         public Game Game { get; set; }
@@ -28,7 +28,7 @@ namespace Examples.Scharfschiessen
             this.Rc = rc;
             this.gui = new Gui(Rc, RCanvas, this);
             this.GameState = new GameState(ref gui, this);
-            DbConnection =new DbConnection(this);
+          //  DbConnection =new DbConnection(this);
         }
 
        
